@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çiftli Stroop Testi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --correct-color: #4CAF50;
+            --wrong-color: #f44336;
+            --neutral-color: #f5f5f5;
+            --text-dark: #333;
+            --text-light: #f5f5f5;
+            --btn-hover: rgba(0,0,0,0.05);
+            --btn-active: rgba(0,0,0,0.1);
+            /* Define the 4 main colors */
+            --color-red: #f44336;
+            --color-blue: #2196F3;
+            --color-green: #4CAF50;
+            --color-yellow: #FFC107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .game-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .word-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 30px 0;
+            padding: 20px 40px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            min-width: 300px;
+            text-align: center;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .word-display.flash-correct {
+            animation: flashCorrect 0.5s;
+        }
+
+        .word-display.flash-wrong {
+            animation: flashWrong 0.5s;
+        }
+
+        @keyframes flashCorrect {
+            0%, 100% { border-color: rgba(0,0,0,0.1); }
+            50% { border-color: var(--correct-color); box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); }
+        }
+
+        @keyframes flashWrong {
+            0%, 100% { border-color: rgba(0,0,0,0.1); }
+            50% { border-color: var(--wrong-color); box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.3); }
+        }
+
+        .color-options {
+            display: grid;
+            /* Changed to 2 columns for 4 buttons */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 400px; /* Optional: constrain width for better look */
+            margin: 0 auto; /* Center the grid */
+        }
+
+        .color-btn {
+            padding: 15px 10px;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: white;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+            background-color: var(--btn-hover);
+        }
+
+        .color-btn:active {
+            transform: translateY(1px);
+            background-color: var(--btn-active);
+        }
+
+        .start-btn, .restart-btn, .next-test-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .start-btn:hover, .restart-btn:hover, .next-test-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .score-display {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 1.1rem;
+        }
+
+        .score-box {
+            background-color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            min-width: 110px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .score-box span {
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: block;
+            color: var(--primary-color);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 30px 0;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer i {
+            font-size: 1.3em;
+        }
+
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .stat-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary-color);
+            opacity: 0;
+            animation: confettiDrop 3s ease-in-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes confettiDrop {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .how-to-play {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .how-to-play h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .how-to-play ul {
+            list-style-type: none;
+        }
+
+        .how-to-play li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .how-to-play i {
+            color: var(--secondary-color);
+            margin-top: 3px;
+        }
+
+        .language-note {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Text color classes for buttons */
+        .text-kirmizi { color: var(--color-red); }
+        .text-mavi { color: var(--color-blue); }
+        .text-yesil { color: var(--color-green); }
+        .text-sari { color: var(--color-yellow); }
+
+
+        /* Word display color classes */
+        .kirmizi { color: var(--color-red); }
+        .mavi { color: var(--color-blue); }
+        .yesil { color: var(--color-green); }
+        .sari { color: var(--color-yellow); }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .word-display {
+                font-size: 3rem;
+                padding: 15px 30px;
+                min-width: 250px;
+            }
+
+            /* No need to change grid columns here anymore */
+
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .score-display {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .score-box {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .color-btn {
+                padding: 12px 8px;
+                font-size: 1rem;
+            }
+            .color-options {
+                max-width: 300px; /* Further constrain width on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-brain"></i> Çiftli Stroop Testi</h1>
+
+        <div id="intro-screen">
+            <h2>Beyninizi İki Ayrı Şekilde Test Edin!</h2>
+            <div class="intro">
+                <p>Bu çiftli Stroop testinde, önce kelimenin rengini seçeceğiniz bir bölüm, ardından kelimenin anlamını seçeceğiniz bir bölüm bulunmaktadır. İki testin sonunda toplam performansınızı göreceksiniz.</p>
+            </div>
+
+            <div class="how-to-play">
+                <h3><i class="fas fa-question-circle"></i> Nasıl Oynanır?</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <strong>1. Test:</strong> Ekranda görünen kelimenin RENGİNİ seçin (kelimenin kendisini değil!)</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>2. Test:</strong> Ekranda görünen kelimenin ANLAMINI seçin (rengini değil!)</li>
+                    <li><i class="fas fa-stopwatch"></i> <strong>Hızlı olun!</strong> Her soru için 5 saniyeniz var.</li>
+                    <li><i class="fas fa-star"></i> <strong>Zorluk seviyesi:</strong> İkinci test genellikle daha zordur!</li>
+                </ul>
+                <p class="language-note">Not: Renk isimleri Türkçedir (kırmızı, mavi, yeşil, sarı).</p>
+            </div>
+
+            <button id="startBtn" class="start-btn">
+                <i class="fas fa-play"></i> Başla (1. Test)
+            </button>
+        </div>
+
+        <div id="game-screen" class="game-screen" style="display: none;">
+            <div id="test-instruction" class="timer">
+                <i class="fas fa-info-circle"></i> <span id="instruction-text">Kelimenin RENGİNİ seçin</span>
+            </div>
+
+            <div class="timer">
+                <i class="fas fa-clock"></i> <span id="time">5</span> saniye
+            </div>
+
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <div id="wordDisplay" class="word-display">Hazır mısın?</div>
+
+            <div class="color-options">
+                <button class="color-btn text-kirmizi" onclick="checkAnswer('kirmizi')">Kırmızı</button>
+                <button class="color-btn text-mavi" onclick="checkAnswer('mavi')">Mavi</button>
+                <button class="color-btn text-yesil" onclick="checkAnswer('yesil')">Yeşil</button>
+                <button class="color-btn text-sari" onclick="checkAnswer('sari')">Sarı</button>
+            </div>
+
+            <div class="score-display">
+                <div class="score-box">
+                    Doğru <span id="correctCount">0</span>
+                </div>
+                <div class="score-box">
+                    Yanlış <span id="wrongCount">0</span>
+                </div>
+                <div class="score-box">
+                    Puan <span id="score">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="mid-results-screen" class="results" style="display: none;">
+            <h2><i class="fas fa-trophy"></i> 1. Test Tamamlandı!</h2>
+
+            <div class="result-stats">
+                <div class="stat-box">
+                    <h3>Toplam Puan</h3>
+                    <div id="mid-final-score" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Doğru Cevaplar</h3>
+                    <div id="mid-final-correct" class="stat-value">0/0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Doğruluk Oranı</h3>
+                    <div id="mid-accuracy" class="stat-value">0%</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Ortalama Süre</h3>
+                    <div id="mid-avg-time" class="stat-value">0s</div>
+                </div>
+            </div>
+
+            <button id="nextTestBtn" class="next-test-btn">
+                <i class="fas fa-arrow-right"></i> 2. Teste Geç
+            </button>
+        </div>
+
+        <div id="final-results-screen" class="results" style="display: none;">
+            <h2><i class="fas fa-award"></i> Testler Tamamlandı!</h2>
+
+            <h3 style="margin-top: 20px; color: var(--primary-color);">1. Test Sonuçları (Renk Seçimi)</h3>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <h3>Toplam Puan</h3>
+                    <div id="final-score-1" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Doğru Cevaplar</h3>
+                    <div id="final-correct-1" class="stat-value">0/0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Doğruluk Oranı</h3>
+                    <div id="final-accuracy-1" class="stat-value">0%</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 20px; color: var(--primary-color);">2. Test Sonuçları (Anlam Seçimi)</h3>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <h3>Toplam Puan</h3>
+                    <div id="final-score-2" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Doğru Cevaplar</h3>
+                    <div id="final-correct-2" class="stat-value">0/0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Doğruluk Oranı</h3>
+                    <div id="final-accuracy-2" class="stat-value">0%</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 20px; color: var(--primary-color);">Genel Sonuçlar</h3>
+            <div class="result-stats">
+                <div class="stat-box">
+                    <h3>Toplam Puan</h3>
+                    <div id="final-total-score" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Toplam Doğru</h3>
+                    <div id="final-total-correct" class="stat-value">0/0</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Genel Doğruluk</h3>
+                    <div id="final-total-accuracy" class="stat-value">0%</div>
+                </div>
+            </div>
+
+            <button id="restartBtn" class="restart-btn">
+                <i class="fas fa-redo"></i> Tekrar Oyna
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let currentWord = '';
+        let currentColor = '';
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let timer;
+        let timeLeft = 5;
+        let totalQuestions = 0;
+        let totalTime = 0;
+        let gameActive = false;
+        let gameTimeout;
+        let currentTest = 1; // 1 for color test, 2 for word test
+        let colorTestStats = {score: 0, correct: 0, total: 0, accuracy: 0};
+        let wordTestStats = {score: 0, correct: 0, total: 0, accuracy: 0};
+
+        // Turkish color names and their corresponding CSS classes (Reduced to 4)
+        const colors = [
+            { name: 'kırmızı', class: 'kirmizi' },
+            { name: 'mavi', class: 'mavi' },
+            { name: 'yeşil', class: 'yesil' },
+            { name: 'sarı', class: 'sari' }
+        ];
+
+        // DOM elements
+        const introScreen = document.getElementById('intro-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const midResultsScreen = document.getElementById('mid-results-screen');
+        const finalResultsScreen = document.getElementById('final-results-screen');
+        const wordDisplay = document.getElementById('wordDisplay');
+        const correctCountEl = document.getElementById('correctCount');
+        const wrongCountEl = document.getElementById('wrongCount');
+        const scoreEl = document.getElementById('score');
+        const timeEl = document.getElementById('time');
+        const progressBar = document.getElementById('progressBar');
+        const instructionText = document.getElementById('instruction-text');
+        const midFinalScoreEl = document.getElementById('mid-final-score');
+        const midFinalCorrectEl = document.getElementById('mid-final-correct');
+        const midAccuracyEl = document.getElementById('mid-accuracy');
+        const midAvgTimeEl = document.getElementById('mid-avg-time');
+        const finalScore1El = document.getElementById('final-score-1');
+        const finalCorrect1El = document.getElementById('final-correct-1');
+        const finalAccuracy1El = document.getElementById('final-accuracy-1');
+        const finalScore2El = document.getElementById('final-score-2');
+        const finalCorrect2El = document.getElementById('final-correct-2');
+        const finalAccuracy2El = document.getElementById('final-accuracy-2');
+        const finalTotalScoreEl = document.getElementById('final-total-score');
+        const finalTotalCorrectEl = document.getElementById('final-total-correct');
+        const finalTotalAccuracyEl = document.getElementById('final-total-accuracy');
+        const startBtn = document.getElementById('startBtn');
+        const nextTestBtn = document.getElementById('nextTestBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        nextTestBtn.addEventListener('click', startSecondTest);
+        restartBtn.addEventListener('click', restartGame);
+
+        // Start the first test (color selection)
+        function startGame() {
+            currentTest = 1;
+            introScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+            midResultsScreen.style.display = 'none';
+            finalResultsScreen.style.display = 'none';
+
+            instructionText.textContent = "Kelimenin RENGİNİ seçin";
+
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            totalQuestions = 0;
+            totalTime = 0;
+            gameActive = true;
+
+            updateScore();
+            showNextWord();
+
+            // Set game timeout (60 seconds)
+            clearTimeout(gameTimeout);
+            gameTimeout = setTimeout(() => {
+                if (gameActive) {
+                    endTest();
+                }
+            }, 60000); // 60 seconds
+        }
+
+        // Start the second test (word meaning selection)
+        function startSecondTest() {
+            currentTest = 2;
+            midResultsScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+
+            instructionText.textContent = "Kelimenin ANLAMINI seçin";
+
+            // Reset scores for second test
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            totalQuestions = 0;
+            totalTime = 0;
+            gameActive = true;
+
+            updateScore();
+            showNextWord();
+
+            // Set game timeout (60 seconds)
+            clearTimeout(gameTimeout);
+            gameTimeout = setTimeout(() => {
+                if (gameActive) {
+                    endTest();
+                }
+            }, 60000); // 60 seconds
+        }
+
+        // Show a new word with a random color
+        function showNextWord() {
+            if (!gameActive) return;
+
+            // Reset timer
+            clearInterval(timer);
+            timeLeft = 5;
+            updateTimer();
+
+            // Randomly select a color for the text and the actual color (can be different)
+            // Math.random() * colors.length will now correctly use the length of the reduced array (4)
+            const textColorIndex = Math.floor(Math.random() * colors.length);
+            const actualColorIndex = Math.floor(Math.random() * colors.length);
+
+            currentWord = colors[textColorIndex].name;
+            currentColor = colors[actualColorIndex].class;
+
+            // Apply the color to the word
+            wordDisplay.textContent = currentWord;
+            wordDisplay.className = 'word-display'; // Reset classes
+            wordDisplay.classList.add(colors[actualColorIndex].class);
+
+            // Start countdown
+            timer = setInterval(updateTimer, 1000);
+
+            // Update progress bar
+            progressBar.style.width = '0%';
+        }
+
+        // Update the timer display
+        function updateTimer() {
+            timeLeft--;
+            timeEl.textContent = timeLeft;
+            progressBar.style.width = `${100 - (timeLeft * 20)}%`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                wordDisplay.classList.add('flash-wrong');
+                wrongCount++;
+                totalQuestions++; // Count timed-out questions as attempts
+                updateScore();
+                setTimeout(() => {
+                    wordDisplay.classList.remove('flash-wrong');
+                    if(gameActive) showNextWord(); // Only show next word if game is still active
+                }, 500);
+            }
+        }
+
+        // Check if the selected answer is correct
+        function checkAnswer(selectedColorClass) { // Parameter is now the class name
+            if (!gameActive || timeLeft <= 0) return;
+
+            clearInterval(timer);
+            totalQuestions++;
+            const responseTime = (5 - timeLeft);
+            totalTime += responseTime;
+
+            let isCorrect = false;
+
+            if (currentTest === 1) {
+                // First test - check the actual color of the text (compare class names)
+                isCorrect = (selectedColorClass === currentColor);
+            } else {
+                // Second test - check the meaning of the word
+                // Find the name corresponding to the selected button's class
+                const selectedColorName = colors.find(c => c.class === selectedColorClass)?.name;
+                isCorrect = (selectedColorName === currentWord);
+            }
+
+            if (isCorrect) {
+                // Correct answer
+                wordDisplay.classList.add('flash-correct');
+                correctCount++;
+                const timeBonus = Math.floor(timeLeft * 10);
+                score += 50 + timeBonus;
+            } else {
+                // Wrong answer
+                wordDisplay.classList.add('flash-wrong');
+                wrongCount++;
+            }
+
+            updateScore();
+
+            setTimeout(() => {
+                wordDisplay.classList.remove('flash-correct', 'flash-wrong');
+                if (gameActive) showNextWord(); // Only show next word if game is still active
+            }, 500);
+        }
+
+        // Update the score display
+        function updateScore() {
+            correctCountEl.textContent = correctCount;
+            wrongCountEl.textContent = wrongCount;
+            scoreEl.textContent = score;
+        }
+
+        // End the current test and show appropriate results
+        function endTest() {
+            gameActive = false; // Stop the game logic
+            clearInterval(timer);
+            clearTimeout(gameTimeout);
+            wordDisplay.textContent = "Süre Doldu!"; // Indicate why it ended
+            wordDisplay.className = 'word-display'; // Reset color class
+
+            // Use correct + wrong count for total attempts as timeout counts as wrong
+            const currentTotalAttempts = correctCount + wrongCount;
+            const accuracy = currentTotalAttempts > 0 ? Math.round((correctCount / currentTotalAttempts) * 100) : 0;
+            // Use correctCount for avg time calculation as wrong/timeout don't have meaningful time
+            const avgTime = correctCount > 0 ? (totalTime / correctCount).toFixed(1) : 0;
+
+
+            if (currentTest === 1) {
+                // Save results for first test
+                colorTestStats = {
+                    score: score,
+                    correct: correctCount,
+                    total: currentTotalAttempts, // Use actual attempts
+                    accuracy: accuracy
+                };
+
+                // Show mid results
+                gameScreen.style.display = 'none';
+                midResultsScreen.style.display = 'block';
+
+                midFinalScoreEl.textContent = score;
+                midFinalCorrectEl.textContent = `${correctCount}/${currentTotalAttempts}`;
+                midAccuracyEl.textContent = `${accuracy}%`;
+                midAvgTimeEl.textContent = `${avgTime}s`;
+
+                if (accuracy > 70) {
+                    createConfetti();
+                }
+            } else {
+                // Save results for second test
+                wordTestStats = {
+                    score: score,
+                    correct: correctCount,
+                    total: currentTotalAttempts, // Use actual attempts
+                    accuracy: accuracy
+                };
+
+                // Show final combined results
+                gameScreen.style.display = 'none';
+                finalResultsScreen.style.display = 'block';
+
+                // First test results
+                finalScore1El.textContent = colorTestStats.score;
+                finalCorrect1El.textContent = `${colorTestStats.correct}/${colorTestStats.total}`;
+                finalAccuracy1El.textContent = `${colorTestStats.accuracy}%`;
+
+                // Second test results
+                finalScore2El.textContent = wordTestStats.score;
+                finalCorrect2El.textContent = `${wordTestStats.correct}/${wordTestStats.total}`;
+                finalAccuracy2El.textContent = `${wordTestStats.accuracy}%`;
+
+                // Combined results
+                const totalScore = colorTestStats.score + wordTestStats.score;
+                const totalCorrect = colorTestStats.correct + wordTestStats.correct;
+                const totalQuestionsCombined = colorTestStats.total + wordTestStats.total;
+                const overallAccuracy = totalQuestionsCombined > 0 ? Math.round((totalCorrect / totalQuestionsCombined) * 100) : 0;
+
+                finalTotalScoreEl.textContent = totalScore;
+                finalTotalCorrectEl.textContent = `${totalCorrect}/${totalQuestionsCombined}`;
+                finalTotalAccuracyEl.textContent = `${overallAccuracy}%`;
+
+                if (overallAccuracy > 65) {
+                    createConfetti();
+                }
+            }
+        }
+
+        // Restart the game from beginning
+        function restartGame() {
+            // Hide results and show intro
+            finalResultsScreen.style.display = 'none';
+            introScreen.style.display = 'block'; // Go back to intro screen
+            // Reset test stats
+            colorTestStats = {score: 0, correct: 0, total: 0, accuracy: 0};
+            wordTestStats = {score: 0, correct: 0, total: 0, accuracy: 0};
+            // Let the start button handle the rest
+        }
+
+        // Create confetti effect
+        function createConfetti() {
+            // Use the 4 main colors + maybe primary/secondary for variety
+             const confettiColors = [
+                'var(--color-red)',
+                'var(--color-blue)',
+                'var(--color-green)',
+                'var(--color-yellow)',
+                'var(--primary-color)',
+                'var(--secondary-color)'
+             ];
+
+            for (let i = 0; i < 100; i++) { // Reduced count slightly
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                // Use CSS variables directly if possible, otherwise use hex codes
+                confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                confetti.style.width = `${Math.random() * 8 + 4}px`;
+                confetti.style.height = `${Math.random() * 8 + 4}px`;
+                confetti.style.animationDuration = `${Math.random() * 2 + 1.5}s`;
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
