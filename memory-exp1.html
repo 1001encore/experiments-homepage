@@ -430,7 +430,6 @@
 
 	    const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    const receivedData = JSON.parse(storedDataString);
-            //const receivedDataDiv = document.getElementById('receivedData');
 
 		const name = receivedData["userName"];
 		const telNo = receivedData["telNumber"];
@@ -522,10 +521,11 @@
 
          // Modified to include list order information
          function generateResultsText() {
-
+	    const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
 		const nameDownload = receivedData["userName"];
 		const telNoDownload = receivedData["telNumber"];
-	sessionStorage.removeItem('confirmationFormData');
+		sessionStorage.removeItem('confirmationFormData');
              let text = "Test Sonuçları\n=============================\n";
 		 text +=  `Ad-Soyad: ${nameDownload}\n`;
 		 text +=  `Telefon Numarası: ${telNoDownload}\n\n`;
