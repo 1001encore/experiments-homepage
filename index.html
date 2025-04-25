@@ -1,78 +1,519 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Stroop Testi</title>
     <style>
         body {
             font-family: sans-serif;
-            margin: 20px;
-            background-color: #f0f0f0;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .main-block {
-            background-color: #fff;
-            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
-            text-align: center;
-            box-shadow: 2px 2px 5px #888888;
         }
-        .sub-blocks-container {
+        .page {
+            display: none; /* Hide pages by default */
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            min-width: 450px; /* Adjusted width */
+        }
+        .page.active {
+            display: block; /* Show active page */
+        }
+        .instructions {
+            text-align: left;
+            margin-bottom: 15px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .stimuli-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .sub-block {
-            background-color: #e9e9e9;
-            border: 1px solid #bbb;
-            padding: 15px;
-            text-align: center;
-        }
-        .sub-block a {
-            text-decoration: none;
-            color: #333;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns */
+            gap: 15px; /* Spacing between items */
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            max-width: 350px; /* Adjust as needed */
+            font-size: 1.5em; /* Make words/dots larger */
             font-weight: bold;
         }
+         .stimuli-dots {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* 6 columns for dots */
+            gap: 20px;
+            margin: 20px auto;
+            padding: 10px;
+            max-width: 400px; /* Adjust as needed */
+        }
+        .dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 5px; /* Add some space between buttons */
+        }
+        .timer-display {
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .error-inputs {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #aaa;
+            background-color: #fafafa;
+            display: none; /* Hide by default */
+        }
+        .error-inputs.visible {
+            display: block; /* Show when needed */
+        }
+        .error-inputs label {
+            margin-right: 5px;
+            margin-left: 15px;
+        }
+        .error-inputs input {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+        }
+        .results-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .results-table th, .results-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .results-table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Specific Colors for Stimuli */
+        .color-blue { color: blue; }
+        .color-yellow { color: yellow; } /* Added background for visibility */
+        .color-red { color: red; }
+        .color-green { color: green; }
+        .color-orange { color: orange; }
+        .color-black { color: black; }
+
+        /* Background colors for dots */
+        .bg-blue { background-color: blue; }
+        .bg-yellow { background-color: yellow; }
+        .bg-red { background-color: red; }
+        .bg-green { background-color: green; }
+        .bg-orange { background-color: orange; }
+
     </style>
 </head>
 <body>
 
-    <h1>Welcome to the Homepage</h1>
+    <h1>Stroop Testi</h1>
 
-    <div class="container">
-        <div class="main-block">
-            <h2>Main Block 1</h2>
-            <p>Content for Main Block 1. Link to an external website or internal page.</p>
-            <p><a href="https://placeholder.com" target="_blank">Visit Link 1</a></p>
+    <div id="page-0" class="page active">
+        <h2>Başlangıç Yönergesi</h2>
+        <div class="instructions">
+            <p>Ekranda bazı kelimeler göreceksiniz.</p>
+            <p>Ben “Başlayın” dedikten hemen sonra, sizden ekranda yazılı olan kelimeleri okumanızı veya kelimelerin renkleri söylemenizi isteyeceğim.</p>
+            <p>Kelimeleri mümkün olduğu kadar hızlı okumaya, renk isimlerini mümkün olduğu kadar hızlı söylemeye çalışın.</p>
+            <p>Kelimeleri okurken veya renkleri söylerken hata yaptığınızı fark ederseniz, hemen doğrusunu söyleyin.</p>
         </div>
-
-        <div class="main-block">
-            <h2>Main Block 2 with Sub-blocks</h2>
-            <div class="sub-blocks-container">
-                <div class="sub-block">
-                    <p><a href="subpage1.html">Go to Sub-page 1</a></p>
-                </div>
-                <div class="sub-block">
-                    <p><a href="subpage2.html">Go to Sub-page 2</a></p>
-                </div>
-                <div class="sub-block">
-                    <p><a href="subpage3.html">Go to Sub-page 3</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="main-block">
-            <h2>Main Block 3</h2>
-            <p>Content for Main Block 3. Link to an external website or internal page.</p>
-            <p><a href="https://placeholder.com" target="_blank">Visit Link 3</a></p>
-        </div>
+        <button onclick="startTest()">Deneye Başla</button>
     </div>
+
+    <div id="page-1" class="page">
+        <h2>1. Kart</h2>
+        <div class="instructions">
+            <p>Ekrandaki kelimeleri mümkün olduğu kadar hızlı okumanızı istiyorum. Okumaya en baştan başlayın ve soldan sağa doğru gidin. Hata yaptığınızı fark ederseniz, düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        </div>
+        <div class="stimuli-grid color-black"> <span>mavi</span><span>sarı</span><span>kırmızı</span><span>yeşil</span>
+            <span>yeşil</span><span>mavi</span><span>sarı</span><span>kırmızı</span>
+            <span>yeşil</span><span>kırmızı</span><span>mavi</span><span>sarı</span>
+            <span>kırmızı</span><span>yeşil</span><span>sarı</span><span>mavi</span>
+            <span>sarı</span><span>kırmızı</span><span>yeşil</span><span>mavi</span>
+            <span>kırmızı</span><span>mavi</span><span>sarı</span><span>yeşil</span>
+        </div>
+        <button onclick="startTimer(1)">Başla</button>
+        <button onclick="stopTimer(1)" disabled>Bitir</button>
+        <div class="timer-display" id="timer-1">Süre: 0.000 saniye</div>
+        <div class="error-inputs" id="error-inputs-1">
+            <p><strong>Gözetmen Girişi:</strong></p>
+            <label for="errors-1">Hatalı Cevap Sayısı:</label>
+            <input type="number" id="errors-1" min="0" value="0">
+            <label for="corrections-1">Düzeltilen Hata Sayısı:</label>
+            <input type="number" id="corrections-1" min="0" value="0">
+            
+        </div>
+         <div id="nav-button-container-1"></div> </div>
+
+    <div id="page-2" class="page">
+        <h2>2. Kart</h2>
+        <div class="instructions">
+            <p>Şimdi de ekrandaki renk isimlerini mümkün olduğu kadar hızlı okumanızı istiyorum.</p>
+            <p>Kelimenin basımında kullanılan renk önemli değil, buna dikkat etmeniz gerekmiyor. Sizden istenen, kelimeleri okumanız.</p>
+            <p>Deminki gibi, sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+            
+        </div>
+        <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
+            <span class="color-yellow">yeşil</span><span class="color-red">mavi</span><span class="color-green">sarı</span><span class="color-blue">kırmızı</span>
+            <span class="color-blue">yeşil</span><span class="color-green">kırmızı</span><span class="color-yellow">mavi</span><span class="color-red">sarı</span>
+            <span class="color-blue">kırmızı</span><span class="color-yellow">yeşil</span><span class="color-red">sarı</span><span class="color-green">mavi</span>
+            <span class="color-red">sarı</span><span class="color-green">kırmızı</span><span class="color-blue">yeşil</span><span class="color-yellow">mavi</span>
+            <span class="color-yellow">kırmızı</span><span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-red">yeşil</span>
+        </div>
+        <button onclick="startTimer(2)">Başla</button>
+        <button onclick="stopTimer(2)" disabled>Bitir</button>
+        <div class="timer-display" id="timer-2">Süre: 0.000 saniye</div>
+         <div class="error-inputs" id="error-inputs-2">
+            <p><strong>Gözetmen Girişi:</strong></p>
+            <label for="errors-2">Hatalı Cevap Sayısı:</label>
+            <input type="number" id="errors-2" min="0" value="0">
+            <label for="corrections-2">Düzeltilen Hata Sayısı:</label>
+            <input type="number" id="corrections-2" min="0" value="0">
+            
+        </div>
+         <div id="nav-button-container-2"></div> </div>
+
+     <div id="page-3" class="page">
+        <h2>3. Kart</h2>
+        <div class="instructions">
+            <p>Şimdi bu karttaki dairelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum.</p>
+             <p>Sıranın başından başlayın ve soldan sağa doğru gidin. Hatalarınızı düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        </div>
+        <div class="stimuli-dots"> <div class="dot bg-red"></div><div class="dot bg-green"></div><div class="dot bg-yellow"></div><div class="dot bg-blue"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
+            <div class="dot bg-orange"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-green"></div><div class="dot bg-orange"></div>
+            <div class="dot bg-blue"></div><div class="dot bg-green"></div><div class="dot bg-green"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-blue"></div>
+            <div class="dot bg-yellow"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-yellow"></div><div class="dot bg-orange"></div><div class="dot bg-red"></div>
+             <div class="dot bg-green"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
+        </div>
+        <button onclick="startTimer(3)">Başla</button>
+        <button onclick="stopTimer(3)" disabled>Bitir</button>
+        <div class="timer-display" id="timer-3">Süre: 0.000 saniye</div>
+         <div class="error-inputs" id="error-inputs-3">
+            <p><strong>Gözetmen Girişi:</strong></p>
+            <label for="errors-3">Hatalı Cevap Sayısı:</label>
+            <input type="number" id="errors-3" min="0" value="0">
+            <label for="corrections-3">Düzeltilen Hata Sayısı:</label>
+            <input type="number" id="corrections-3" min="0" value="0">
+             
+        </div>
+         <div id="nav-button-container-3"></div> </div>
+
+    <div id="page-4" class="page">
+        <h2>4. Kart</h2>
+        <div class="instructions">
+             <p>Şimdi bu ekrandaki kelimelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum. Sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        </div>
+        <div class="stimuli-grid"> <span class="color-green">kadar</span><span class="color-blue">zayıf</span><span class="color-yellow">ise</span><span class="color-red">orta</span>
+            <span class="color-yellow">orta</span><span class="color-red">kadar</span><span class="color-green">zayıf</span><span class="color-blue">ise</span>
+            <span class="color-blue">orta</span><span class="color-green">ise</span><span class="color-yellow">kadar</span><span class="color-red">zayıf</span>
+            <span class="color-red">ise</span><span class="color-yellow">orta</span><span class="color-red">zayıf</span><span class="color-green">kadar</span>
+            <span class="color-red">zayıf</span><span class="color-green">ise</span><span class="color-blue">orta</span><span class="color-yellow">kadar</span>
+            <span class="color-yellow">ise</span><span class="color-green">kadar</span><span class="color-blue">zayıf</span><span class="color-red">orta</span>
+        </div>
+        <button onclick="startTimer(4)">Başla</button>
+        <button onclick="stopTimer(4)" disabled>Bitir</button>
+        <div class="timer-display" id="timer-4">Süre: 0.000 saniye</div>
+        <div class="error-inputs" id="error-inputs-4">
+            <p><strong>Gözetmen Girişi:</strong></p>
+            <label for="errors-4">Hatalı Cevap Sayısı:</label>
+            <input type="number" id="errors-4" min="0" value="0">
+            <label for="corrections-4">Düzeltilen Hata Sayısı:</label>
+            <input type="number" id="corrections-4" min="0" value="0">
+            
+        </div>
+         <div id="nav-button-container-4"></div> </div>
+
+
+    <div id="page-5" class="page">
+        <h2>5. Kart</h2>
+        <div class="instructions">
+            <p>Şimdi de kelimelerin hangi renkte yazılmış olduğunu mümkün olduğu kadar çabuk söylemenizi istiyorum.</p>
+            <p>Kelimeyi okumayın, rengini söyleyin. Yine sıranın başından başlayın ve soldan sağa doğru gidin. Fark ettiğiniz hataları düzeltin.</p>
+            <p>Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        </div>
+         <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
+            <span class="color-yellow">yeşil</span><span class="color-red">mavi</span><span class="color-green">sarı</span><span class="color-blue">kırmızı</span>
+            <span class="color-blue">yeşil</span><span class="color-green">kırmızı</span><span class="color-yellow">mavi</span><span class="color-red">sarı</span>
+            <span class="color-blue">kırmızı</span><span class="color-yellow">yeşil</span><span class="color-red">sarı</span><span class="color-green">mavi</span>
+            <span class="color-red">sarı</span><span class="color-green">kırmızı</span><span class="color-blue">yeşil</span><span class="color-yellow">mavi</span>
+            <span class="color-yellow">kırmızı</span><span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-red">yeşil</span>
+        </div>
+        <button onclick="startTimer(5)">Başla</button>
+        <button onclick="stopTimer(5)" disabled>Bitir</button>
+        <div class="timer-display" id="timer-5">Süre: 0.000 saniye</div>
+        <div class="error-inputs" id="error-inputs-5">
+           <p><strong>Gözetmen Girişi:</strong></p>
+            <label for="errors-5">Hatalı Cevap Sayısı:</label>
+            <input type="number" id="errors-5" min="0" value="0">
+            <label for="corrections-5">Düzeltilen Hata Sayısı:</label>
+            <input type="number" id="corrections-5" min="0" value="0">
+            
+        </div>
+         <div id="nav-button-container-5"></div> </div>
+
+    <div id="page-6" class="page">
+        <h2>Test Bitti - Sonuçlar</h2>
+        <div id="results-summary">
+             <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Kart</th>
+                        <th>Süre (saniye)</th>
+                        <th>Hata Sayısı</th>
+                        <th>Düzeltme Sayısı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td id="result-time-1">--</td>
+                        <td id="result-errors-1">--</td>
+                        <td id="result-corrections-1">--</td>
+                    </tr>
+                     <tr>
+                        <td>2</td>
+                        <td id="result-time-2">--</td>
+                        <td id="result-errors-2">--</td>
+                        <td id="result-corrections-2">--</td>
+                    </tr>
+                     <tr>
+                        <td>3</td>
+                        <td id="result-time-3">--</td>
+                        <td id="result-errors-3">--</td>
+                        <td id="result-corrections-3">--</td>
+                    </tr>
+                     <tr>
+                        <td>4</td>
+                        <td id="result-time-4">--</td>
+                        <td id="result-errors-4">--</td>
+                        <td id="result-corrections-4">--</td>
+                    </tr>
+                     <tr>
+                        <td>5</td>
+                        <td id="result-time-5">--</td>
+                        <td id="result-errors-5">--</td>
+                        <td id="result-corrections-5">--</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br><br>
+        <h2>Bilgi Formu</h2>
+        <br> 
+        <label for="name">Ad-Soyad:</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="age">Yaş:</label>
+        <input type="number" min="0" id="age" name="age"><br><br>
+
+        <label for="occupation">Meslek:</label>
+        <input type="text" id="occupation" name="occupation"><br><br>
+
+        <label for="sex">Cinsiyet:</label>
+        <select id="sex" name="sex">
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+        </select><br><br>
+
+        <button onclick="downloadResults()">Sonuçları İndir</button>
+
+        <button onclick="resetTest()">Testi Sıfırla</button>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+        let timers = {}; // To store timer intervals
+        let startTimes = {}; // To store start times
+        let elapsedTimes = {}; // To store elapsed times for each page
+        let errorCounts = {}; // To store error counts
+        let correctionCounts = {}; // To store correction counts
+
+        function showPage(pageIndex) {
+            pages.forEach((page, index) => {
+                page.classList.toggle('active', index === pageIndex);
+            });
+            currentPage = pageIndex;
+        }
+
+        function startTest() {
+            resetTestState(); // Ensure clean state before starting
+            showPage(1); // Show first card page
+        }
+
+        function startTimer(pageIndex) {
+            startTimes[pageIndex] = Date.now();
+            // Disable start button, enable stop button
+            const pageElement = document.getElementById(`page-${pageIndex}`);
+            pageElement.querySelector('button[onclick^="startTimer"]').disabled = true;
+            pageElement.querySelector('button[onclick^="stopTimer"]').disabled = false;
+             // Hide error inputs if they were somehow visible
+            document.getElementById(`error-inputs-${pageIndex}`).classList.remove('visible');
+            // Remove any existing next button
+             const navContainer = document.getElementById(`nav-button-container-${pageIndex}`);
+             navContainer.innerHTML = '';
+
+
+            // Update timer display every 10ms
+            timers[pageIndex] = setInterval(() => {
+                const elapsed = (Date.now() - startTimes[pageIndex]) / 1000;
+                document.getElementById(`timer-${pageIndex}`).textContent = `Süre: ${elapsed.toFixed(3)} saniye`;
+            }, 10);
+        }
+
+        function stopTimer(pageIndex) {
+            if (timers[pageIndex]) {
+                clearInterval(timers[pageIndex]);
+                timers[pageIndex] = null;
+                elapsedTimes[pageIndex] = (Date.now() - startTimes[pageIndex]) / 1000;
+                document.getElementById(`timer-${pageIndex}`).textContent = `Süre: ${elapsedTimes[pageIndex].toFixed(3)} saniye`;
+                // Disable stop button
+                 const pageElement = document.getElementById(`page-${pageIndex}`);
+                 pageElement.querySelector('button[onclick^="stopTimer"]').disabled = true;
+
+                 // Show error inputs
+                 document.getElementById(`error-inputs-${pageIndex}`).classList.add('visible');
+
+                // Add the next/results button
+                addNavButton(pageIndex);
+            }
+        }
+
+         function recordAndProceed(currentPageIndex) {
+             // Record errors and corrections
+             const errorsInput = document.getElementById(`errors-${currentPageIndex}`);
+             const correctionsInput = document.getElementById(`corrections-${currentPageIndex}`);
+
+             errorCounts[currentPageIndex] = parseInt(errorsInput.value, 10) || 0;
+             correctionCounts[currentPageIndex] = parseInt(correctionsInput.value, 10) || 0;
+
+            // Hide error inputs again
+            document.getElementById(`error-inputs-${currentPageIndex}`).classList.remove('visible');
+
+             // Proceed to next step
+              if (currentPageIndex < 5) {
+                  showPage(currentPageIndex + 1);
+              } else {
+                  displayResults();
+              }
+         }
+
+
+        function addNavButton(currentPageIndex) {
+             const navContainer = document.getElementById(`nav-button-container-${currentPageIndex}`);
+             navContainer.innerHTML = ''; // Clear previous button if any
+
+             const nextButton = document.createElement('button');
+             nextButton.textContent = (currentPageIndex < 5) ? 'Sonraki Kart' : 'Sonuçları Gör';
+             nextButton.className = 'next-button';
+             nextButton.onclick = () => recordAndProceed(currentPageIndex); // Record values before proceeding
+             navContainer.appendChild(nextButton);
+        }
+
+         function displayResults() {
+            // Populate results summary table
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`result-time-${i}`).textContent = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
+                document.getElementById(`result-errors-${i}`).textContent = errorCounts[i] !== undefined ? errorCounts[i] : '--';
+                document.getElementById(`result-corrections-${i}`).textContent = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
+            }
+            showPage(6); // Show results page
+        }
+
+        function resetTestState() {
+            timers = {};
+            startTimes = {};
+            elapsedTimes = {};
+            errorCounts = {};
+            correctionCounts = {};
+
+             // Reset timer displays, buttons, inputs, and hide error sections
+             for (let i = 1; i <= 5; i++) {
+                 if(timers[i]) clearInterval(timers[i]); // Clear any running timers
+                 document.getElementById(`timer-${i}`).textContent = 'Süre: 0.000 saniye';
+                 document.getElementById(`errors-${i}`).value = 0; // Reset input
+                 document.getElementById(`corrections-${i}`).value = 0; // Reset input
+                 document.getElementById(`error-inputs-${i}`).classList.remove('visible'); // Hide inputs
+
+                 const pageElement = document.getElementById(`page-${i}`);
+                 pageElement.querySelector('button[onclick^="startTimer"]').disabled = false;
+                 pageElement.querySelector('button[onclick^="stopTimer"]').disabled = true;
+
+                // Clear navigation button container
+                const navContainer = document.getElementById(`nav-button-container-${i}`);
+                navContainer.innerHTML = '';
+             }
+             // Reset results page table
+            for (let i = 1; i <= 5; i++) {
+                 document.getElementById(`result-time-${i}`).textContent = '--';
+                 document.getElementById(`result-errors-${i}`).textContent = '--';
+                 document.getElementById(`result-corrections-${i}`).textContent = '--';
+            }
+        }
+
+
+        function resetTest() {
+            resetTestState(); // Clear current state
+            showPage(0); // Go back to initial instructions
+        }
+
+        // Initialize by showing the first page (instructions)
+        showPage(0);
+
+    // {{change 3: Add downloadResults function}}
+    function downloadResults() {
+        // Get user info
+        const name = document.getElementById('name').value;
+        const age = document.getElementById('age').value;
+        const occupation = document.getElementById('occupation').value;
+        const sex = document.getElementById('sex').value;
+
+        // Get test results
+        let resultsText = "Stroop Test Sonuçları\n\n";
+        resultsText += `Ad: ${name}\n`;
+        resultsText += `Yaş: ${age}\n`;
+        resultsText += `Meslek: ${occupation}\n`;
+        resultsText += `Cinsiyet: ${sex}\n\n`;
+
+        for (let i = 1; i <= 5; i++) {
+            const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
+            const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
+            const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
+            resultsText += `Kart ${i}:\n`;
+            resultsText += `  Süre: ${time} saniye\n`;
+            resultsText += `  Hata Sayısı: ${errors}\n`;
+            resultsText += `  Düzeltme Sayısı: ${corrections}\n\n`;
+        }
+
+        // Create a blob
+        const blob = new Blob([resultsText], { type: 'text/plain' });
+
+        // Create a link and download it
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'stroop_testi_sonuçlar.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // Free up memory
+    }
+
+    </script>
 
 </body>
 </html>
