@@ -21,10 +21,10 @@
             background-color: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            max-width: 500px;
-            text-align: center;
+            max-width: 600px;
+            text-align: left;
         }
         .confirmation-box h3 {
             /*color: #dc3545;  Red for warning */
@@ -113,6 +113,9 @@
 
         .longForm {
             overflow-y: scroll;
+            height: 500px;
+            margin: 5px;
+            padding-bottom: 15px;
         }
 
     </style>
@@ -135,21 +138,21 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
         </div>
         <form id="confirmationForm" class="confirmation-form">
             <div class="form-group">
-                <label for="userName">Please enter your name:</label>
+                <label for="userName" style="margin-top: 20px;">Lütfen Ad-Soyadınızı Giriniz:</label>
                 <input type="text" id="userName" name="userName" required>
             </div>
 
              <div class="form-group">
-                <label for="telNumber">Please enter telephone number:</label>
-                <input type="text" id="telNumber" name="telNumber" required placeholder="e.g., +90-123-456-7890 or 123-456-7890"> <!-- Updated placeholder -->
+                <label for="telNumber">Lütfen Telefon Numaranızı Giriniz:</label>
+                <input type="text" id="telNumber" name="telNumber" required placeholder="örn. 123-456-7890"> <!-- Updated placeholder -->
             </div>
 
             <!-- Add more form fields here as needed -->
 
              <div class="button-container">
                  <!-- Button starts disabled -->
-                 <button type="submit" class="confirm-button" id="proceedButton" disabled>I Understand and Proceed</button>
-                 <a href="index.html" class="cancel-button">Cancel</a>
+                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Okudum ve Kabul Ediyorum</button>
+                 <a href="index.html" class="cancel-button">İptal</a>
              </div>
         </form>
 
