@@ -3,75 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Clickable Homepage</title>
     <style>
         body {
-            font-family: sans-serif;
-            margin: 20px;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
         }
         .container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 30px;
+            padding: 0 20px 30px;
+            max-width: 1200px;
+            margin: auto;
         }
-        .main-block {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 20px;
+
+        /* Styling for the clickable main blocks */
+        .main-block-link {
+            display: flex; /* Use flex to center content easily */
+            flex-direction: column; /* Stack content vertically */
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none; /* Remove default link underline */
+            color: inherit; /* Inherit text color */
             text-align: center;
-            box-shadow: 2px 2px 5px #888888;
+            height: 100%; /* Make blocks the same height if needed, depends on content */
+            box-sizing: border-box; /* Include padding and border in height */
         }
-        .sub-blocks-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-top: 15px;
+         .main-block-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-        .sub-block {
-            background-color: #e9e9e9;
-            border: 1px solid #bbb;
+
+        .main-block-link h2 {
+            color: #0056b3;
+            margin-top: 0;
+            margin-bottom: 10px; /* Reduced margin */
+        }
+         .main-block-link p {
+             margin-bottom: 0; /* Remove margin from last paragraph */
+         }
+
+
+        /* Specific styling for the main block containing sub-links */
+        .main-block-sublinks {
+             background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column; /* Stack title and sub-links vertically */
+        }
+        .main-block-sublinks h2 {
+             color: #0056b3;
+            margin-top: 0;
+            margin-bottom: 15px;
+             text-align: center;
+        }
+
+        .sub-link-item {
+            display: flex; /* Use flex for content within sub-link */
+            flex-direction: column; /* Stack potential title/description */
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            background-color: #e9f5ff; /* Light background for links */
+            border: 1px solid #cce0ff; /* Slightly darker border */
+            border-radius: 5px;
             padding: 15px;
-            text-align: center;
-        }
-        .sub-block a {
             text-decoration: none;
-            color: #333;
+            color: #007bff;
             font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            flex-grow: 1; /* Allow items to grow and fill space */
         }
+        .sub-link-item:hover {
+             background-color: #cfe3ff; /* Slightly darker hover background */
+             transform: translateY(-3px);
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .sub-link-item span { /* For potential text inside sub-link */
+            pointer-events: none; /* Allow click to pass through to the link */
+        }
+
+
+        .sub-links-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Stack sub-links on small screens */
+            gap: 15px; /* Space between sub-link items */
+            margin-top: 15px;
+             padding-top: 15px;
+             border-top: 1px solid #eee;
+        }
+
+        @media (min-width: 600px) { /* Arrange sub-links in a column on wider screens */
+             .sub-links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+         /* Ensure direct text within main blocks is not affected by link styles */
+        .main-block-sublinks > p {
+             text-align: center;
+             margin-bottom: 20px;
+        }
+
+
     </style>
 </head>
 <body>
 
-    <h1>Welcome to the Homepage</h1>
+    <div class="header">
+        <h1>Welcome to Our Website</h1>
+        <p>Explore the sections below</p>
+    </div>
 
     <div class="container">
-        <div class="main-block">
-            <h2>Main Block 1</h2>
-            <p>Content for Main Block 1. Link to an external website or internal page.</p>
-            <p><a href="https://placeholder.com" target="_blank">Visit Link 1</a></p>
-        </div>
+        <a href="confirm.html?target=page1.html" class="main-block-link">
+            <h2>Section One</h2>
+            <p>Detailed information about the first section of our site.</p>
+        </a>
 
-        <div class="main-block">
-            <h2>Main Block 2 with Sub-blocks</h2>
-            <div class="sub-blocks-container">
-                <div class="sub-block">
-                    <p><a href="subpage1.html">Go to Sub-page 1</a></p>
-                </div>
-                <div class="sub-block">
-                    <p><a href="subpage2.html">Go to Sub-page 2</a></p>
-                </div>
-                <div class="sub-block">
-                    <p><a href="subpage3.html">Go to Sub-page 3</a></p>
-                </div>
+        <div class="main-block-sublinks">
+            <h2>More Resources</h2>
+            <p>Discover related pages and external links here by clicking the blocks below.</p>
+
+            <div class="sub-links-grid">
+                <a href="confirm.html?target=subpageA.html" class="sub-link-item">
+                    <span>Visit Resource Page A</span>
+                </a>
+                <a href="confirm.html?target=subpageB.html" class="sub-link-item">
+                    <span>Visit Resource Page B</span>
+                </a>
+                <a href="https://www.example.com" class="sub-link-item" target="_blank">
+                     <span>Visit External Site (Example.com)</span>
+                </a>
             </div>
         </div>
 
-        <div class="main-block">
-            <h2>Main Block 3</h2>
-            <p>Content for Main Block 3. Link to an external website or internal page.</p>
-            <p><a href="https://placeholder.com" target="_blank">Visit Link 3</a></p>
-        </div>
+        <a href="confirm.html?target=page3.html" class="main-block-link">
+            <h2>Section Three</h2>
+            <p>Learn more about the third key area of our website.</p>
+        </a>
     </div>
 
 </body>
