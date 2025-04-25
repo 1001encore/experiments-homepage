@@ -3,517 +3,585 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stroop Testi</title>
+    <title>Bellek Deneyi</title>
     <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        .page {
-            display: none; /* Hide pages by default */
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            min-width: 450px; /* Adjusted width */
-        }
-        .page.active {
-            display: block; /* Show active page */
-        }
-        .instructions {
-            text-align: left;
-            margin-bottom: 15px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .stimuli-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 columns */
-            gap: 15px; /* Spacing between items */
-            margin: 20px auto;
-            padding: 10px;
-            border: 1px solid #eee;
-            max-width: 350px; /* Adjust as needed */
-            font-size: 1.5em; /* Make words/dots larger */
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f4f4; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; max-width: 600px; width: 90%; }
+        .screen { display: none; } /* Hide all screens initially */
+        .screen.active { display: block; } /* Show active screen */
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px 5px; border: none; border-radius: 5px; background-color: #878991; color: white; }
+        button:hover { background-color: b3b1b1; }
+        button:disabled { background-color: #cccccc; cursor: not-allowed; }
+        #wordDisplay, #wordDisplay2 {
+            font-size: 3em;
             font-weight: bold;
+            margin: 20px 0;
+            min-height: 1.5em;
         }
-         .stimuli-dots {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr); /* 6 columns for dots */
-            gap: 20px;
-            margin: 20px auto;
-            padding: 10px;
-            max-width: 400px; /* Adjust as needed */
-        }
-        .dot {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin: auto;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            margin-top: 15px;
-            margin-right: 5px; /* Add some space between buttons */
-        }
-        .timer-display {
-            margin-top: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .error-inputs {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px dashed #aaa;
-            background-color: #fafafa;
-            display: none; /* Hide by default */
-        }
-        .error-inputs.visible {
-            display: block; /* Show when needed */
-        }
-        .error-inputs label {
-            margin-right: 5px;
-            margin-left: 15px;
-        }
-        .error-inputs input {
-            width: 50px;
-            padding: 5px;
-            text-align: center;
-        }
-        .results-table {
-            margin-top: 20px;
-            border-collapse: collapse;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .results-table th, .results-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .results-table th {
-            background-color: #f2f2f2;
-        }
-
-        /* Specific Colors for Stimuli */
-        .color-blue { color: blue; }
-        .color-yellow { color: yellow; } /* Added background for visibility */
-        .color-red { color: red; }
-        .color-green { color: green; }
-        .color-orange { color: orange; }
-        .color-black { color: black; }
-
-        /* Background colors for dots */
-        .bg-blue { background-color: blue; }
-        .bg-yellow { background-color: yellow; }
-        .bg-red { background-color: red; }
-        .bg-green { background-color: green; }
-        .bg-orange { background-color: orange; }
-
+        #timerDisplay { font-size: 1.2em; margin-bottom: 15px; color: #555; }
+        .game-card { border: 1px solid #ccc; padding: 15px; margin: 10px auto; border-radius: 5px; background-color: #f9f9f9; width: 80%; }
+        .recall-input { display: block; width: calc(100% - 22px); margin: 5px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
+        .recognition-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; flex-direction: row-reverse;  }
+        .recognition-item .word { flex-grow: 1; text-align: center; font-size: 1.3em; }
+        .recognition-item .seen-buttons button, .recognition-item .likert-scale button { padding: 5px 10px; font-size: 14px; margin: 0 2px; }
+        .recognition-item .likert-scale { margin-left: 10px; }
+        .likert-scale button.selected { background-color: #28a745; }
+        .seen-buttons button.selected { background-color: #28a745; }
+        #recognitionList { max-height: 400px; overflow-y: auto; margin-top: 15px; border: 1px solid #ccc; padding: 10px; }
+        #resultsArea { text-align: left; margin-top: 20px; }
+        #resultsArea h3 { text-align: center; }
+        .game-card-buttons button { margin: 0 10px; padding: 8px 15px;}
+	.likert-scale { display: none; }
     </style>
 </head>
 <body>
+	<div class="container">
+        <div id="screen1" class="screen active">
+            <h2>Yönerge</h2>
+            <p>Bu bir bellek deneyidir. Test değildir, belleğinizi ölçmez. Amaç belleğin nasıl çalıştığına dair bilgi edinmektir. Deney iki bölümden oluşmaktadır. İki deneyin arasında beş dakika süren bir tetris oyunu oynayacaksınız. Deneyde verilen yönergelere uymanız önemlidir. Katılımınız için şimdiden teşekkür ederiz.</p>
+            <p id="instructionText1">Şimdi sizlere birer saniye aralıklarla 14 kelimelik bir liste sunulacaktır. Kelimeleri dikkatle inceleyin aklınızda tutmaya çalışın, daha sonra bir hatırlama testi verilecektir.</p>
+            <button id="startTestBtn">Testi Başlat</button>
+        </div>
 
-    <h1>Stroop Testi</h1>
+        <div id="screen2" class="screen">
+            <h2 id="listTitle1">Kelime:</h2>
+            <div id="wordDisplay"></div>
+            <p>Bu kelimeyi hatırlayın.</p>
+        </div>
 
-    <div id="page-0" class="page active">
-        <h2>Başlangıç Yönergesi</h2>
-        <div class="instructions">
-            <p>Ekranda bazı kelimeler göreceksiniz.</p>
-            <p>Ben “Başlayın” dedikten hemen sonra, sizden ekranda yazılı olan kelimeleri okumanızı veya kelimelerin renkleri söylemenizi isteyeceğim.</p>
-            <p>Kelimeleri mümkün olduğu kadar hızlı okumaya, renk isimlerini mümkün olduğu kadar hızlı söylemeye çalışın.</p>
-            <p>Kelimeleri okurken veya renkleri söylerken hata yaptığınızı fark ederseniz, hemen doğrusunu söyleyin.</p>
+        <div id="screen3" class="screen">
+            <h2>Yönerge</h2>
+            <p id="instructionText2">Az önce görmüş olduğunuz kelimeler, asıl listeyi sorunsuz şekilde uygulamak için sadece alıştırma amacıyla verildi. Hatırlama testine dahil değildir. Testte sorumlu olacağınız asıl liste şimdi sunulacaktır. Dikkatle inceleyin ve aklınızda tutmaya çalışın.</p>
+            <button id="startList2Btn">Asıl Teste Geç</button>
         </div>
-        <button onclick="startTest()">Deneye Başla</button>
-    </div>
 
-    <div id="page-1" class="page">
-        <h2>1. Kart</h2>
-        <div class="instructions">
-            <p>Ekrandaki kelimeleri mümkün olduğu kadar hızlı okumanızı istiyorum. Okumaya en baştan başlayın ve soldan sağa doğru gidin. Hata yaptığınızı fark ederseniz, düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        <div id="screen4" class="screen">
+             <h2 id="listTitle2">Kelime:</h2>
+            <div id="wordDisplay2"></div>
+             <p>Bu kelimeyi hatırlayın.</p>
         </div>
-        <div class="stimuli-grid color-black"> <span>mavi</span><span>sarı</span><span>kırmızı</span><span>yeşil</span>
-            <span>yeşil</span><span>mavi</span><span>sarı</span><span>kırmızı</span>
-            <span>yeşil</span><span>kırmızı</span><span>mavi</span><span>sarı</span>
-            <span>kırmızı</span><span>yeşil</span><span>sarı</span><span>mavi</span>
-            <span>sarı</span><span>kırmızı</span><span>yeşil</span><span>mavi</span>
-            <span>kırmızı</span><span>mavi</span><span>sarı</span><span>yeşil</span>
-        </div>
-        <button onclick="startTimer(1)">Başla</button>
-        <button onclick="stopTimer(1)" disabled>Bitir</button>
-        <div class="timer-display" id="timer-1">Süre: 0.000 saniye</div>
-        <div class="error-inputs" id="error-inputs-1">
-            <p><strong>Gözetmen Girişi:</strong></p>
-            <label for="errors-1">Hatalı Cevap Sayısı:</label>
-            <input type="number" id="errors-1" min="0" value="0">
-            <label for="corrections-1">Düzeltilen Hata Sayısı:</label>
-            <input type="number" id="corrections-1" min="0" value="0">
-            
-        </div>
-         <div id="nav-button-container-1"></div> </div>
 
-    <div id="page-2" class="page">
-        <h2>2. Kart</h2>
-        <div class="instructions">
-            <p>Şimdi de ekrandaki renk isimlerini mümkün olduğu kadar hızlı okumanızı istiyorum.</p>
-            <p>Kelimenin basımında kullanılan renk önemli değil, buna dikkat etmeniz gerekmiyor. Sizden istenen, kelimeleri okumanız.</p>
-            <p>Deminki gibi, sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
-            
+        <div id="screen5" class="screen">
+            <h2>Oyun Zamanı</h2>
+            <div id="timerDisplay">Kalan Süre: 60s</div>
+			<p>Her başkent-ülke eşleştirmesi için "Doğru" ya da "Yanlış"'a tıklayın. Oyun 1 dakika sürecektir.</p>
+			<h3> Başkent   -   Ülke </h4>
+            <div id="gameArea">
+                </div>
         </div>
-        <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
-            <span class="color-yellow">yeşil</span><span class="color-red">mavi</span><span class="color-green">sarı</span><span class="color-blue">kırmızı</span>
-            <span class="color-blue">yeşil</span><span class="color-green">kırmızı</span><span class="color-yellow">mavi</span><span class="color-red">sarı</span>
-            <span class="color-blue">kırmızı</span><span class="color-yellow">yeşil</span><span class="color-red">sarı</span><span class="color-green">mavi</span>
-            <span class="color-red">sarı</span><span class="color-green">kırmızı</span><span class="color-blue">yeşil</span><span class="color-yellow">mavi</span>
-            <span class="color-yellow">kırmızı</span><span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-red">yeşil</span>
-        </div>
-        <button onclick="startTimer(2)">Başla</button>
-        <button onclick="stopTimer(2)" disabled>Bitir</button>
-        <div class="timer-display" id="timer-2">Süre: 0.000 saniye</div>
-         <div class="error-inputs" id="error-inputs-2">
-            <p><strong>Gözetmen Girişi:</strong></p>
-            <label for="errors-2">Hatalı Cevap Sayısı:</label>
-            <input type="number" id="errors-2" min="0" value="0">
-            <label for="corrections-2">Düzeltilen Hata Sayısı:</label>
-            <input type="number" id="corrections-2" min="0" value="0">
-            
-        </div>
-         <div id="nav-button-container-2"></div> </div>
 
-     <div id="page-3" class="page">
-        <h2>3. Kart</h2>
-        <div class="instructions">
-            <p>Şimdi bu karttaki dairelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum.</p>
-             <p>Sıranın başından başlayın ve soldan sağa doğru gidin. Hatalarınızı düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        <div id="screen6" class="screen">
+            <h2>Serbest Hatırlama</h2>
+            <div id="recallTimerDisplay">Kalan Süre: 180s</div>
+            <p>Şimdi her iki listedeki kelimelerden aklınızda kalan kelimeleri aşağıdaki boşluğa yazınız. Yazdığınız her bir kelimeden sonra “enter” tuşuna basarak yanıtınızı kaydediniz. Süreniz 3 dakikadır (180 saniye). Enter tuşuna bastığınızda yazdığınız kelime kaydedilecektir. Bitirmek için “Tamamladım” tuşuna basınız.</p>
+            <form id="recallForm">
+                <input type="text" id="recallInput" class="recall-input" placeholder="Hatırladığınız kelimeleri yazın ve Enter'a basın" autocomplete="off">
+            </form>
+            <div id="recalledWordsList" style="margin-top:10px; text-align:left;"><strong>Hatırlanan Kelimeler:</strong></div>
+            <button id="finishRecallBtn">Tamamladım</button>
         </div>
-        <div class="stimuli-dots"> <div class="dot bg-red"></div><div class="dot bg-green"></div><div class="dot bg-yellow"></div><div class="dot bg-blue"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
-            <div class="dot bg-orange"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-green"></div><div class="dot bg-orange"></div>
-            <div class="dot bg-blue"></div><div class="dot bg-green"></div><div class="dot bg-green"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-blue"></div>
-            <div class="dot bg-yellow"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-yellow"></div><div class="dot bg-orange"></div><div class="dot bg-red"></div>
-             <div class="dot bg-green"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
-        </div>
-        <button onclick="startTimer(3)">Başla</button>
-        <button onclick="stopTimer(3)" disabled>Bitir</button>
-        <div class="timer-display" id="timer-3">Süre: 0.000 saniye</div>
-         <div class="error-inputs" id="error-inputs-3">
-            <p><strong>Gözetmen Girişi:</strong></p>
-            <label for="errors-3">Hatalı Cevap Sayısı:</label>
-            <input type="number" id="errors-3" min="0" value="0">
-            <label for="corrections-3">Düzeltilen Hata Sayısı:</label>
-            <input type="number" id="corrections-3" min="0" value="0">
-             
-        </div>
-         <div id="nav-button-container-3"></div> </div>
 
-    <div id="page-4" class="page">
-        <h2>4. Kart</h2>
-        <div class="instructions">
-             <p>Şimdi bu ekrandaki kelimelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum. Sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+        <div id="screen7" class="screen">
+            <h2>Tanıma Testi</h2>
+             <p>Size şimdi bir tanıma testi vereceğim. Bu testteki kelimelerin bazıları gördüğünüz iki listedeki kelimelerdir; bazıları ise o iki listede görmediğiniz yeni kelimelerdir. Yapmanızı istediğim şey her bir kelimeyi dikkatle inceledikten sonra, o kelimenin listelerde gördüğünüz kelimelerden birisi olup olmadığına karar vermenizdir. Size gösterilen listede olduğunu düşünüyorsanız “GÖRDÜM” kutucuğunu işaretleyiniz. Görmediğinizi düşünüyorsanız “GÖRMEDİM” kutucuğunu işaretleyiniz. Ayrıca, bu kararınızdan ne kadar emin olduğunuzu, o kelimenin yanındaki ölçek üzerinde işaretlemenizi istiyorum.</p>
+             <ul>
+                 <li>Eğer bu kelimeyi deneyde gördüğünüzden eminseniz “1” kutucuğunu işaretleyiniz.</li>
+                 <li>Gördüğünüzü düşünüyorsanız ama emin değilseniz “2” kutucuğunu işaretleyiniz.</li>
+                 <li>Görmediğinizi düşünüyorsanız ama emin değilseniz “3” kutucuğunu işaretleyiniz.</li>
+                 <li>Görmediğinizden emin iseniz “4” kutucuğunu işaretleyiniz.</li>
+             </ul>
+             <p>Ölçekleri sırayla ve eksiksiz olarak doldurun.</p>
+            <div id="recognitionList">
+                </div>
+            <button id="finishRecognitionBtn" disabled>Testi Bitir</button>
         </div>
-        <div class="stimuli-grid"> <span class="color-green">kadar</span><span class="color-blue">zayıf</span><span class="color-yellow">ise</span><span class="color-red">orta</span>
-            <span class="color-yellow">orta</span><span class="color-red">kadar</span><span class="color-green">zayıf</span><span class="color-blue">ise</span>
-            <span class="color-blue">orta</span><span class="color-green">ise</span><span class="color-yellow">kadar</span><span class="color-red">zayıf</span>
-            <span class="color-red">ise</span><span class="color-yellow">orta</span><span class="color-red">zayıf</span><span class="color-green">kadar</span>
-            <span class="color-red">zayıf</span><span class="color-green">ise</span><span class="color-blue">orta</span><span class="color-yellow">kadar</span>
-            <span class="color-yellow">ise</span><span class="color-green">kadar</span><span class="color-blue">zayıf</span><span class="color-red">orta</span>
+
+        <div id="screen8" class="screen">
+            <h2>Test Sonuçları</h2>
+            <div id="resultsArea">
+                </div>
+            <button id="resetTestBtn">Testi Tekrarla</button>
+            <button id="downloadResultsBtn">Sonuçları İndir</button>
+			<button id="startTetrisBtn">Tetrise Geç</button>
         </div>
-        <button onclick="startTimer(4)">Başla</button>
-        <button onclick="stopTimer(4)" disabled>Bitir</button>
-        <div class="timer-display" id="timer-4">Süre: 0.000 saniye</div>
-        <div class="error-inputs" id="error-inputs-4">
-            <p><strong>Gözetmen Girişi:</strong></p>
-            <label for="errors-4">Hatalı Cevap Sayısı:</label>
-            <input type="number" id="errors-4" min="0" value="0">
-            <label for="corrections-4">Düzeltilen Hata Sayısı:</label>
-            <input type="number" id="corrections-4" min="0" value="0">
-            
-        </div>
-         <div id="nav-button-container-4"></div> </div>
-
-
-    <div id="page-5" class="page">
-        <h2>5. Kart</h2>
-        <div class="instructions">
-            <p>Şimdi de kelimelerin hangi renkte yazılmış olduğunu mümkün olduğu kadar çabuk söylemenizi istiyorum.</p>
-            <p>Kelimeyi okumayın, rengini söyleyin. Yine sıranın başından başlayın ve soldan sağa doğru gidin. Fark ettiğiniz hataları düzeltin.</p>
-            <p>Hazır olduğunuzda 'Başla' düğmesine basın.</p>
-        </div>
-         <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
-            <span class="color-yellow">yeşil</span><span class="color-red">mavi</span><span class="color-green">sarı</span><span class="color-blue">kırmızı</span>
-            <span class="color-blue">yeşil</span><span class="color-green">kırmızı</span><span class="color-yellow">mavi</span><span class="color-red">sarı</span>
-            <span class="color-blue">kırmızı</span><span class="color-yellow">yeşil</span><span class="color-red">sarı</span><span class="color-green">mavi</span>
-            <span class="color-red">sarı</span><span class="color-green">kırmızı</span><span class="color-blue">yeşil</span><span class="color-yellow">mavi</span>
-            <span class="color-yellow">kırmızı</span><span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-red">yeşil</span>
-        </div>
-        <button onclick="startTimer(5)">Başla</button>
-        <button onclick="stopTimer(5)" disabled>Bitir</button>
-        <div class="timer-display" id="timer-5">Süre: 0.000 saniye</div>
-        <div class="error-inputs" id="error-inputs-5">
-           <p><strong>Gözetmen Girişi:</strong></p>
-            <label for="errors-5">Hatalı Cevap Sayısı:</label>
-            <input type="number" id="errors-5" min="0" value="0">
-            <label for="corrections-5">Düzeltilen Hata Sayısı:</label>
-            <input type="number" id="corrections-5" min="0" value="0">
-            
-        </div>
-         <div id="nav-button-container-5"></div> </div>
-
-    <div id="page-6" class="page">
-        <h2>Test Bitti - Sonuçlar</h2>
-        <div id="results-summary">
-             <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Kart</th>
-                        <th>Süre (saniye)</th>
-                        <th>Hata Sayısı</th>
-                        <th>Düzeltme Sayısı</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td id="result-time-1">--</td>
-                        <td id="result-errors-1">--</td>
-                        <td id="result-corrections-1">--</td>
-                    </tr>
-                     <tr>
-                        <td>2</td>
-                        <td id="result-time-2">--</td>
-                        <td id="result-errors-2">--</td>
-                        <td id="result-corrections-2">--</td>
-                    </tr>
-                     <tr>
-                        <td>3</td>
-                        <td id="result-time-3">--</td>
-                        <td id="result-errors-3">--</td>
-                        <td id="result-corrections-3">--</td>
-                    </tr>
-                     <tr>
-                        <td>4</td>
-                        <td id="result-time-4">--</td>
-                        <td id="result-errors-4">--</td>
-                        <td id="result-corrections-4">--</td>
-                    </tr>
-                     <tr>
-                        <td>5</td>
-                        <td id="result-time-5">--</td>
-                        <td id="result-errors-5">--</td>
-                        <td id="result-corrections-5">--</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <br><br>
-        <h2>Bilgi Formu</h2>
-        <br> 
-        <label for="name">Ad-Soyad:</label>
-        <input type="text" id="name" name="name"><br><br>
-
-        <label for="age">Yaş:</label>
-        <input type="number" min="0" id="age" name="age"><br><br>
-
-        <label for="occupation">Meslek:</label>
-        <input type="text" id="occupation" name="occupation"><br><br>
-
-        <label for="sex">Cinsiyet:</label>
-        <select id="sex" name="sex">
-            <option value="Erkek">Erkek</option>
-            <option value="Kadın">Kadın</option>
-        </select><br><br>
-
-        <button onclick="downloadResults()">Sonuçları İndir</button>
-
-        <button onclick="resetTest()">Testi Sıfırla</button>
+		
+		<div id="screen9" class="screen">
+			<iframe id="oyun" title="oyun" src="https://html5.gamedistribution.com/647536adcfa040668029eae70c72ce33/" width="600" height="600" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+		</div>
+		
+		<div id="screen10" class="screen">
+		<h1>
+		İlk Deney Bitti. Diğer Deneye Geçebilirsiniz.
+		</h1>
+		</div>
     </div>
 
     <script>
-        let currentPage = 0;
-        const pages = document.querySelectorAll('.page');
-        let timers = {}; // To store timer intervals
-        let startTimes = {}; // To store start times
-        let elapsedTimes = {}; // To store elapsed times for each page
-        let errorCounts = {}; // To store error counts
-        let correctionCounts = {}; // To store correction counts
+        // --- Configuration ---
+        const list1Words = ["Yağmur", "Rakam", "Cami", "Demir", "Boyun", "İçki", "Siyah", "Kahve", "Rüzgar", "Bacak", "Tabak", "Şişe", "Kıyı", "Yaprak"]; // Original List 1
+        const list2Words = ["Şeker", "Cihaz", "Yolcu", "Marka", "Uçak", "Tahta", "Tesis", "Rapor", "Kemik", "Ekran", "Gemi", "Paşa", "Mesaj", "Kedi"]; // Original List 2
+        const recognitionWordsAll = ["Rakam", "Petrol", "Yolcu", "Yağmur", "Fırın", "Kutu", "Uçak", "Saray", "Altın", "Otel", "Boyun", "Kedi", "İmza", "Paket", "Tahta", "Şeker", "Sebze", "Dudak", "Yaprak", "Mesaj", "Kumaş", "Radyo", "Paşa", "Konut", "Kemik", "Çiçek", "Kapak", "Tabak", "Gölge", "Cihaz", "Kaşık", "Rapor", "Gemi", "Yangın", "Ekran", "Asker", "Şarap", "Rüzgar", "Bacak", "Şişe", "Demir", "Ayna", "Kıyı", "Çanta", "Döviz", "Motor", "Marka", "Tesis", "Kahve", "Pirinç", "Delik", "Siyah", "Alet", "Giysi", "İçki", "Cami"];
 
-        function showPage(pageIndex) {
-            pages.forEach((page, index) => {
-                page.classList.toggle('active', index === pageIndex);
+        const wordDisplayTime = 2000;
+        const wordIntervalTime = 1000;
+        const gameTotalTime = 60;
+        const recallTime = 180;
+        const cardsPerGroup = 5;
+
+        // --- State Variables ---
+        let currentScreen = 'screen1';
+        let wordTimeout, intervalTimeout, gameTimerInterval, recallTimerInterval;
+        let list1ShownWords = []; // Words shown in the *first* part of the test run
+        let list2ShownWords = []; // Words shown in the *second* part of the test run
+        let listOrderSwapped = false; // Track if List2 is shown before List1
+        let gameData = [];
+        let originalGameData = [];
+        let currentGameCardIndex = 0;
+        let gameScore = 0;
+        let gameTotalAnswered = 0;
+        let gameTimeLeft = gameTotalTime;
+        let recalledWords = [];
+        let recallTimeLeft = recallTime;
+        let recognitionAnswers = {};
+
+
+        // --- DOM Elements ---
+        const screens = document.querySelectorAll('.screen');
+        const wordDisplayEl = document.getElementById('wordDisplay');
+        const wordDisplayEl2 = document.getElementById('wordDisplay2');
+        const listTitle1El = document.getElementById('listTitle1');
+        const listTitle2El = document.getElementById('listTitle2');
+        const instructionText1El = document.getElementById('instructionText1');
+        const instructionText2El = document.getElementById('instructionText2');
+        const timerDisplayEl = document.getElementById('timerDisplay');
+        const recallTimerDisplayEl = document.getElementById('recallTimerDisplay');
+        const gameAreaEl = document.getElementById('gameArea');
+        const recallForm = document.getElementById('recallForm');
+        const recallInput = document.getElementById('recallInput');
+        const recalledWordsListEl = document.getElementById('recalledWordsList');
+        const recognitionListEl = document.getElementById('recognitionList');
+        const finishRecognitionBtn = document.getElementById('finishRecognitionBtn');
+        const resultsAreaEl = document.getElementById('resultsArea');
+
+        // --- Utility Functions ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function switchScreen(screenId) {
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            console.log("Switched to screen:", screenId);
+
+             if (screenId === 'screen5') startGame();
+             if (screenId === 'screen6') startRecallTimer();
+             if (screenId === 'screen7') populateRecognitionTest();
+        }
+		
+		document.getElementById("startTetrisBtn").addEventListener("click", () => {
+			switchScreen("screen9");
+			setTimeout(() => {switchScreen("screen10")}, 5*60*1000);
+		})
+
+        function displayWord(wordList, displayElement, index, onComplete) {
+            if (index >= wordList.length) {
+                displayElement.textContent = '';
+                if(onComplete) onComplete();
+                return;
+            }
+            displayElement.textContent = '';
+            intervalTimeout = setTimeout(() => {
+                 displayElement.textContent = wordList[index];
+                 console.log("Displaying:", wordList[index]);
+                 wordTimeout = setTimeout(() => {
+                    displayWord(wordList, displayElement, index + 1, onComplete);
+                }, wordDisplayTime);
+            }, wordIntervalTime);
+        }
+
+         // --- Test Flow Functions (Modified for List Swapping) ---
+
+        // Step 1 -> 2
+        document.getElementById('startTestBtn').addEventListener('click', () => {
+            switchScreen('screen2');
+            const currentList1 = listOrderSwapped ? list2Words : list1Words;
+            const list1Name = listOrderSwapped ? "List 2" : "List 1";
+
+            //listTitle1El.textContent = `Word List (Part 1 - ${list1Name})`; // Update title
+            list1ShownWords = shuffleArray([...currentList1]); // Store the *shown* words
+            console.log(`Showing ${list1Name} as Part 1:`, list1ShownWords);
+
+            displayWord(list1ShownWords, wordDisplayEl, 0, () => {
+                 setTimeout(() => switchScreen('screen3'), 500);
             });
-            currentPage = pageIndex;
+        });
+
+         // Step 3 -> 4
+        document.getElementById('startList2Btn').addEventListener('click', () => {
+            switchScreen('screen4');
+            const currentList2 = listOrderSwapped ? list1Words : list2Words;
+             const list2Name = listOrderSwapped ? "List 1" : "List 2";
+
+             //listTitle2El.textContent = `Word List (Part 2 - ${list2Name})`; // Update title
+             list2ShownWords = shuffleArray([...currentList2]); // Store the *shown* words
+            console.log(`Showing ${list2Name} as Part 2:`, list2ShownWords);
+
+             displayWord(list2ShownWords, wordDisplayEl2, 0, () => {
+                 setTimeout(() => switchScreen('screen5'), 500);
+            });
+        });
+
+        // --- Step 5: Game Logic (Unchanged - Infinite Loop) ---
+        function setupGameCards() {
+             originalGameData = [
+                { text: "Paris - Fransa", correct: true }, { text: "Londra - İspanya", correct: false }, { text: "Roma - İtalya", correct: true }, { text: "Berlin - Polonya", correct: false }, { text: "Madrid - Portekiz", correct: false },
+                { text: "Ankara - Türkiye", correct: true }, { text: "Atina - Mısır", correct: false }, { text: "Tokyo - Çin", correct: false }, { text: "Moskova - Rusya", correct: true }, { text: "Kahire - Yunanistan", correct: false },
+                { text: "Ottawa - ABD", correct: false }, { text: "Kanberra - Avusturalya", correct: true }, { text: "Beijing - Japonya", correct: false }, { text: "Yeni Delhi - Hindistan", correct: true }, { text: "Mexico City - Brezilya", correct: false },
+                { text: "Lizbon - İspanya", correct: false }, { text: "Oslo - Norveç", correct: true }, { text: "Stokholm - Danimarka", correct: false }, { text: "Helsinki - Finlandiya", correct: true }, { text: "Viyana - Avusturya", correct: true },
+                { text: "Brüksel - Hollanda", correct: false }, { text: "Varşova - Polonya", correct: true }, { text: "Prag - Macaristan", correct: false }, { text: "Budapeşte - Çek Cumhuriyeti", correct: false }, { text: "Dublin - İrlanda", correct: true },
+            ];
+            gameData = shuffleArray([...originalGameData]);
+            currentGameCardIndex = 0; gameScore = 0; gameTotalAnswered = 0;
+            console.log("Game cards set up. Total unique cards:", originalGameData.length);
         }
 
-        function startTest() {
-            resetTestState(); // Ensure clean state before starting
-            showPage(1); // Show first card page
-        }
+        function displayCardGroup() {
+            gameAreaEl.innerHTML = '';
+             if (currentGameCardIndex >= gameData.length) {
+                 console.log("Looping game cards...");
+                 currentGameCardIndex = 0;
+                 gameData = shuffleArray([...originalGameData]);
+             }
+            const endIndex = Math.min(currentGameCardIndex + cardsPerGroup, gameData.length);
+             if (currentGameCardIndex >= gameData.length) { console.error("Looping error"); return; }
 
-        function startTimer(pageIndex) {
-            startTimes[pageIndex] = Date.now();
-            // Disable start button, enable stop button
-            const pageElement = document.getElementById(`page-${pageIndex}`);
-            pageElement.querySelector('button[onclick^="startTimer"]').disabled = true;
-            pageElement.querySelector('button[onclick^="stopTimer"]').disabled = false;
-             // Hide error inputs if they were somehow visible
-            document.getElementById(`error-inputs-${pageIndex}`).classList.remove('visible');
-            // Remove any existing next button
-             const navContainer = document.getElementById(`nav-button-container-${pageIndex}`);
-             navContainer.innerHTML = '';
-
-
-            // Update timer display every 10ms
-            timers[pageIndex] = setInterval(() => {
-                const elapsed = (Date.now() - startTimes[pageIndex]) / 1000;
-                document.getElementById(`timer-${pageIndex}`).textContent = `Süre: ${elapsed.toFixed(3)} saniye`;
-            }, 10);
-        }
-
-        function stopTimer(pageIndex) {
-            if (timers[pageIndex]) {
-                clearInterval(timers[pageIndex]);
-                timers[pageIndex] = null;
-                elapsedTimes[pageIndex] = (Date.now() - startTimes[pageIndex]) / 1000;
-                document.getElementById(`timer-${pageIndex}`).textContent = `Süre: ${elapsedTimes[pageIndex].toFixed(3)} saniye`;
-                // Disable stop button
-                 const pageElement = document.getElementById(`page-${pageIndex}`);
-                 pageElement.querySelector('button[onclick^="stopTimer"]').disabled = true;
-
-                 // Show error inputs
-                 document.getElementById(`error-inputs-${pageIndex}`).classList.add('visible');
-
-                // Add the next/results button
-                addNavButton(pageIndex);
+            for (let i = currentGameCardIndex; i < endIndex; i++) {
+                 if(i >= gameData.length) { console.warn("Index out of bounds:", i); continue; };
+                const card = gameData[i];
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('game-card');
+                cardDiv.innerHTML = `<p>${card.text}</p><div class="game-card-buttons"><button onclick="handleGameAnswer(${i}, true)">Doğru</button><button onclick="handleGameAnswer(${i}, false)">Yanlış</button></div>`;
+                gameAreaEl.appendChild(cardDiv);
             }
         }
 
-         function recordAndProceed(currentPageIndex) {
-             // Record errors and corrections
-             const errorsInput = document.getElementById(`errors-${currentPageIndex}`);
-             const correctionsInput = document.getElementById(`corrections-${currentPageIndex}`);
+        function handleGameAnswer(cardIndex, userAnswer) {
+             if (gameTimeLeft <= 0) return;
+             let isCardVisible = false;
+             const visibleCards = gameAreaEl.children;
+             for(let i = 0; i < visibleCards.length; i++) {
+                 if (currentGameCardIndex + i === cardIndex) {
+                      isCardVisible = true;
+                      const cardDiv = visibleCards[i];
+                      cardDiv.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                       gameTotalAnswered++;
+                       if (userAnswer === gameData[cardIndex].correct) {
+                           gameScore++; cardDiv.style.backgroundColor = '#d4edda'; console.log("Card", cardIndex, "Correct!");
+                       } else { cardDiv.style.backgroundColor = '#f8d7da'; console.log("Card", cardIndex, "Wrong."); }
+                      break;
+                 }
+             }
+              if (!isCardVisible) { console.log("Answer ignored. Index:", cardIndex); return; }
+             const allCurrentGroupAnswered = Array.from(visibleCards).every(child => child.querySelectorAll('button:disabled').length > 0);
+             if (allCurrentGroupAnswered) {setTimeout( moveToNextGroup, 500) }
+        }
 
-             errorCounts[currentPageIndex] = parseInt(errorsInput.value, 10) || 0;
-             correctionCounts[currentPageIndex] = parseInt(correctionsInput.value, 10) || 0;
+         function moveToNextGroup() {
+             currentGameCardIndex += cardsPerGroup;
+             if (gameTimeLeft > 0) { displayCardGroup(); }
+         }
 
-            // Hide error inputs again
-            document.getElementById(`error-inputs-${currentPageIndex}`).classList.remove('visible');
+        function startGame() {
+            console.log("Starting game...");
+            setupGameCards();
+            gameTimeLeft = gameTotalTime;
+            updateGameTimerDisplay();
+            displayCardGroup();
+            clearInterval(gameTimerInterval);
+            gameTimerInterval = setInterval(() => {
+                gameTimeLeft--; updateGameTimerDisplay();
+                if (gameTimeLeft <= 0) { endGame("Süre Doldu"); }
+            }, 1000);
+        }
 
-             // Proceed to next step
-              if (currentPageIndex < 5) {
-                  showPage(currentPageIndex + 1);
-              } else {
-                  displayResults();
-              }
+         function updateGameTimerDisplay() { timerDisplayEl.textContent = `Kalan Süre: ${gameTimeLeft}s`; }
+
+        function endGame(reason) {
+             console.log("Oyun bitti:", reason);
+             clearInterval(gameTimerInterval);
+             gameAreaEl.querySelectorAll('button').forEach(btn => btn.disabled = true);
+             const endMessage = document.createElement('p');
+             endMessage.style.fontWeight = 'bold'; endMessage.textContent = `Oyun Bitti! ${reason}`;
+              if(gameAreaEl.firstChild) { gameAreaEl.insertBefore(endMessage, gameAreaEl.firstChild); }
+              else { gameAreaEl.appendChild(endMessage); }
+              timerDisplayEl.textContent = `Kalan Süre: 0s`;
+             setTimeout(() => switchScreen('screen6'), 2000);
+        }
+
+         // --- Step 6: Free Recall Logic (Unchanged) ---
+         function startRecallTimer() {
+             console.log("Starting recall timer...");
+             recalledWords = []; recalledWordsListEl.innerHTML = '<strong>Hatırlanan Kelimeler:</strong>';
+             recallInput.value = ''; recallInput.disabled = false;
+             document.getElementById('finishRecallBtn').disabled = false;
+             recallTimeLeft = recallTime; updateRecallTimerDisplay();
+             clearInterval(recallTimerInterval);
+             recallTimerInterval = setInterval(() => {
+                 recallTimeLeft--; updateRecallTimerDisplay();
+                 if (recallTimeLeft <= 0) { endRecall("Süre Doldu"); }
+             }, 1000);
+         }
+         function updateRecallTimerDisplay() { recallTimerDisplayEl.textContent = `Kalan Süre: ${recallTimeLeft}s`; }
+         recallForm.addEventListener('submit', (e) => {
+            e.preventDefault(); const word = recallInput.value.trim();
+            if (word && !recalledWords.includes(word)) {
+                recalledWords.push(word); const listItem = document.createElement('div');
+                listItem.textContent = word; recalledWordsListEl.appendChild(listItem); console.log("Recalled:", word);
+            }
+            recallInput.value = '';
+            if (recalledWords.length >= (list1Words.length + list2Words.length)) { endRecall("Max words entered"); }
+         });
+         document.getElementById('finishRecallBtn').addEventListener('click', () => { endRecall("User finished"); });
+         function endRecall(reason) {
+             console.log("Recall ended:", reason); clearInterval(recallTimerInterval);
+             recallInput.disabled = true; document.getElementById('finishRecallBtn').disabled = true;
+             console.log("Final recalled words:", recalledWords);
+             setTimeout(() => switchScreen('screen7'), 1000);
+         }
+
+        // --- Step 7: Recognition Test Logic (Unchanged) ---
+         function populateRecognitionTest() {
+             console.log("Populating recognition test...");
+             recognitionListEl.innerHTML = ''; recognitionAnswers = {}; finishRecognitionBtn.disabled = true;
+             const wordsToTest = shuffleArray([...recognitionWordsAll]);
+             wordsToTest.forEach(word => {
+                 recognitionAnswers[word] = { seen: 'unanswered', confidence: 'unanswered' };
+                 const itemDiv = document.createElement('div'); itemDiv.classList.add('recognition-item');
+                 const seenButtonsDiv = document.createElement('div'); seenButtonsDiv.classList.add('seen-buttons');
+                 const sawBtn = document.createElement('button'); sawBtn.textContent = 'GÖRDÜM';
+                 sawBtn.onclick = () => handleRecognitionAnswer(word, 'seen', 'yes', itemDiv);
+                 const notSawBtn = document.createElement('button'); notSawBtn.textContent = 'GÖRMEDİM';
+                 notSawBtn.onclick = () => handleRecognitionAnswer(word, 'seen', 'no', itemDiv);
+                 seenButtonsDiv.appendChild(sawBtn); seenButtonsDiv.appendChild(notSawBtn);
+                 const wordSpan = document.createElement('span'); wordSpan.classList.add('word'); wordSpan.textContent = word;
+                 const likertDiv = document.createElement('div'); likertDiv.classList.add('likert-scale');
+                 for (let i = 1; i <= 4; i++) {
+                     const scaleBtn = document.createElement('button'); scaleBtn.textContent = i;
+                     scaleBtn.onclick = () => handleRecognitionAnswer(word, 'confidence', i, itemDiv);
+                     likertDiv.appendChild(scaleBtn);
+                 }
+                 itemDiv.appendChild(seenButtonsDiv); itemDiv.appendChild(wordSpan); itemDiv.appendChild(likertDiv);
+                 recognitionListEl.appendChild(itemDiv);
+             });
+              checkAllRecognitionAnswered();
+         }
+         function handleRecognitionAnswer(word, type, value, itemElement) {
+             console.log(`Answer for ${word}: ${type} = ${value}`); recognitionAnswers[word][type] = value;
+             if (type === 'seen') {
+                 const buttons = itemElement.querySelector('.seen-buttons').querySelectorAll('button');
+                 buttons.forEach(btn => btn.classList.remove('selected'));
+                 const targetButton = value === 'yes' ? buttons[0] : buttons[1]; targetButton.classList.add('selected');
+             } else if (type === 'confidence') {
+                 const buttons = itemElement.querySelector('.likert-scale').querySelectorAll('button');
+                 buttons.forEach(btn => btn.classList.remove('selected')); buttons[value - 1].classList.add('selected');
+             }
+             checkAllRecognitionAnswered();
+         }
+         function checkAllRecognitionAnswered() {
+             const allAnswered = Object.values(recognitionAnswers).every(answer => answer.seen !== 'unanswered');
+             finishRecognitionBtn.disabled = !allAnswered; console.log("All recognition questions answered:", allAnswered);
+         }
+         document.getElementById('finishRecognitionBtn').addEventListener('click', () => {
+             console.log("Recognition finished. Answers:", recognitionAnswers);
+             calculateAndShowResults(); switchScreen('screen8');
+         });
+
+        // --- Step 8: Results Logic (Modified for List Swapping) ---
+        function calculateAndShowResults() {
+            console.log("Calculating results... List order swapped:", listOrderSwapped);
+            resultsAreaEl.innerHTML = '';
+
+            // 1. Recall Analysis
+            // list1ShownWords always contains words shown FIRST (intended forget)
+            // list2ShownWords always contains words shown SECOND (intended remember)
+            let correctRecalls = 0;
+            let list1Recalls = 0; // Recalls from the list shown FIRST
+            let list2Recalls = 0; // Recalls from the list shown SECOND
+            let intrusionRecalls = 0;
+
+            recalledWords.forEach(word => {
+                // Check if the recalled word was in *either* of the lists presented in this run
+				word = word.toLowerCase()
+                if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+                    correctRecalls++;
+                    // Attribute recall to the correct *presentation slot*
+                    if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
+                    if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+                } else {
+                    intrusionRecalls++;
+                }
+            });
+
+	    const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
+            //const receivedDataDiv = document.getElementById('receivedData');
+
+		const name = receivedData["userName"];
+		const telNo = receivedData["telNumber"];
+	    
+
+            // Determine labels based on whether lists were swapped
+            const firstListName = listOrderSwapped ? "Liste 2" : "Liste 1";
+            const secondListName = listOrderSwapped ? "Liste 1" : "Liste 2";
+
+	    resultsAreaEl.innerHTML += `<h4 style="text-align: center;">(Ad-Soyad: ${name})</h4>`;
+
+            resultsAreaEl.innerHTML += `<h3>Serbest Hatırlama Sonuçları</h3>`;
+            resultsAreaEl.innerHTML += `<p>Toplam Hatırlanan Kelime Sayısı: ${recalledWords.length}</p>`;
+            resultsAreaEl.innerHTML += `<p>Doğru Hatırlanan Kelimeler: ${correctRecalls}</p>`;
+            // Label recalls based on presentation order and original list name
+            resultsAreaEl.innerHTML += `<p>   - İlk Gösterilenden (${firstListName}): ${list1Recalls}</p>`;
+            resultsAreaEl.innerHTML += `<p>   - İkinci Gösterilenden (${secondListName}): ${list2Recalls}</p>`;
+            resultsAreaEl.innerHTML += `<p>Araya Girme Hataları (Listelerde olmayanlar): ${intrusionRecalls}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>Girilen Kelimeler:</strong> ${recalledWords.join(', ') || 'None'}</p><hr>`;
+
+
+            // 2. Game Statistics (Unchanged)
+            resultsAreaEl.innerHTML += `<h3>Oyun İstatistikleri</h3>`;
+            resultsAreaEl.innerHTML += `<p>Toplam Cevaplanan Eşleşmeler: ${gameTotalAnswered}</p>`;
+             const gameAccuracy = gameTotalAnswered > 0 ? ((gameScore / gameTotalAnswered) * 100).toFixed(1) : 0;
+            resultsAreaEl.innerHTML += `<p>Doğru Cevaplar: ${gameScore}</p>`;
+            resultsAreaEl.innerHTML += `<p>Doğruluk: ${gameAccuracy}%</p><hr>`;
+
+            // 3. Recognition Analysis (Unchanged - Checks against original lists)
+            let hits = 0, misses = 0, falseAlarms = 0, correctRejections = 0;
+            let totalShownWordsInRecog = 0, totalNewWordsInRecog = 0;
+            const allOriginalWords = [...list1Words, ...list2Words]; // Base truth is original lists
+            Object.entries(recognitionAnswers).forEach(([word, answer]) => {
+                const wasShown = allOriginalWords.includes(word);
+                if (wasShown) totalShownWordsInRecog++; else totalNewWordsInRecog++;
+                if (answer.seen === 'yes') { if (wasShown) hits++; else falseAlarms++; }
+                else if (answer.seen === 'no') { if (wasShown) misses++; else correctRejections++; }
+            });
+             resultsAreaEl.innerHTML += `<h3>Hatırlama Testi Sonuçları</h3>`;
+			 /*
+             resultsAreaEl.innerHTML += `<p>   - Words Originally in List 1/2: ${totalShownWordsInRecog}</p>`;
+             resultsAreaEl.innerHTML += `<p>   - New Words (Not in List 1/2): ${totalNewWordsInRecog}</p>`;
+			 */
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınanlar(doğru):</strong> ${hits}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınmayanlar(yanlış):</strong> ${misses}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınanlar(yanlış):</strong> ${falseAlarms}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınmayanlar(doğru):</strong> ${correctRejections}</p>`;
+        }
+
+         // --- Button Actions (Reset Modified, Download Updated) ---
+         document.getElementById('resetTestBtn').addEventListener('click', () => {
+             // Clear timers
+             clearTimeout(wordTimeout); clearTimeout(intervalTimeout);
+             clearInterval(gameTimerInterval); clearInterval(recallTimerInterval);
+
+             // Reset state variables
+             list1ShownWords = []; list2ShownWords = []; gameData = [];
+             originalGameData = []; currentGameCardIndex = 0; gameScore = 0;
+             gameTotalAnswered = 0; recalledWords = []; recognitionAnswers = {};
+
+             // *** Toggle the list order for the next run ***
+             listOrderSwapped = !listOrderSwapped;
+             console.log("Resetting test... List order swapped for next run:", listOrderSwapped);
+
+             // Reset displays
+             wordDisplayEl.textContent = ''; wordDisplayEl2.textContent = '';
+             gameAreaEl.innerHTML = ''; recalledWordsListEl.innerHTML = '<strong>Hatırlanan Kelimeler:</strong>';
+             recognitionListEl.innerHTML = ''; resultsAreaEl.innerHTML = '';
+             // Reset titles/instructions potentially changed by list swap
+             listTitle1El.textContent = "Kelime:";
+             listTitle2El.textContent = "Kelime:";
+             instructionText1El.textContent = "Şimdi sizlere birer saniye aralıklarla 14 kelimelik bir liste sunulacaktır. Kelimeleri dikkatle inceleyin aklınızda tutmaya çalışın, daha sonra bir hatırlama testi verilecektir.";
+             instructionText2El.textContent = "Az önce görmüş olduğunuz kelimeler, asıl listeyi sorunsuz şekilde uygulamak için sadece alıştırma amacıyla verildi. Hatırlama testine dahil değildir. Testte sorumlu olacağınız asıl liste şimdi sunulacaktır. Dikkatle inceleyin ve aklınızda tutmaya çalışın.";
+
+
+             switchScreen('screen1'); // Go back to the start
+         });
+
+         document.getElementById('downloadResultsBtn').addEventListener('click', () => {
+             const resultsText = generateResultsText(); // generateResultsText now includes swap info
+             const blob = new Blob([resultsText], { type: 'text/plain' });
+             const link = document.createElement('a');
+             link.href = URL.createObjectURL(blob);
+             link.download = 'deney_sonuçları.txt';
+             link.click();
+             URL.revokeObjectURL(link.href);
+             console.log("Downloading results...");
+         });
+
+         // Modified to include list order information
+         function generateResultsText() {
+             const nameDownload = receivedData["userName"];
+		     const telNoDownload = receivedData["telNumber"];
+             sessionStorage.removeItem('confirmationFormData');
+             
+             let text = "Test Sonuçları\n=============================\n";
+		 text +=  `Ad-Soyad: ${nameDownload}\n`;
+		 text +=  `Telefon Numarası: ${telNoDownload}\n\n`;
+             text += `Liste Sırası: ${listOrderSwapped ? 'Önce Liste 2, sonra Liste 1' : 'Önce Liste 1, sonra Liste 2'}\n\n`;
+
+             // Recall Results
+             let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
+		 
+             recalledWords.forEach(word => {
+				word = word.toLowerCase()
+                if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+                    correctRecalls++;
+                    if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
+                    if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+                } else {
+                    intrusionRecalls++;
+                }
+            });
+		 
+             const firstListName = listOrderSwapped ? "List 2" : "List 1";
+             const secondListName = listOrderSwapped ? "List 1" : "List 2";
+             text += "Serbest Hatırlama Bölümü:\n";
+             text += ` - Toplam Hatırlanan: ${recalledWords.length}\n`;
+             text += ` - Doğru Hatırlanan: ${correctRecalls}\n`;
+             text += `   - İlk Gösterilenden (${firstListName}): ${list1Recalls}\n`;
+             text += `   - İkinci Gösterilenden (${secondListName}): ${list2Recalls}\n`;
+             text += ` - Araya Girme: ${intrusionRecalls}\n`;
+             text += ` - Girilen Kelimeler: ${recalledWords.join(', ') || 'None'}\n\n`;
+
+             // Game Results (Unchanged)
+             const gameAccuracy = gameTotalAnswered > 0 ? ((gameScore / gameTotalAnswered) * 100).toFixed(1) : 0;
+             text += "Oyun İstatistikleri:\n";
+             text += ` - Toplam Cevaplar: ${gameTotalAnswered}\n`;
+             text += ` - Doğru Cevaplar: ${gameScore}\n`;
+             text += ` - Doğruluk: ${gameAccuracy}%\n\n`;
+
+             // Recognition Results (Unchanged - checks against original lists)
+             let hits = 0, misses = 0, falseAlarms = 0, correctRejections = 0;
+             const allOriginalWords = [...list1Words, ...list2Words];
+             text += "Tanıma Bölümü:\n";
+             text += "Kelime, Listelerde Var Mıydı?, Gördüm Mü Dedi?, Özgüveni(1-4)\n"; // Clarified header
+             Object.entries(recognitionAnswers).forEach(([word, answer]) => {
+                const wasShown = allOriginalWords.includes(word);
+                 text += `${word}, ${wasShown ? 'Evet' : 'Hayır'}, ${(answer.seen === "yes") ? "Evet" : "Hayır"}, ${answer.confidence}\n`;
+                  if (answer.seen === 'yes') { if (wasShown) hits++; else falseAlarms++; }
+                  else if (answer.seen === 'no') { if (wasShown) misses++; else correctRejections++; }
+             });
+             text += "\nTanıma Özet:\n";
+             text += ` - Listelerde olup tanınanlar(doğru): ${hits}\n - Listelerde olup tanınmayanlar(yanlış): ${misses}\n - Listelerde olmayıp tanınanlar(yanlış): ${falseAlarms}\n - Listelerde olmayıp tanınmayanlar(doğru): ${correctRejections}\n\n`;
+             return text;
          }
 
 
-        function addNavButton(currentPageIndex) {
-             const navContainer = document.getElementById(`nav-button-container-${currentPageIndex}`);
-             navContainer.innerHTML = ''; // Clear previous button if any
-
-             const nextButton = document.createElement('button');
-             nextButton.textContent = (currentPageIndex < 5) ? 'Sonraki Kart' : 'Sonuçları Gör';
-             nextButton.className = 'next-button';
-             nextButton.onclick = () => recordAndProceed(currentPageIndex); // Record values before proceeding
-             navContainer.appendChild(nextButton);
-        }
-
-         function displayResults() {
-            // Populate results summary table
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(`result-time-${i}`).textContent = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
-                document.getElementById(`result-errors-${i}`).textContent = errorCounts[i] !== undefined ? errorCounts[i] : '--';
-                document.getElementById(`result-corrections-${i}`).textContent = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
-            }
-            showPage(6); // Show results page
-        }
-
-        function resetTestState() {
-            timers = {};
-            startTimes = {};
-            elapsedTimes = {};
-            errorCounts = {};
-            correctionCounts = {};
-
-             // Reset timer displays, buttons, inputs, and hide error sections
-             for (let i = 1; i <= 5; i++) {
-                 if(timers[i]) clearInterval(timers[i]); // Clear any running timers
-                 document.getElementById(`timer-${i}`).textContent = 'Süre: 0.000 saniye';
-                 document.getElementById(`errors-${i}`).value = 0; // Reset input
-                 document.getElementById(`corrections-${i}`).value = 0; // Reset input
-                 document.getElementById(`error-inputs-${i}`).classList.remove('visible'); // Hide inputs
-
-                 const pageElement = document.getElementById(`page-${i}`);
-                 pageElement.querySelector('button[onclick^="startTimer"]').disabled = false;
-                 pageElement.querySelector('button[onclick^="stopTimer"]').disabled = true;
-
-                // Clear navigation button container
-                const navContainer = document.getElementById(`nav-button-container-${i}`);
-                navContainer.innerHTML = '';
-             }
-             // Reset results page table
-            for (let i = 1; i <= 5; i++) {
-                 document.getElementById(`result-time-${i}`).textContent = '--';
-                 document.getElementById(`result-errors-${i}`).textContent = '--';
-                 document.getElementById(`result-corrections-${i}`).textContent = '--';
-            }
-        }
-
-
-        function resetTest() {
-            resetTestState(); // Clear current state
-            showPage(0); // Go back to initial instructions
-        }
-
-        // Initialize by showing the first page (instructions)
-        showPage(0);
-
-    // {{change 3: Add downloadResults function}}
-    function downloadResults() {
-        // Get user info
-        const name = document.getElementById('name').value;
-        const age = document.getElementById('age').value;
-        const occupation = document.getElementById('occupation').value;
-        const sex = document.getElementById('sex').value;
-
-        // Get test results
-        let resultsText = "Stroop Test Sonuçları\n\n";
-        resultsText += `Ad: ${name}\n`;
-        resultsText += `Yaş: ${age}\n`;
-        resultsText += `Meslek: ${occupation}\n`;
-        resultsText += `Cinsiyet: ${sex}\n\n`;
-
-        for (let i = 1; i <= 5; i++) {
-            const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
-            const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
-            const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
-            resultsText += `Kart ${i}:\n`;
-            resultsText += `  Süre: ${time} saniye\n`;
-            resultsText += `  Hata Sayısı: ${errors}\n`;
-            resultsText += `  Düzeltme Sayısı: ${corrections}\n\n`;
-        }
-
-        // Create a blob
-        const blob = new Blob([resultsText], { type: 'text/plain' });
-
-        // Create a link and download it
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'stroop_testi_sonuçlar.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url); // Free up memory
-    }
+        // --- Initial Setup ---
+         switchScreen('screen1');
+         console.log("App Initialized. Waiting for user to start. Initial list order swap:", listOrderSwapped);
 
     </script>
-
 </body>
 </html>
