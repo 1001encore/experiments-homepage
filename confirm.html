@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation Required</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .confirmation-box {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            text-align: center;
+        }
+        .confirmation-box h1 {
+            color: #dc3545; /* Red for warning */
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .confirmation-box p {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .confirm-button, .cancel-button {
+            display: inline-block;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+        .confirm-button {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+        .confirm-button:hover {
+            background-color: #218838;
+        }
+        .cancel-button {
+            background-color: #6c757d; /* Grey */
+            color: white;
+        }
+        .cancel-button:hover {
+            background-color: #5a6268;
+        }
+         .confirm-button:active, .cancel-button:active {
+             opacity: 0.8;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div class="confirmation-box">
+        <h1>Warning!</h1>
+        <p>You are about to leave the current page and proceed to another section of the site.</p>
+        <p>Please confirm you understand before proceeding.</p>
+        <div class="button-container">
+            <button class="confirm-button" id="proceedButton">I Understand and Proceed</button>
+            <a href="index.html" class="cancel-button">Cancel</a>
+        </div>
+    </div>
+
+    <script>
+        // Get the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        // Get the value of the 'target' parameter
+        const targetPage = urlParams.get('target');
+        const proceedButton = document.getElementById('proceedButton');
+
+        // If a target page is found, set the click event for the proceed button
+        if (targetPage) {
+            proceedButton.onclick = function() {
+                window.location.href = targetPage; // Navigate to the target page
+            };
+        } else {
+            // If no target is specified, disable the button or hide it
+            proceedButton.disabled = true;
+            proceedButton.textContent = 'Invalid Link';
+            proceedButton.style.backgroundColor = '#ccc';
+            proceedButton.style.cursor = 'not-allowed';
+        }
+    </script>
+
+</body>
+</html>
