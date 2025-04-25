@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .main-block {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 2px 2px 5px #888888;
+        }
+        .sub-blocks-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .sub-block {
+            background-color: #e9e9e9;
+            border: 1px solid #bbb;
+            padding: 15px;
+            text-align: center;
+        }
+        .sub-block a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Homepage</h1>
+
+    <div class="container">
+        <div class="main-block">
+            <h2>Main Block 1</h2>
+            <p>Content for Main Block 1. Link to an external website or internal page.</p>
+            <p><a href="https://placeholder.com" target="_blank">Visit Link 1</a></p>
+        </div>
+
+        <div class="main-block">
+            <h2>Main Block 2 with Sub-blocks</h2>
+            <div class="sub-blocks-container">
+                <div class="sub-block">
+                    <p><a href="subpage1.html">Go to Sub-page 1</a></p>
+                </div>
+                <div class="sub-block">
+                    <p><a href="subpage2.html">Go to Sub-page 2</a></p>
+                </div>
+                <div class="sub-block">
+                    <p><a href="subpage3.html">Go to Sub-page 3</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-block">
+            <h2>Main Block 3</h2>
+            <p>Content for Main Block 3. Link to an external website or internal page.</p>
+            <p><a href="https://placeholder.com" target="_blank">Visit Link 3</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
