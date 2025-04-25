@@ -413,7 +413,7 @@
          function displayResults() {
 	    const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    const receivedData = JSON.parse(storedDataString);
-	    document.getElementById("namesurname").textContent = "(" + receivedData["userName"] + ")";
+	    document.getElementById("namesurname").textContent = "(Ad-Soyad: " + receivedData["userName"] + ")";
             // Populate results summary table
             for (let i = 1; i <= 5; i++) {
                 document.getElementById(`result-time-${i}`).textContent = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
