@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation Required</title>
+    <title>Onay Gerekli</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,8 +26,8 @@
             max-width: 500px;
             text-align: center;
         }
-        .confirmation-box h1 {
-            color: #dc3545; /* Red for warning */
+        .confirmation-box h3 {
+            /*color: #dc3545;  Red for warning */
             margin-top: 0;
             margin-bottom: 20px;
         }
@@ -111,15 +111,28 @@
              opacity: 0.8;
          }
 
+        .longForm {
+            overflow-y: scroll;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="confirmation-box">
-        <h1>Warning!</h1>
-        <p>You are about to leave the current page and proceed to another section of the site.</p>
-        <p>Please confirm you understand before proceeding.</p>
-
+        <div id="longForm">
+            <h3>BİLGİLENDİRİLMİŞ GÖNÜLLÜ OLUR FORMU</h3>
+            <h4>ÇALIŞMANIN ADI:</h4> <p>İnhibisyon Yeteneği İle Yönlendirilmiş Unutma Düzeyi Arasında Bir İlişki Var mıdır?</p>
+            <p>Aşağıda bilgileri yer almakta olan bir araştırma çalışmasına katılmanız istenmektedir. Çalışmaya katılıp katılmama kararı tamamen size aittir. Katılmak isteyip istemediğinize karar vermeden önce araştırmanın neden yapıldığını, bilgilerinizin nasıl kullanılacağını, çalışmanın neleri içerdiğini,  olası yararları ve risklerini ya da rahatsızlık verebilecek yönlerini anlamanız önemlidir. Lütfen aşağıdaki bilgileri dikkatlice okumak için zaman ayırınız. Eğer çalışmaya katılma kararı verirseniz, Çalışmaya Katılma Onayı Formu’nu imzalayınız. Çalışmadan herhangi bir zamanda ayrılmakta özgürsünüz. Araştırmada kullanılacak tüm malzemeler ve yapılabilecek tüm harcamalar araştırmacı tarafından karşılanacaktır.</p>
+            <h4>ÇALIŞMANIN KONUSU VE AMACI:</h4> <p>Bu çalışma, Üsküdar Üniversitesi'nde doktora tezi kapsamında yürütülecek deneysel bir araştırmadır. Bu araştırmanın amacı, bireylerin inhibisyon yeteneği ile yönlendirilmiş unutma düzeyleri arasındaki ilişkinin deneysel yöntemlerle incelenmesidir.</p>
+            <h4>ÇALIŞMA İŞLEMLERİ:</h4> <p>Araştırma kapsamında katılımcılara aşağıdaki psikolojik testler uygulanacaktır: Stroop Testi, İz Sürme Testi (Trail Making Test), Yönlendirilmiş Unutma Görevi.
+Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uygulamalar bireysel olarak, uygun ve güvenli bir ortamda gerçekleştirilecektir.
+</p>
+            <h4>ÇALIŞMAYA KATILMAMIN OLASI YARARLARI NELERDİR? </h4> <p>Araştırmaya katılım sonucunda doğrudan bir yarar sağlanmayabilir, ancak çalışma psikoloji bilim alanına katkıda bulunacaktır.</p>
+            <h4>KİŞİSEL BİLGİLERİM NASIL KULLANILACAK?</h4> <p>Katılımcılardan elde edilen tüm bilgiler gizli tutulacak ve yalnızca bilimsel amaçla kullanılacaktır. Kişisel kimlik bilgileri hiçbir şekilde üçüncü kişilerle paylaşılmayacaktır. Veriler analiz edilirken katılımcılar anonimleştirilmiş şekilde tanımlanacaktır. Bu araştırmanın katılımcılar için bilinen herhangi bir fiziksel ya da psikolojik riski bulunmamaktadır. </p>
+            <h4>SORU VE PROBLEMLER İÇİN BAŞVURULACAK KİŞİLER :</h4> <p>1.	Araştırmacı: Uzman Klinik Psikolog Lale ALKIŞ Üsküdar Üniversitesi, [Sosyal Bilimler Fakültesi], [Psikoloji], Doktora Öğrencisi</p> <p>2.	Danışman: Prof. Dr. Hıdır İlyas GÖZ Üsküdar Üniversitesi Öğretim Üyesi, Psikoloji Doktora Bölüm Başkanı</p>
+            <h3>Çalışmaya Katılma Onayı</h3> <p>Bu araştırmaya dair yukarıda belirtilen bilgileri okudum ve anladım Yukarıdaki bilgileri ilgili araştırmacı ile ayrıntılı olarak tartıştım ve kendisi bütün sorularımı cevapladı. Bu bilgilendirilmiş olur belgesini okudum ve anladım. Katılımımın gönüllü olduğunu, istediğim zaman herhangi bir gerekçe göstermeksizin çalışmadan çekilebileceğimi biliyorum. Bu araştırmaya katılmayı kabul ediyor ve bu onay belgesini kendi hür irademle imzalıyorum. Bu onay, ilgili hiçbir kanun ve yönetmeliği geçersiz kılmaz. Katılımcı onam formunun bir örneğini talep edebileceğim bilgisi tarafıma verildi. Gönüllü olarak katılmayı kabul ediyorum.</p>
+        </div>
         <form id="confirmationForm" class="confirmation-form">
             <div class="form-group">
                 <label for="userName">Please enter your name:</label>
