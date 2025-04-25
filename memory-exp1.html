@@ -394,7 +394,7 @@
              checkAllRecognitionAnswered();
          }
          function checkAllRecognitionAnswered() {
-             const allAnswered = Object.values(recognitionAnswers).every(answer => answer.seen !== 'unanswered' && answer.confidence !== 'unanswered');
+             const allAnswered = Object.values(recognitionAnswers).every(answer => answer.seen !== 'unanswered');
              finishRecognitionBtn.disabled = !allAnswered; console.log("All recognition questions answered:", allAnswered);
          }
          document.getElementById('finishRecognitionBtn').addEventListener('click', () => {
@@ -433,7 +433,7 @@
             //const receivedDataDiv = document.getElementById('receivedData');
 
 		const name = receivedData["userName"];
-		const telNo = reveicedData["telNumber"];
+		const telNo = receivedData["telNumber"];
 	    sessionStorage.removeItem('confirmationFormData');
 
             // Determine labels based on whether lists were swapped
