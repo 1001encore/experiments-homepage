@@ -428,13 +428,14 @@
             });
 
 	    const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
             //const receivedDataDiv = document.getElementById('receivedData');
 
             // Determine labels based on whether lists were swapped
             const firstListName = listOrderSwapped ? "Liste 2" : "Liste 1";
             const secondListName = listOrderSwapped ? "Liste 1" : "Liste 2";
 
-	    resultsAreaEl.innerHTML += `<h4>adsoyad: ${storedDataString["userName"]}</h4>`;
+	    resultsAreaEl.innerHTML += `<h4 style="text-align: center;">adsoyad: ${receivedData["userName"]}</h4>`;
 
             resultsAreaEl.innerHTML += `<h3>Serbest Hatırlama Sonuçları</h3>`;
             resultsAreaEl.innerHTML += `<p>Toplam Hatırlanan Kelime Sayısı: ${recalledWords.length}</p>`;
