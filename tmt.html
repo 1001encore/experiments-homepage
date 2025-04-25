@@ -145,6 +145,7 @@
                 <br><br><br>
                  <div class="bg-gray-100 p-4 rounded-lg">
                       <h3 class="text-xl font-semibold mb-3 text-blue-800">Genel Sonuçlar</h3>
+					  <h4 style="" id="namesurname"></h4>
                       <p class="text-base mb-1">Toplam Süre: <span id="total-time" class="font-mono font-semibold">--:--.-</span></p>
                       <p class="text-base mb-1">Ortalama Doğruluk: <span id="average-accuracy" class="font-mono font-semibold">--</span>%</p>
                       <p class="text-base mb-1">Eğitim Süre Farkı: <span id="training-time-difference" class="font-mono font-semibold">--:--.-</span></p>
@@ -152,25 +153,7 @@
                       <p class="text-base mb-1">Eğitim Doğruluk Farkı: <span id="training-accuracy-difference" class="font-mono font-semibold">--</span>%</p>
                       <p class="text-base mb-1">Test Doğruluk Farkı: <span id="test-accuracy-difference" class="font-mono font-semibold">--</span>%</p>
                  </div>
-                <div class="mt-4">
-                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">İsim:</label>
-                    <input type="text" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mt-4">
-                    <label for="age" class="block text-gray-700 text-sm font-bold mb-2">Yaş:</label>
-                    <input type="number" id="age" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mt-4">
-                    <label for="occupation" class="block text-gray-700 text-sm font-bold mb-2">Meslek:</label>
-                    <input type="text" id="occupation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mt-4">
-                    <label for="sex" class="block text-gray-700 text-sm font-bold mb-2">Cinsiyet:</label>
-                    <select id="sex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <option value="Erkek">Erkek</option>
-                        <option value="Kadın">Kadın</option>
-                    </select>
-                </div>
+                
                 <div class="flex justify-center mt-8">
                     <button id="download-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
                         Sonuçları İndir
@@ -310,6 +293,7 @@
         // DOM elements
         const testContainer = document.getElementById('test-container');
         const resultsScreen = document.getElementById('results-screen');
+		const nameSurnameH4 = document.getElementById("namesurname");
         const testArea = document.getElementById('test-area');
         const nodeContainer = document.getElementById('node-container');
         const connectionCanvas = document.getElementById('connection-canvas');
@@ -896,9 +880,16 @@
 
         // Display final results screen
         function displayResults() {
+		
+			 const name = receivedData["userName"];
+			 const telNo = receivedData["telNumber"];
+		
+		
              testContainer.classList.add('hidden'); // Hide the test area
              resultsScreen.classList.remove('hidden'); // Show results
              restartBtn.classList.remove('hidden'); // Show restart button
+			 
+			 nameSurnameH4.textContent = name;
 
              // Populate Training Part 1 Results
             trainingPart1TimeDisp.textContent = state.trainingPart1Stats.time;
@@ -1031,11 +1022,22 @@
 
         // Initialize the application when the page loads
         window.addEventListener('DOMContentLoaded', init);
+		
+		
+		
         function downloadResults() {
-        const name = document.getElementById('name').value;
-        const age = document.getElementById('age').value;
-        const occupation = document.getElementById('occupation').value;
-        const sex = document.getElementById('sex').value;
+		
+		const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
+		//userName, telNumber
+		
+        const nameD = receivedData["userName"];
+		const telNoD = receivedData["telNumber"];
+        //const age = document.getElementById('age').value;
+        //const occupation = document.getElementById('occupation').value;
+        //const sex = document.getElementById('sex').value;
+		
+		sessionStorage.removeItem('confirmationFormData');
 
         const part1Time = document.getElementById('part1-time').textContent;
         const part1Accuracy = document.getElementById('part1-accuracy').textContent;
@@ -1053,10 +1055,11 @@
         const trainingAccuracyDifference = document.getElementById('training-accuracy-difference').textContent;
         const testAccuracyDifference = document.getElementById('test-accuracy-difference').textContent;
 
-        let resultsText = `Ad-Soyad: ${name}\n`;
-        resultsText += `Yaş: ${age}\n`;
-        resultsText += `Meslek: ${occupation}\n`;
-        resultsText += `Cinsiyet: ${sex}\n\n`;
+        let resultsText = `Ad-Soyad: ${nameD}\n`;
+		resultsText += `Telefon Numarası: ${telNoD}\n`;
+        //resultsText += `Yaş: ${age}\n`;
+        //resultsText += `Meslek: ${occupation}\n`;
+        //resultsText += `Cinsiyet: ${sex}\n\n`;
 
         resultsText += `1. Bölüm Eğitim Süresi: ${trainingPart1Time}\n`;
         resultsText += `1. Bölüm Eğitim Doğruluğu: ${trainingPart1Accuracy}\n`;
