@@ -880,7 +880,9 @@
 
         // Display final results screen
         function displayResults() {
-		
+		const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    
+		const receivedData = JSON.parse(storedDataString);
 			 const name = receivedData["userName"];
 			 const telNo = receivedData["telNumber"];
 		
@@ -1027,7 +1029,7 @@
 		
         function downloadResults() {
 		
-		const storedDataString = sessionStorage.getItem('confirmationFormData');
+	const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    const receivedData = JSON.parse(storedDataString);
 		//userName, telNumber
 		
