@@ -145,7 +145,7 @@
                 <br><br><br>
                  <div class="bg-gray-100 p-4 rounded-lg">
                       <h3 class="text-xl font-semibold mb-3 text-blue-800">Genel Sonuçlar</h3>
-					  <h4 style="" id="namesurname"></h4>
+					  <h4 style="text-align: center;" id="namesurname"></h4>
                       <p class="text-base mb-1">Toplam Süre: <span id="total-time" class="font-mono font-semibold">--:--.-</span></p>
                       <p class="text-base mb-1">Ortalama Doğruluk: <span id="average-accuracy" class="font-mono font-semibold">--</span>%</p>
                       <p class="text-base mb-1">Eğitim Süre Farkı: <span id="training-time-difference" class="font-mono font-semibold">--:--.-</span></p>
@@ -883,8 +883,8 @@
 		const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    
 		const receivedData = JSON.parse(storedDataString);
-			 const name = receivedData["userName"];
-			 const telNo = receivedData["telNumber"];
+		const name = receivedData["userName"];
+			 //const telNo = receivedData["telNumber"];
 		
 		
              testContainer.classList.add('hidden'); // Hide the test area
