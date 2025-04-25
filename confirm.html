@@ -35,6 +35,24 @@
             margin-bottom: 25px;
             font-size: 1.1em;
         }
+        .confirmation-form {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .confirmation-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .confirmation-form input[type="text"] {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
         .button-container {
             display: flex;
             justify-content: center;
@@ -47,6 +65,9 @@
             border-radius: 5px;
             font-weight: bold;
             transition: background-color 0.3s ease, opacity 0.3s ease;
+             cursor: pointer; /* Indicate it's clickable */
+             border: none; /* Remove default button border */
+             font-size: 1em; /* Match font size */
         }
         .confirm-button {
             background-color: #28a745; /* Green */
@@ -74,30 +95,55 @@
         <h1>Warning!</h1>
         <p>You are about to leave the current page and proceed to another section of the site.</p>
         <p>Please confirm you understand before proceeding.</p>
-        <div class="button-container">
-            <button class="confirm-button" id="proceedButton">I Understand and Proceed</button>
-            <a href="index.html" class="cancel-button">Cancel</a>
-        </div>
+
+        <form id="confirmationForm" class="confirmation-form">
+            <label for="userName">Enter your name (optional):</label>
+            <input type="text" id="userName" name="userName">
+            <div class="button-container">
+                 <button type="submit" class="confirm-button" id="proceedButton">I Understand and Proceed</button>
+                 <a href="index.html" class="cancel-button">Cancel</a>
+             </div>
+        </form>
+
+
     </div>
 
     <script>
-        // Get the URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        // Get the value of the 'target' parameter
         const targetPage = urlParams.get('target');
-        const proceedButton = document.getElementById('proceedButton');
+        const confirmationForm = document.getElementById('confirmationForm');
+        const proceedButton = document.getElementById('proceedButton'); // Still useful for disabling
 
-        // If a target page is found, set the click event for the proceed button
         if (targetPage) {
-            proceedButton.onclick = function() {
-                window.location.href = targetPage; // Navigate to the target page
-            };
+            confirmationForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Collect form data
+                const formData = new FormData(confirmationForm);
+                const dataToStore = {};
+                formData.forEach((value, key) => {
+                    dataToStore[key] = value;
+                });
+
+                // Store data in sessionStorage as a JSON string
+                sessionStorage.setItem('confirmationFormData', JSON.stringify(dataToStore));
+
+                // Redirect to the target page
+                window.location.href = targetPage;
+            });
+
         } else {
-            // If no target is specified, disable the button or hide it
+            // If no target is specified, disable the submit button
             proceedButton.disabled = true;
             proceedButton.textContent = 'Invalid Link';
             proceedButton.style.backgroundColor = '#ccc';
             proceedButton.style.cursor = 'not-allowed';
+            // Optionally hide the form or show an error message
+             confirmationForm.style.display = 'none';
+             const errorMsg = document.createElement('p');
+             errorMsg.style.color = 'red';
+             errorMsg.textContent = 'Error: Target page not specified.';
+             confirmationForm.parentElement.insertBefore(errorMsg, confirmationForm);
         }
     </script>
 
