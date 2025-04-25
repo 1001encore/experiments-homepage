@@ -434,7 +434,7 @@
 
 		const name = receivedData["userName"];
 		const telNo = receivedData["telNumber"];
-	    sessionStorage.removeItem('confirmationFormData');
+	    
 
             // Determine labels based on whether lists were swapped
             const firstListName = listOrderSwapped ? "Liste 2" : "Liste 1";
@@ -525,7 +525,7 @@
 
 		const nameDownload = receivedData["userName"];
 		const telNoDownload = receivedData["telNumber"];
-		 
+	sessionStorage.removeItem('confirmationFormData');
              let text = "Test Sonuçları\n=============================\n";
 		 text +=  `Ad-Soyad: ${nameDownload}\n`;
 		 text +=  `Telefon Numarası: ${telNoDownload}\n\n`;
