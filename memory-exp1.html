@@ -522,9 +522,13 @@
 
          // Modified to include list order information
          function generateResultsText() {
+
+		const nameDownload = receivedData["userName"];
+		const telNoDownload = receivedData["telNumber"];
+		 
              let text = "Test Sonuçları\n=============================\n";
-		 text +=  `Ad-Soyad: ${name}\n`;
-		 text +=  `Telefon Numarası: ${telNo}\n\n`;
+		 text +=  `Ad-Soyad: ${nameDownload}\n`;
+		 text +=  `Telefon Numarası: ${telNoDownload}\n\n`;
              text += `Liste Sırası: ${listOrderSwapped ? 'Önce Liste 2, sonra Liste 1' : 'Önce Liste 1, sonra Liste 2'}\n\n`;
 
              // Recall Results
