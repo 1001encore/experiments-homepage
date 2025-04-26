@@ -130,7 +130,7 @@
 
     <div class="header">
         <h1>Deneylerimize Hoşgeldiniz</h1>
-        <h3 id="userName" style="text-align: left;"></h3>
+        <h2 id="userName" style="text-align: left;"></h2>
     </div>
 
     <div class="container">
@@ -157,9 +157,9 @@
            
         </a>
     </div>
-	<br><br><br><br><br>
-	<div>
-		<a href="https://1001encore.github.io/experiments-homepage/" onclick="resetSessionStorage()" class="sub-link-item">
+	
+	<div style="justify-items: center; margin-top: 10%;">
+		<a href="https://1001encore.github.io/experiments-homepage/" onclick="resetSessionStorage()" class="sub-link-item" style="width: 200px;">
 			Oturumu Sıfırla
 		</a>
 	</div>
@@ -169,7 +169,7 @@
     const storedDataString = sessionStorage.getItem('confirmationFormData');
 	const receivedData = JSON.parse(storedDataString);
     const name = receivedData["userName"];
-    document.getElementById("userName").innerHTML = "(Oturum: " + name + ")";
+    document.getElementById("userName").innerHTML = "Oturum: " + name;
 
 	function resetSessionStorage(){
 		sessionStorage.removeItem('confirmationFormData');
