@@ -157,11 +157,23 @@
            
         </a>
     </div>
+	<br><br><br><br><br>
+	<div>
+		<a href="https://1001encore.github.io/experiments-homepage/" onclick="resetSessionStorage()" class="sub-link-item">
+			Oturumu Sıfırla
+		</a>
+	</div>
+
+	
 <script>
     const storedDataString = sessionStorage.getItem('confirmationFormData');
 	const receivedData = JSON.parse(storedDataString);
     const name = receivedData["userName"];
     document.getElementById("userName").innerHTML = "(Oturum: " + name + ")";
+
+	function resetSessionStorage(){
+		sessionStorage.removeItem('confirmationFormData');
+	}
 </script>
 </body>
 </html>
