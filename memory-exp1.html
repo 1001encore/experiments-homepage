@@ -102,18 +102,9 @@
                 </div>
             <button id="resetTestBtn">Testi Tekrarla</button>
             <button id="downloadResultsBtn">Sonuçları İndir</button>
-			<button id="startTetrisBtn">Tetrise Geç</button>
+			
         </div>
 		
-		<div id="screen9" class="screen">
-			<iframe id="oyun" title="oyun" src="https://html5.gamedistribution.com/647536adcfa040668029eae70c72ce33/" width="600" height="600" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-		</div>
-		
-		<div id="screen10" class="screen">
-		<h1>
-		İlk Deney Bitti. Diğer Deneye Geçebilirsiniz.
-		</h1>
-		</div>
 
     </div>
 
@@ -184,10 +175,12 @@
              if (screenId === 'screen7') populateRecognitionTest();
         }
 		
+		/*
 		document.getElementById("startTetrisBtn").addEventListener("click", () => {
 			switchScreen("screen9");
 			setTimeout(() => {switchScreen("screen10")}, 5*60*1000);
 		})
+		*/
 
         function displayWord(wordList, displayElement, index, onComplete) {
             if (index >= wordList.length) {
