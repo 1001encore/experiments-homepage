@@ -432,11 +432,6 @@
 	    const receivedData = JSON.parse(storedDataString);
 
 		const name = receivedData["userName"];
-		const telNo = receivedData["telNumber"];
-	    	const birthDate = receivedData["birthDate"];
-		const question1 = receivedData["question1"];
-		const question2 = receivedData["question2"];
-		const sex = receivedData["sex"];
 		
 
             // Determine labels based on whether lists were swapped
@@ -527,6 +522,7 @@
          function generateResultsText() {
 	    const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    const receivedData = JSON.parse(storedDataString);
+		 
 		const name = receivedData["userName"];
 		const telNo = receivedData["telNumber"];
 	    	const birthDate = receivedData["birthDate"];
