@@ -559,7 +559,7 @@
              const blob = new Blob([resultsText], { type: 'text/plain' });
              const link = document.createElement('a');
              link.href = URL.createObjectURL(blob);
-             link.download = 'deney_sonuçları.txt';
+             link.download = 'unutma_deneyi_2_sonuçları.txt';
              link.click();
              URL.revokeObjectURL(link.href);
              console.log("Downloading results...");
