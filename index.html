@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onay Gerekli</title>
+    <title>Homepage with Form</title> <!-- Changed title -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,25 +17,28 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .confirmation-box {
+        .form-container { /* Renamed from confirmation-box */
             background-color: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 20px;
+            padding: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            max-width: 600px;
-            text-align: left;
+            max-width: 500px;
+            width: 100%; /* Make container responsive */
+            box-sizing: border-box; /* Include padding */
+            text-align: center;
         }
-        .confirmation-box h3 {
-            /*color: #dc3545;  Red for warning */
+        .form-container h1 {
+            color: #0056b3; /* Changed color from red */
             margin-top: 0;
             margin-bottom: 20px;
         }
-        .confirmation-box p {
+         .form-container > p { /* Style for paragraphs directly under container */
             margin-bottom: 25px;
             font-size: 1.1em;
-        }
-        .confirmation-form {
+         }
+
+        .data-form { /* Renamed from confirmation-form */
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
@@ -49,24 +52,49 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        .form-group input[type="text"] {
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select { /* Apply styles to text, date inputs and selects */
             width: calc(100% - 22px); /* Adjust for padding and border */
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1em;
+            box-sizing: border-box; /* Include padding and border in width */
+            /* Added display block for selects for better layout */
+             display: block;
+             max-width: 100%; /* Ensure they don't overflow */
         }
+
+         /* Specific width for date input if needed, or let it be full width */
+         /* .form-group input[type="date"] { width: auto; } */
+
+
         /* Style for input when it's required and invalid */
         .form-group input:required:invalid:not(:placeholder-shown),
-        .form-group input:required:invalid:focus {
+        .form-group select:required:invalid:not([value=""]), /* Added select validation */
+        .form-group input:required:invalid:focus,
+        .form-group select:required:invalid:focus {
             border-color: #dc3545; /* Red border for invalid */
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
          /* Style for input when it's valid */
-        .form-group input:valid:not(:placeholder-shown) {
+        .form-group input:valid:not(:placeholder-shown),
+        .form-group select:valid:not([value=""]) { /* Added select validation */
             border-color: #28a745; /* Green border for valid */
              box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
         }
+
+        /* Initially hide the conditional text input container */
+        .conditional-input-container {
+            display: none;
+             margin-top: 15px; /* Space above the conditional input */
+        }
+         .conditional-input-container label {
+             font-weight: normal; /* Less emphasis for the details label */
+             margin-bottom: 5px;
+         }
+
 
         .button-container {
             display: flex;
@@ -111,78 +139,159 @@
              opacity: 0.8;
          }
 
-        #longForm {
-            overflow-y: scroll;
-            height: 500px;
-            margin: 5px;
-            padding-bottom: 15px;
+        /* Optional: Style for required asterisk */
+        .form-group label::after {
+            content: '*';
+            color: red;
+            margin-left: 4px;
         }
+
 
     </style>
 </head>
 <body>
 
-    <div class="confirmation-box">
-        <div id="longForm">
-            <h3>BİLGİLENDİRİLMİŞ GÖNÜLLÜ OLUR FORMU</h3>
-            <h4>ÇALIŞMANIN ADI:</h4> <p>İnhibisyon Yeteneği İle Yönlendirilmiş Unutma Düzeyi Arasında Bir İlişki Var mıdır?</p>
-            <p>Aşağıda bilgileri yer almakta olan bir araştırma çalışmasına katılmanız istenmektedir. Çalışmaya katılıp katılmama kararı tamamen size aittir. Katılmak isteyip istemediğinize karar vermeden önce araştırmanın neden yapıldığını, bilgilerinizin nasıl kullanılacağını, çalışmanın neleri içerdiğini,  olası yararları ve risklerini ya da rahatsızlık verebilecek yönlerini anlamanız önemlidir. Lütfen aşağıdaki bilgileri dikkatlice okumak için zaman ayırınız. Eğer çalışmaya katılma kararı verirseniz, Çalışmaya Katılma Onayı Formu’nu imzalayınız. Çalışmadan herhangi bir zamanda ayrılmakta özgürsünüz. Araştırmada kullanılacak tüm malzemeler ve yapılabilecek tüm harcamalar araştırmacı tarafından karşılanacaktır.</p>
-            <h4>ÇALIŞMANIN KONUSU VE AMACI:</h4> <p>Bu çalışma, Üsküdar Üniversitesi'nde doktora tezi kapsamında yürütülecek deneysel bir araştırmadır. Bu araştırmanın amacı, bireylerin inhibisyon yeteneği ile yönlendirilmiş unutma düzeyleri arasındaki ilişkinin deneysel yöntemlerle incelenmesidir.</p>
-            <h4>ÇALIŞMA İŞLEMLERİ:</h4> <p>Araştırma kapsamında katılımcılara aşağıdaki psikolojik testler uygulanacaktır: Stroop Testi, İz Sürme Testi (Trail Making Test), Yönlendirilmiş Unutma Görevi.
-Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uygulamalar bireysel olarak, uygun ve güvenli bir ortamda gerçekleştirilecektir.
-</p>
-            <h4>ÇALIŞMAYA KATILMAMIN OLASI YARARLARI NELERDİR? </h4> <p>Araştırmaya katılım sonucunda doğrudan bir yarar sağlanmayabilir, ancak çalışma psikoloji bilim alanına katkıda bulunacaktır.</p>
-            <h4>KİŞİSEL BİLGİLERİM NASIL KULLANILACAK?</h4> <p>Katılımcılardan elde edilen tüm bilgiler gizli tutulacak ve yalnızca bilimsel amaçla kullanılacaktır. Kişisel kimlik bilgileri hiçbir şekilde üçüncü kişilerle paylaşılmayacaktır. Veriler analiz edilirken katılımcılar anonimleştirilmiş şekilde tanımlanacaktır. Bu araştırmanın katılımcılar için bilinen herhangi bir fiziksel ya da psikolojik riski bulunmamaktadır. </p>
-            <h4>SORU VE PROBLEMLER İÇİN BAŞVURULACAK KİŞİLER :</h4> <p>1.	Araştırmacı: Uzman Klinik Psikolog Lale ALKIŞ Üsküdar Üniversitesi, [Sosyal Bilimler Fakültesi], [Psikoloji], Doktora Öğrencisi</p> <p>2.	Danışman: Prof. Dr. Hıdır İlyas GÖZ Üsküdar Üniversitesi Öğretim Üyesi, Psikoloji Doktora Bölüm Başkanı</p>
-            <h3>Çalışmaya Katılma Onayı</h3> <p>Bu araştırmaya dair yukarıda belirtilen bilgileri okudum ve anladım Yukarıdaki bilgileri ilgili araştırmacı ile ayrıntılı olarak tartıştım ve kendisi bütün sorularımı cevapladı. Bu bilgilendirilmiş olur belgesini okudum ve anladım. Katılımımın gönüllü olduğunu, istediğim zaman herhangi bir gerekçe göstermeksizin çalışmadan çekilebileceğimi biliyorum. Bu araştırmaya katılmayı kabul ediyor ve bu onay belgesini kendi hür irademle imzalıyorum. Bu onay, ilgili hiçbir kanun ve yönetmeliği geçersiz kılmaz. Katılımcı onam formunun bir örneğini talep edebileceğim bilgisi tarafıma verildi. Gönüllü olarak katılmayı kabul ediyorum.</p>
-        </div>
-        <form id="confirmationForm" class="confirmation-form">
+    <div class="form-container"> <!-- Renamed container class -->
+        <h1>Enter Your Information</h1> <!-- Changed main heading -->
+        <p>Please fill out the form below to proceed.</p>
+
+        <form id="dataForm" class="data-form"> <!-- Renamed form ID and class -->
             <div class="form-group">
-                <label for="userName" style="margin-top: 20px;">Lütfen Ad-Soyadınızı Giriniz:</label>
+                <label for="userName">Your Name:</label>
                 <input type="text" id="userName" name="userName" required>
             </div>
 
              <div class="form-group">
-                <label for="telNumber">Lütfen Telefon Numaranızı Giriniz:</label>
-                <input type="text" id="telNumber" name="telNumber" required placeholder="örn. 123-456-7890"> <!-- Updated placeholder -->
+                <label for="telNumber">Telephone Number:</label>
+                <input type="text" id="telNumber" name="telNumber" required placeholder="e.g., +90-123-456-7890 or 123-456-7890">
             </div>
 
-            <!-- Add more form fields here as needed -->
+            <div class="form-group">
+                <label for="birthDate">Date of Birth:</label>
+                <input type="date" id="birthDate" name="birthDate" required> <!-- Made date required -->
+            </div>
+
+            <div class="form-group">
+                <label for="sex">Sex:</label>
+                <select id="sex" name="sex" required> <!-- Made sex required -->
+                    <option value="">Select...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer_not_say">Prefer not to say</option>
+                </select>
+            </div>
+
+             <div class="form-group">
+                <label for="question1">Placeholder Question 1:</label>
+                <select id="question1" name="question1" required> <!-- Made required -->
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+
+                <!-- Conditional Input Container -->
+                <div id="conditionalInputContainer" class="conditional-input-container">
+                    <label for="question1Details">Details (if Yes):</label>
+                    <input type="text" id="question1Details" name="question1Details"> <!-- 'required' handled by JS -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="question2">Placeholder Question 2:</label>
+                <select id="question2" name="question2" required> <!-- Made required -->
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
 
              <div class="button-container">
                  <!-- Button starts disabled -->
-                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Okudum ve Kabul Ediyorum</button>
-                 <a href="https://1001encore.github.io/experiments-homepage/home.html" class="cancel-button">İptal</a>
+                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Proceed</button> <!-- Changed button text -->
+                 <!-- Assuming no "Cancel" needed if this is the homepage, or maybe a link to another page? -->
+                 <!-- <a href="#" class="cancel-button">Cancel</a> -->
              </div>
         </form>
+
+
+         <!-- Assuming links to target pages might be elsewhere or triggered by the form -->
+         <!-- If you need the block structure elsewhere, you'd add it below this form -->
+         <!-- For now, this page IS the entry point with the form -->
 
 
     </div>
 
     <script>
+        // In this structure, there's no 'target' parameter in the URL initially
+        // The target needs to be determined by the user's action AFTER submitting the form.
+        // Based on the original request of 3 main blocks, maybe clicking a block leads HERE?
+        // Or maybe the form submission ITSELF determines the target?
+        // Let's assume the form submission will lead to ONE specific confirmation/redirect page,
+        // or perhaps the target pages from the *previous* structure are now the targets.
+        // If the form IS the homepage, where do the original 'main blocks' go?
+        // Let's revert the assumption: The user arrives AT this form page from somewhere else.
+        // The 'target' parameter logic should be kept if this page is linked *to*.
+        // If THIS page is the index.html, the original index.html blocks are gone.
+        // Let's stick to the current request: Rename confirm.html to index.html and modify its logic.
+        // The concept of linking TO specific target pages from the 'homepage' needs re-definition.
+        // Assumption: Submitting *this* form page will lead to ONE place, or the target is still from a query parameter.
+        // Let's keep the 'target' parameter logic, meaning this form page is linked *to*
+        // from somewhere else, perhaps an initial landing page or menu.
+        // If this IS the entry page, you need to define where 'Proceed' goes.
+        // Let's assume the user intends to go to a default target page or the target is still from a query parameter.
+        // We'll keep the query parameter logic for now, assuming links like index.html?target=page1.html are used elsewhere.
+
         const urlParams = new URLSearchParams(window.location.search);
-        const targetPage = "https://1001encore.github.io/experiments-homepage/home.html";
-        const confirmationForm = document.getElementById('confirmationForm');
+        const targetPage = "https://1001encore.github.io/experiments-homepage/home.html" //urlParams.get('target'); // Still expecting a target parameter
+
+        const dataForm = document.getElementById('dataForm'); // Renamed form reference
         const proceedButton = document.getElementById('proceedButton');
         const userNameInput = document.getElementById('userName');
         const telNumberInput = document.getElementById('telNumber');
+        const birthDateInput = document.getElementById('birthDate'); // Get date input
+        const sexSelect = document.getElementById('sex'); // Get sex dropdown
+        const question1Select = document.getElementById('question1');
+        const conditionalInputContainer = document.getElementById('conditionalInputContainer');
+        const question1DetailsInput = document.getElementById('question1Details');
+        const question2Select = document.getElementById('question2'); // Get second question dropdown
 
-        // Function to check if the form is valid
+
+        // Function to check if the form is valid (ALL required fields filled)
         function checkFormValidity() {
-            // Check if userName is not empty (after trimming whitespace)
+            // Check if name is filled
             const isNameFilled = userNameInput.value.trim() !== '';
 
-            // Get the cleaned value (digits + potential leading +)
+            // Check if telephone is valid (not empty and >= 10 digits)
             const cleanedTelValue = telNumberInput.value.replace(/[^\d+]/g, '');
-            // Count digits after potential +
             const digitCount = cleanedTelValue.replace(/\+/g, '').length;
-
-            // Phone is valid if it's not empty AND has at least 10 digits
             const isTelValid = telNumberInput.value.trim() !== '' && digitCount >= 10;
 
+            // Check if date is filled
+            const isBirthDateFilled = birthDateInput.value !== '';
 
-            // Form is valid if both name is filled and telephone is valid
-            return isNameFilled && isTelValid;
+            // Check if sex is selected (value is not the default empty option)
+            const isSexSelected = sexSelect.value !== '';
+
+             // Check if Question 1 is answered
+            const isQuestion1Answered = question1Select.value !== '';
+
+            // Check if Question 2 is answered
+            const isQuestion2Answered = question2Select.value !== '';
+
+
+            // Check if Question 1 Details are required and filled
+            let isQuestion1DetailsValid = true; // Assume valid unless required and empty
+            if (question1Select.value === 'yes') {
+                // If "Yes" is selected, the details field must be filled
+                isQuestion1DetailsValid = question1DetailsInput.value.trim() !== '';
+            }
+            // If question1Select.value is "no" or "", isQuestion1DetailsValid remains true
+
+
+            // Button is enabled ONLY if ALL required conditions are met
+            return isNameFilled && isTelValid && isBirthDateFilled && isSexSelected && isQuestion1Answered && isQuestion2Answered && isQuestion1DetailsValid;
         }
 
         // --- Auto-formatting for telephone number ---
@@ -215,7 +324,7 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
                     formattedValue += tempDigits.substring(3, Math.min(6, tempDigits.length));
                     if (tempDigits.length > 6) {
                          formattedValue += '-';
-                         formattedValue += tempDigits.substring(6, Math.min(10, tempDigits.length));
+                         formattedValue += tempDigits.substring(6, Math.min(13, tempDigits.length));
                          // Stop after 10 digits for basic formatting
                     }
                 }
@@ -247,13 +356,57 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
             proceedButton.disabled = !checkFormValidity();
         });
 
-        // --- Initial State and Event Listeners ---
+
+         // --- Conditional Input Display ---
+        question1Select.addEventListener('change', function() {
+            if (question1Select.value === 'yes') {
+                conditionalInputContainer.style.display = 'block';
+                // Make the details input required if visible AND name/phone/other required fields are filled
+                // To simplify, we just make it required. checkFormValidity handles the rest.
+                 question1DetailsInput.required = true;
+            } else {
+                conditionalInputContainer.style.display = 'none';
+                question1DetailsInput.value = ''; // Clear value when hidden
+                question1DetailsInput.required = false; // Remove required status
+            }
+             // Also check button validity when this changes
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+
+        // --- Event Listeners for New Fields (Trigger Validation Check) ---
+        birthDateInput.addEventListener('input', function() {
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+        sexSelect.addEventListener('change', function() {
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+        // question1Select change listener is already above for conditional input
+
+        question2Select.addEventListener('change', function() {
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+         // Also listen to input on the conditional details field if it's visible
+         question1DetailsInput.addEventListener('input', function() {
+             // Only check validity if the container is displayed (means question1 is 'yes')
+            if (conditionalInputContainer.style.display !== 'none') {
+                 proceedButton.disabled = !checkFormValidity();
+            }
+         });
+
+
+
+        // --- Initial State and Form Submission ---
         // Disable the button initially (also set in HTML)
         proceedButton.disabled = true;
 
 
-        // If a target page is found, set up the form submission and input listeners
+        // If a target page is found (expecting this page is linked TO)
         if (targetPage) {
+
             // Add event listener to the name input field
             userNameInput.addEventListener('input', function() {
                 proceedButton.disabled = !checkFormValidity();
@@ -261,9 +414,8 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
 
             // The telNumberInput listener is already defined above for formatting and validation
 
-
             // Add submit listener to the form
-            confirmationForm.addEventListener('submit', function(event) {
+            dataForm.addEventListener('submit', function(event) { // Renamed form reference
                 // Only proceed if the form is valid (button should already be enabled)
                 if (!checkFormValidity()) {
                     event.preventDefault();
@@ -272,11 +424,17 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
 
                 event.preventDefault(); // Prevent the default form submission
 
-                // Collect form data
-                const formData = new FormData(confirmationForm);
+                // Collect form data from ALL fields with a 'name' attribute
+                const formData = new FormData(dataForm); // Renamed form reference
                 const dataToStore = {};
                 formData.forEach((value, key) => {
-                    dataToStore[key] = value;
+                    // Exclude the details input if the answer was 'no'
+                     if (key === 'question1Details' && question1Select.value !== 'yes') {
+                         // Skip this field
+                     } else {
+                         dataToStore[key] = value;
+                     }
+
                 });
 
                 // Store data in sessionStorage as a JSON string
@@ -284,23 +442,58 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
 
                 // Redirect to the target page
                 window.location.href = targetPage;
+
             });
 
             // Check validity on page load in case fields are pre-filled by the browser
+            checkFormValidity(); // Call once to set initial button state
             proceedButton.disabled = !checkFormValidity();
+
+            // Trigger change event on question1Select to set initial visibility of conditional input
+            question1Select.dispatchEvent(new Event('change'));
 
 
         } else {
-            // If no target is specified, handle the invalid link case
-            proceedButton.disabled = true;
-            proceedButton.textContent = 'Invalid Link';
-            proceedButton.style.backgroundColor = '#ccc';
-            proceedButton.style.cursor = 'not-allowed';
-            confirmationForm.style.display = 'none';
-             const errorMsg = document.createElement('p');
-             errorMsg.style.color = 'red';
-             errorMsg.textContent = 'Error: Target page not specified.';
-             confirmationForm.parentElement.insertBefore(errorMsg, confirmationForm);
+             // If no target is specified (e.g., user opened index.html directly without a target)
+             // You might want a default behavior here, or show a message.
+             // For now, we'll just allow the form to be filled but submission won't redirect.
+             console.warn("No target page specified in the URL. Form submission will not redirect.");
+             // You could also disable the form or show a message to the user.
+             // Example: Disable the submit button permanently and show a message
+             proceedButton.disabled = true;
+             proceedButton.textContent = 'Cannot Proceed (No Target)';
+             proceedButton.style.backgroundColor = '#ccc';
+             proceedButton.style.cursor = 'not-allowed';
+             const noTargetMsg = document.createElement('p');
+             noTargetMsg.style.color = 'orange';
+             noTargetMsg.textContent = 'Warning: No destination specified. Form data will not be saved.';
+              dataForm.insertBefore(noTargetMsg, dataForm.firstChild); // Add message inside form
+
+             // Still need listeners to enable/disable button based on validation, even if submit does nothing
+              userNameInput.addEventListener('input', function() { proceedButton.disabled = !checkFormValidity(); });
+              telNumberInput.addEventListener('input', function() { proceedButton.disabled = !checkFormValidity(); });
+              birthDateInput.addEventListener('input', function() { proceedButton.disabled = !checkFormValidity(); });
+              sexSelect.addEventListener('change', function() { proceedButton.disabled = !checkFormValidity(); });
+              question1Select.addEventListener('change', function() {
+                 if (question1Select.value === 'yes') {
+                    conditionalInputContainer.style.display = 'block';
+                 } else {
+                    conditionalInputContainer.style.display = 'none';
+                    question1DetailsInput.value = '';
+                 }
+                 proceedButton.disabled = !checkFormValidity();
+              });
+               question2Select.addEventListener('change', function() { proceedButton.disabled = !checkFormValidity(); });
+               question1DetailsInput.addEventListener('input', function() {
+                   if (conditionalInputContainer.style.display !== 'none') {
+                     proceedButton.disabled = !checkFormValidity();
+                   }
+               });
+               // Initial check
+               checkFormValidity();
+               proceedButton.disabled = !checkFormValidity();
+               question1Select.dispatchEvent(new Event('change')); // Trigger conditional display init
+
         }
     </script>
 
