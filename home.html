@@ -130,7 +130,7 @@
 
     <div class="header">
         <h1>Deneylerimize Hoşgeldiniz</h1>
-        <p>Deney Seçiniz</p>
+        <h3 id="userName" style="text-align: left;"></h3>
     </div>
 
     <div class="container">
@@ -157,6 +157,11 @@
            
         </a>
     </div>
-
+<script>
+    const storedDataString = sessionStorage.getItem('confirmationFormData');
+	const receivedData = JSON.parse(storedDataString);
+    const name = receivedData["userName"];
+    document.getElementById("userName").innerHTML = "(Oturum: " + name + ")";
+</script>
 </body>
 </html>
