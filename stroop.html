@@ -474,19 +474,23 @@
 		
         const name = receivedData["userName"];
 		const telNo = receivedData["telNumber"];
-        //const age = document.getElementById('age').value;
-        //const occupation = document.getElementById('occupation').value;
-        //const sex = document.getElementById('sex').value;
-		
+	    	const birthDate = receivedData["birthDate"];
+		const question1 = receivedData["question1"];
+		const question1Details = receivedData["question1Details"];
+		const question2 = receivedData["question2"];
+		const sex = receivedData["sex"];
+	    
 		//sessionStorage.removeItem('confirmationFormData');
 		
         // Get test results
         let resultsText = "Stroop Test Sonuçları\n\n";
-        resultsText += `Ad-Soyad: ${name}\n`;
-		resultsText += `Telefon Numarası: ${telNo}\n\n`;
-        //resultsText += `Yaş: ${age}\n`;
-        //resultsText += `Meslek: ${occupation}\n`;
-        //resultsText += `Cinsiyet: ${sex}\n\n`;
+        	 text +=  `Ad-Soyad: ${name}\n`;
+		 text +=  `Telefon Numarası: ${telNo}\n\n`;
+		 text +=  `Doğum Tarihi: ${birthDate}\n`;
+		 text +=  `Cinsiyeti: ${sex}\n`;
+		 text +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+		 text +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+		 text +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
 
         for (let i = 1; i <= 5; i++) {
             const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
