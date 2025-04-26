@@ -484,13 +484,13 @@
 		
         // Get test results
         let resultsText = "Stroop Test Sonuçları\n\n";
-        	 text +=  `Ad-Soyad: ${name}\n`;
-		 text +=  `Telefon Numarası: ${telNo}\n\n`;
-		 text +=  `Doğum Tarihi: ${birthDate}\n`;
-		 text +=  `Cinsiyeti: ${sex}\n`;
-		 text +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
-		 text +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
-		 text +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
+        	 resultsText +=  `Ad-Soyad: ${name}\n`;
+		 resultsText +=  `Telefon Numarası: ${telNo}\n\n`;
+		 resultsText +=  `Doğum Tarihi: ${birthDate}\n`;
+		 resultsText +=  `Cinsiyeti: ${sex}\n`;
+		 resultsText +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+		 resultsText +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+		 resultsText +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
 
         for (let i = 1; i <= 5; i++) {
             const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
