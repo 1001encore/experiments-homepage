@@ -442,7 +442,7 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
                 const dataToStore = {};
                 formData.forEach((value, key) => {
                     // Exclude the details input if the answer was 'no'
-                     if (key === 'question1Details' && question1Select.value !== 'yes') {
+                     if (key === 'question1Details' && question1Select.value !== 'Evet') {
                          // Skip this field
                      } else {
                          dataToStore[key] = value;
