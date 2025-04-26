@@ -23,10 +23,10 @@
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            max-width: 500px;
+            max-width: 600px;
             width: 100%; /* Make container responsive */
             box-sizing: border-box; /* Include padding */
-            text-align: center;
+            text-align: left;
         }
         .form-container h1 {
             color: #0056b3; /* Changed color from red */
@@ -145,6 +145,13 @@
             color: red;
             margin-left: 4px;
         }
+		
+		#longForm {
+            overflow-y: scroll;
+            height: 500px;
+            margin: 5px;
+            padding-bottom: 15px;
+        }
 
 
     </style>
@@ -152,64 +159,73 @@
 <body>
 
     <div class="form-container"> <!-- Renamed container class -->
-        <h1>Enter Your Information</h1> <!-- Changed main heading -->
-        <p>Please fill out the form below to proceed.</p>
-
+        <div id="longForm">
+            <h3>BİLGİLENDİRİLMİŞ GÖNÜLLÜ OLUR FORMU</h3>
+            <h4>ÇALIŞMANIN ADI:</h4> <p>İnhibisyon Yeteneği İle Yönlendirilmiş Unutma Düzeyi Arasında Bir İlişki Var mıdır?</p>
+            <p>Aşağıda bilgileri yer almakta olan bir araştırma çalışmasına katılmanız istenmektedir. Çalışmaya katılıp katılmama kararı tamamen size aittir. Katılmak isteyip istemediğinize karar vermeden önce araştırmanın neden yapıldığını, bilgilerinizin nasıl kullanılacağını, çalışmanın neleri içerdiğini,  olası yararları ve risklerini ya da rahatsızlık verebilecek yönlerini anlamanız önemlidir. Lütfen aşağıdaki bilgileri dikkatlice okumak için zaman ayırınız. Eğer çalışmaya katılma kararı verirseniz, Çalışmaya Katılma Onayı Formu’nu imzalayınız. Çalışmadan herhangi bir zamanda ayrılmakta özgürsünüz. Araştırmada kullanılacak tüm malzemeler ve yapılabilecek tüm harcamalar araştırmacı tarafından karşılanacaktır.</p>
+            <h4>ÇALIŞMANIN KONUSU VE AMACI:</h4> <p>Bu çalışma, Üsküdar Üniversitesi'nde doktora tezi kapsamında yürütülecek deneysel bir araştırmadır. Bu araştırmanın amacı, bireylerin inhibisyon yeteneği ile yönlendirilmiş unutma düzeyleri arasındaki ilişkinin deneysel yöntemlerle incelenmesidir.</p>
+            <h4>ÇALIŞMA İŞLEMLERİ:</h4> <p>Araştırma kapsamında katılımcılara aşağıdaki psikolojik testler uygulanacaktır: Stroop Testi, İz Sürme Testi (Trail Making Test), Yönlendirilmiş Unutma Görevi.
+Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uygulamalar bireysel olarak, uygun ve güvenli bir ortamda gerçekleştirilecektir.
+</p>
+            <h4>ÇALIŞMAYA KATILMAMIN OLASI YARARLARI NELERDİR? </h4> <p>Araştırmaya katılım sonucunda doğrudan bir yarar sağlanmayabilir, ancak çalışma psikoloji bilim alanına katkıda bulunacaktır.</p>
+            <h4>KİŞİSEL BİLGİLERİM NASIL KULLANILACAK?</h4> <p>Katılımcılardan elde edilen tüm bilgiler gizli tutulacak ve yalnızca bilimsel amaçla kullanılacaktır. Kişisel kimlik bilgileri hiçbir şekilde üçüncü kişilerle paylaşılmayacaktır. Veriler analiz edilirken katılımcılar anonimleştirilmiş şekilde tanımlanacaktır. Bu araştırmanın katılımcılar için bilinen herhangi bir fiziksel ya da psikolojik riski bulunmamaktadır. </p>
+            <h4>SORU VE PROBLEMLER İÇİN BAŞVURULACAK KİŞİLER :</h4> <p>1.	Araştırmacı: Uzman Klinik Psikolog Lale ALKIŞ Üsküdar Üniversitesi, [Sosyal Bilimler Fakültesi], [Psikoloji], Doktora Öğrencisi</p> <p>2.	Danışman: Prof. Dr. Hıdır İlyas GÖZ Üsküdar Üniversitesi Öğretim Üyesi, Psikoloji Doktora Bölüm Başkanı</p>
+            <h3>Çalışmaya Katılma Onayı</h3> <p>Bu araştırmaya dair yukarıda belirtilen bilgileri okudum ve anladım Yukarıdaki bilgileri ilgili araştırmacı ile ayrıntılı olarak tartıştım ve kendisi bütün sorularımı cevapladı. Bu bilgilendirilmiş olur belgesini okudum ve anladım. Katılımımın gönüllü olduğunu, istediğim zaman herhangi bir gerekçe göstermeksizin çalışmadan çekilebileceğimi biliyorum. Bu araştırmaya katılmayı kabul ediyor ve bu onay belgesini kendi hür irademle imzalıyorum. Bu onay, ilgili hiçbir kanun ve yönetmeliği geçersiz kılmaz. Katılımcı onam formunun bir örneğini talep edebileceğim bilgisi tarafıma verildi. Gönüllü olarak katılmayı kabul ediyorum.</p>
+        </div>
         <form id="dataForm" class="data-form"> <!-- Renamed form ID and class -->
             <div class="form-group">
-                <label for="userName">Your Name:</label>
+				<h3 style="text-align: left;">KİŞİSEL BİLGİ FORMU</h3>
+                <label for="userName" style="margin-top: 15px;">Ad-Soyad:</label>
                 <input type="text" id="userName" name="userName" required>
             </div>
 
              <div class="form-group">
-                <label for="telNumber">Telephone Number:</label>
-                <input type="text" id="telNumber" name="telNumber" required placeholder="e.g., +90-123-456-7890 or 123-456-7890">
+                <label for="telNumber">Telefon Numarası:</label>
+                <input type="text" id="telNumber" name="telNumber" required placeholder="örn: +90-123-456-7890, 123-456-7890">
             </div>
 
             <div class="form-group">
-                <label for="birthDate">Date of Birth:</label>
+                <label for="birthDate">Doğum Tarihi:</label>
                 <input type="date" id="birthDate" name="birthDate" required> <!-- Made date required -->
             </div>
 
             <div class="form-group">
-                <label for="sex">Sex:</label>
+                <label for="sex">Cinsiyet:</label>
                 <select id="sex" name="sex" required> <!-- Made sex required -->
-                    <option value="">Select...</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="prefer_not_say">Prefer not to say</option>
+                    <option value="">Seçiniz...</option>
+                    <option value="Erkek">Erkek</option>
+                    <option value="Kadın">Kadın</option>
                 </select>
             </div>
 
              <div class="form-group">
-                <label for="question1">Placeholder Question 1:</label>
+                <label for="question1">Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi gördünüz mü?</label>
                 <select id="question1" name="question1" required> <!-- Made required -->
-                    <option value="">Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="">Seçiniz...</option>
+                    <option value="Evet">Evet</option>
+                    <option value="Hayır">Hayır</option>
                 </select>
 
                 <!-- Conditional Input Container -->
                 <div id="conditionalInputContainer" class="conditional-input-container">
-                    <label for="question1Details">Details (if Yes):</label>
+                    <label for="question1Details">Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız:</label>
                     <input type="text" id="question1Details" name="question1Details"> <!-- 'required' handled by JS -->
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="question2">Placeholder Question 2:</label>
+                <label for="question2">Renk körlüğü ya da görme bozukluğunuz (gözlük kullanımı dahil değildir) var mı?:</label>
                 <select id="question2" name="question2" required> <!-- Made required -->
-                    <option value="">Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="">Seçiniz...</option>
+                    <option value="Evet">Evet</option>
+                    <option value="Hayır">Hayır</option>
                 </select>
             </div>
 
 
              <div class="button-container">
                  <!-- Button starts disabled -->
-                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Proceed</button> <!-- Changed button text -->
+                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Anladım ve Devam Etmek İstiyorum</button> <!-- Changed button text -->
                  <!-- Assuming no "Cancel" needed if this is the homepage, or maybe a link to another page? -->
                  <!-- <a href="#" class="cancel-button">Cancel</a> -->
              </div>
@@ -224,25 +240,6 @@
     </div>
 
     <script>
-        // In this structure, there's no 'target' parameter in the URL initially
-        // The target needs to be determined by the user's action AFTER submitting the form.
-        // Based on the original request of 3 main blocks, maybe clicking a block leads HERE?
-        // Or maybe the form submission ITSELF determines the target?
-        // Let's assume the form submission will lead to ONE specific confirmation/redirect page,
-        // or perhaps the target pages from the *previous* structure are now the targets.
-        // If the form IS the homepage, where do the original 'main blocks' go?
-        // Let's revert the assumption: The user arrives AT this form page from somewhere else.
-        // The 'target' parameter logic should be kept if this page is linked *to*.
-        // If THIS page is the index.html, the original index.html blocks are gone.
-        // Let's stick to the current request: Rename confirm.html to index.html and modify its logic.
-        // The concept of linking TO specific target pages from the 'homepage' needs re-definition.
-        // Assumption: Submitting *this* form page will lead to ONE place, or the target is still from a query parameter.
-        // Let's keep the 'target' parameter logic, meaning this form page is linked *to*
-        // from somewhere else, perhaps an initial landing page or menu.
-        // If this IS the entry page, you need to define where 'Proceed' goes.
-        // Let's assume the user intends to go to a default target page or the target is still from a query parameter.
-        // We'll keep the query parameter logic for now, assuming links like index.html?target=page1.html are used elsewhere.
-
         const urlParams = new URLSearchParams(window.location.search);
         const targetPage = "https://1001encore.github.io/experiments-homepage/home.html" //urlParams.get('target'); // Still expecting a target parameter
 
@@ -283,7 +280,7 @@
 
             // Check if Question 1 Details are required and filled
             let isQuestion1DetailsValid = true; // Assume valid unless required and empty
-            if (question1Select.value === 'yes') {
+            if (question1Select.value === 'Evet') {
                 // If "Yes" is selected, the details field must be filled
                 isQuestion1DetailsValid = question1DetailsInput.value.trim() !== '';
             }
@@ -302,7 +299,7 @@
 
             // Remove non-digits, but allow a leading '+'
             let cleanedValue = value.replace(/[^\d+]/g, '');
-            if (cleanedValue.startsWith('+') && cleanedValue.length > 1) {
+            if (cleanedValue.startsWith('+') && cleanedValue.length > 0) {
                  cleanedValue = '+' + cleanedValue.substring(1).replace(/\D/g, ''); // Keep the first +, remove other non-digits
             } else {
                  cleanedValue = cleanedValue.replace(/\D/g, ''); // Remove all non-digits if no leading +
@@ -317,18 +314,34 @@
             }
 
 
-            if (tempDigits.length > 0) {
+            if (tempDigits.length > 0 &&  formattedValue !== "+") {
                 formattedValue += tempDigits.substring(0, Math.min(3, tempDigits.length));
                 if (tempDigits.length > 3) {
                     formattedValue += '-';
                     formattedValue += tempDigits.substring(3, Math.min(6, tempDigits.length));
                     if (tempDigits.length > 6) {
                          formattedValue += '-';
-                         formattedValue += tempDigits.substring(6, Math.min(13, tempDigits.length));
+                         formattedValue += tempDigits.substring(6, Math.min(10, tempDigits.length));
                          // Stop after 10 digits for basic formatting
                     }
                 }
             }
+			else {
+				formattedValue += tempDigits.substring(0, Math.min(2, tempDigits.length));
+                if (tempDigits.length > 2) {
+                    formattedValue += '-';
+                    formattedValue += tempDigits.substring(2, Math.min(5, tempDigits.length));
+                    if (tempDigits.length > 5) {
+                        formattedValue += '-';
+                        formattedValue += tempDigits.substring(5, Math.min(8, tempDigits.length));
+                        if (tempDigits.length > 8) {
+                        formattedValue += '-';
+                        formattedValue += tempDigits.substring(8, Math.min(12, tempDigits.length));
+						}
+                    }
+                }
+			}
+			
 
             telNumberInput.value = formattedValue;
 
@@ -359,7 +372,7 @@
 
          // --- Conditional Input Display ---
         question1Select.addEventListener('change', function() {
-            if (question1Select.value === 'yes') {
+            if (question1Select.value === 'Evet') {
                 conditionalInputContainer.style.display = 'block';
                 // Make the details input required if visible AND name/phone/other required fields are filled
                 // To simplify, we just make it required. checkFormValidity handles the rest.
