@@ -532,22 +532,56 @@
             resultsAreaEl.innerHTML += `<p>Doğruluk: ${gameAccuracy}%</p><hr>`;
 
             // 3. Recognition Analysis (Unchanged - Checks against original lists)
-            let hits = 0, misses = 0, falseAlarms = 0, correctRejections = 0;
-            let totalShownWordsInRecog = 0, totalNewWordsInRecog = 0;
-            const allOriginalWords = [...list1Words, ...list2Words]; // Base truth is original lists
+            let list1Hits = 0, list1Misses = 0;
+            let list2Hits = 0, list2Misses = 0;
+            let falseAlarms = 0, correctRejections = 0;
+
+            // We no longer combine the lists; keep them separate to check origin
+            // const allOriginalWords = [...list1Words, ...list2Words]; // REMOVE THIS LINE
+
             Object.entries(recognitionAnswers).forEach(([word, answer]) => {
-                const wasShown = allOriginalWords.includes(word);
-                if (wasShown) totalShownWordsInRecog++; else totalNewWordsInRecog++;
-                if (answer.seen === 'yes') { if (wasShown) hits++; else falseAlarms++; }
-                else if (answer.seen === 'no') { if (wasShown) misses++; else correctRejections++; }
+                const inList1 = list1Words.includes(word);
+                const inList2 = list2Words.includes(word);
+                // Assuming a word is not in BOTH lists - standard for this type of task
+
+                let listStatus = "Hiçbirinde Yok"; // "Not in either"
+                if (inList1) {
+                    listStatus = "Liste 1";
+                } else if (inList2) {
+                    listStatus = "Liste 2";
+                }
+
+                const participantSaidSeen = (answer.seen === "yes");
+
+
+                // Update counters based on origin and response
+                if (inList1) {
+                    if (participantSaidSeen) {
+                        list1Hits++; // In List 1, said yes -> Hit for List 1
+                    } else {
+                        list1Misses++; // In List 1, said no -> Miss for List 1
+                    }
+                } else if (inList2) {
+                    if (participantSaidSeen) {
+                        list2Hits++; // In List 2, said yes -> Hit for List 2
+                    } else {
+                        list2Misses++; // In List 2, said no -> Miss for List 2
+                    }
+                } else { // The word was not in either list
+                    if (participantSaidSeen) {
+                        falseAlarms++; // Not in lists, said yes -> False Alarm
+                    } else {
+                        correctRejections++; // Not in lists, said no -> Correct Rejection
+                    }
+                }
             });
-             resultsAreaEl.innerHTML += `<h3>Hatırlama Testi Sonuçları</h3>`;
-			 /*
-             resultsAreaEl.innerHTML += `<p>   - Words Originally in List 1/2: ${totalShownWordsInRecog}</p>`;
-             resultsAreaEl.innerHTML += `<p>   - New Words (Not in List 1/2): ${totalNewWordsInRecog}</p>`;
-			 */
-             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınanlar(doğru):</strong> ${hits}</p>`;
-             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınmayanlar(yanlış):</strong> ${misses}</p>`;
+             resultsAreaEl.innerHTML += `<h3>Tanıma Testi Sonuçları</h3>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınanlar(doğru):</strong> ${list1Hits+list2Hits}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    - Liste1'in içinden:</strong> ${list1Hits}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    - Liste2'nin içinden:</strong> ${list2Hits}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınmayanlar(yanlış):</strong> ${list1Misses+list2Misses}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    - Liste1'in içinden:</strong> ${list1Misses}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    - Liste2'nin içinden:</strong> ${list2Misses}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınanlar(yanlış):</strong> ${falseAlarms}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınmayanlar(doğru):</strong> ${correctRejections}</p>`;
         }
@@ -648,19 +682,72 @@
              text += ` - Doğruluk: ${gameAccuracy}%\n\n`;
 
              // Recognition Results (Unchanged - checks against original lists)
-             let hits = 0, misses = 0, falseAlarms = 0, correctRejections = 0;
-             const allOriginalWords = [...list1Words, ...list2Words];
-             text += "Tanıma Bölümü:\n";
-             text += "Kelime, Listelerde Var Mıydı?, Gördüm Mü Dedi?\n"; // Clarified header
-             Object.entries(recognitionAnswers).forEach(([word, answer]) => {
-                const wasShown = allOriginalWords.includes(word);
-                 text += `${word}, ${wasShown ? 'Evet' : 'Hayır'}, ${(answer.seen === "yes") ? "Evet" : "Hayır"}\n`;
-                  if (answer.seen === 'yes') { if (wasShown) hits++; else falseAlarms++; }
-                  else if (answer.seen === 'no') { if (wasShown) misses++; else correctRejections++; }
-             });
-             text += "\nTanıma Özet:\n";
-             text += ` - Listelerde olup tanınanlar(doğru): ${hits}\n - Listelerde olup tanınmayanlar(yanlış): ${misses}\n - Listelerde olmayıp tanınanlar(yanlış): ${falseAlarms}\n - Listelerde olmayıp tanınmayanlar(doğru): ${correctRejections}\n\n`;
-             return text;
+            let list1Hits = 0, list1Misses = 0;
+            let list2Hits = 0, list2Misses = 0;
+            let falseAlarms = 0, correctRejections = 0;
+
+            // We no longer combine the lists; keep them separate to check origin
+            // const allOriginalWords = [...list1Words, ...list2Words]; // REMOVE THIS LINE
+
+            text += "Tanıma Bölümü (Detaylı):\n";
+            text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?\n"; // Updated header
+
+            Object.entries(recognitionAnswers).forEach(([word, answer]) => {
+                const inList1 = list1Words.includes(word);
+                const inList2 = list2Words.includes(word);
+                // Assuming a word is not in BOTH lists - standard for this type of task
+
+                let listStatus = "Hiçbirinde Yok"; // "Not in either"
+                if (inList1) {
+                    listStatus = "Liste 1";
+                } else if (inList2) {
+                    listStatus = "Liste 2";
+                }
+
+                const participantSaidSeen = (answer.seen === "yes");
+
+                text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}\n`;
+
+                // Update counters based on origin and response
+                if (inList1) {
+                    if (participantSaidSeen) {
+                        list1Hits++; // In List 1, said yes -> Hit for List 1
+                    } else {
+                        list1Misses++; // In List 1, said no -> Miss for List 1
+                    }
+                } else if (inList2) {
+                    if (participantSaidSeen) {
+                        list2Hits++; // In List 2, said yes -> Hit for List 2
+                    } else {
+                        list2Misses++; // In List 2, said no -> Miss for List 2
+                    }
+                } else { // The word was not in either list
+                    if (participantSaidSeen) {
+                        falseAlarms++; // Not in lists, said yes -> False Alarm
+                    } else {
+                        correctRejections++; // Not in lists, said no -> Correct Rejection
+                    }
+                }
+            });
+
+            text += "\nTanıma Özeti:\n";
+
+            text += `Listelerde olup tanınanlar(doğru): ${list1Hits+list2Hits}\n`
+            text += `Listelerde olup tanınmayanlar(yanlış): ${list1Misses+list2Misses}\n\n`
+
+            text += "Liste 1 Analizi:\n";
+            text += `   - Listede olup tanınanlar(doğru): ${list1Hits}\n`; // In List 1, said yes
+            text += `   - Listede olup tanınmayanlar(yanlış): ${list1Misses}\n`; // In List 1, said no
+
+            text += "\nListe 2 Analizi:\n";
+            text += `   - Listede olup tanınanlar(doğru): ${list2Hits}\n`; // In List 2, said yes
+            text += `   - Listede olup tanınmayanlar(yanlış): ${list2Misses}\n`; // In List 2, said no
+
+            text += "\nListelerde Olmayan Kelimeler:\n";
+            text += `   - Olmayıp tanınanlar(yanlış - Yanlış Alarm): ${falseAlarms}\n`; // Not in lists, said yes
+            text += `   - Olmayıp tanınmayanlar(doğru - Doğru Red): ${correctRejections}\n\n`; // Not in lists, said no
+
+            return text;
          }
 
 
