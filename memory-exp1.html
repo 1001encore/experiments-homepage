@@ -592,7 +592,7 @@
              let hits = 0, misses = 0, falseAlarms = 0, correctRejections = 0;
              const allOriginalWords = [...list1Words, ...list2Words];
              text += "Tanıma Bölümü:\n";
-             text += "Kelime, Listelerde Var Mıydı?, Gördüm Mü Dedi?, Özgüveni(1-4)\n"; // Clarified header
+             text += "Kelime, Listelerde Var Mıydı?, Gördüm Mü Dedi?\n"; // Clarified header
              Object.entries(recognitionAnswers).forEach(([word, answer]) => {
                 const wasShown = allOriginalWords.includes(word);
                  text += `${word}, ${wasShown ? 'Evet' : 'Hayır'}, ${(answer.seen === "yes") ? "Evet" : "Hayır"}\n`;
