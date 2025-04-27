@@ -231,7 +231,274 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
     </div>
 
     <script>
-	    const t=new URLSearchParams(window.location.search);const o="https://1001encore.github.io/experiments-homepage/home.html";const c=document.getElementById("dataForm");const r=document.getElementById("proceedButton");const l=document.getElementById("userName");const d=document.getElementById("telNumber");const m=document.getElementById("birthDate");const h=document.getElementById("sex");const f=document.getElementById("question1");const n=document.getElementById("conditionalInputContainer");const F=document.getElementById("question1Details");const g=document.getElementById("question2");function checkFormValidity(){const t=l.value.trim()!=="";const n=d.value.replace(/[^\d+]/g,"");const e=n.replace(/\+/g,"").length;const o=d.value.trim()!==""&&e>=10;const c=m.value!=="";const i=h.value!=="";const a=f.value!=="";const s=g.value!=="";let u=true;if(f.value==="Evet"){u=F.value.trim()!==""}return t&&o&&c&&i&&a&&s&&u}d.addEventListener("input",function(){let t=d.value;const n=t.length;const e=d.selectionStart;let o=t.replace(/[^\d+]/g,"");if(o.startsWith("+")&&o.length>0){o="+"+o.substring(1).replace(/\D/g,"")}else{o=o.replace(/\D/g,"")}let c="";let i=o.replace(/\+/g,"");if(o.startsWith("+")){c+="+"}if(i.length>0&&c!=="+"){c+=i.substring(0,Math.min(3,i.length));if(i.length>3){c+="-";c+=i.substring(3,Math.min(6,i.length));if(i.length>6){c+="-";c+=i.substring(6,Math.min(10,i.length))}}}else{c+=i.substring(0,Math.min(2,i.length));if(i.length>2){c+="-";c+=i.substring(2,Math.min(5,i.length));if(i.length>5){c+="-";c+=i.substring(5,Math.min(8,i.length));if(i.length>8){c+="-";c+=i.substring(8,Math.min(12,i.length))}}}}d.value=c;const a=d.value.length;const s=a-n;const u=e+s;if(s>0&&u>0){if(d.value[u-1]==="-"&&e<=u-1-s){d.setSelectionRange(u+1,u+1)}else{d.setSelectionRange(u,u)}}else{d.setSelectionRange(u,u)}r.disabled=!checkFormValidity()});f.addEventListener("change",function(){if(f.value==="Evet"){n.style.display="block";F.required=true}else{n.style.display="none";F.value="";F.required=false}r.disabled=!checkFormValidity()});m.addEventListener("input",function(){r.disabled=!checkFormValidity()});h.addEventListener("change",function(){r.disabled=!checkFormValidity()});g.addEventListener("change",function(){r.disabled=!checkFormValidity()});F.addEventListener("input",function(){if(n.style.display!=="none"){r.disabled=!checkFormValidity()}});r.disabled=true;if(o){l.addEventListener("input",function(){r.disabled=!checkFormValidity()});c.addEventListener("submit",function(t){if(!checkFormValidity()){t.preventDefault();return}t.preventDefault();const n=new FormData(c);const e={};n.forEach((t,n)=>{if(n==="question1Details"&&f.value!=="Evet"){}else{e[n]=t}});sessionStorage.setItem("confirmationFormData",JSON.stringify(e));window.location.href=o});checkFormValidity();r.disabled=!checkFormValidity();f.dispatchEvent(new Event("change"))}else{console.warn("No target page specified in the URL. Form submission will not redirect.");r.disabled=true;r.textContent="Cannot Proceed (No Target)";r.style.backgroundColor="#ccc";r.style.cursor="not-allowed";const e=document.createElement("p");e.style.color="orange";e.textContent="Warning: No destination specified. Form data will not be saved.";c.insertBefore(e,c.firstChild);l.addEventListener("input",function(){r.disabled=!checkFormValidity()});d.addEventListener("input",function(){r.disabled=!checkFormValidity()});m.addEventListener("input",function(){r.disabled=!checkFormValidity()});h.addEventListener("change",function(){r.disabled=!checkFormValidity()});f.addEventListener("change",function(){if(f.value==="yes"){n.style.display="block"}else{n.style.display="none";F.value=""}r.disabled=!checkFormValidity()});g.addEventListener("change",function(){r.disabled=!checkFormValidity()});F.addEventListener("input",function(){if(n.style.display!=="none"){r.disabled=!checkFormValidity()}});checkFormValidity();r.disabled=!checkFormValidity();f.dispatchEvent(new Event("change"))}
+	    const urlParams = new URLSearchParams(window.location.search);
+        const targetPage = "https://1001encore.github.io/experiments-homepage/home.html"
+
+        const dataForm = document.getElementById('dataForm'); // Renamed form reference
+        const proceedButton = document.getElementById('proceedButton');
+        const userNameInput = document.getElementById('userName');
+        const telNumberInput = document.getElementById('telNumber');
+        const birthDateInput = document.getElementById('birthDate'); // Get date input
+        const sexSelect = document.getElementById('sex'); // Get sex dropdown
+        const question1Select = document.getElementById('question1');
+        const conditionalInputContainer = document.getElementById('conditionalInputContainer');
+        const question1DetailsInput = document.getElementById('question1Details');
+        const question2Select = document.getElementById('question2'); // Get second question dropdown
+
+
+        // Function to check if the form is valid (ALL required fields filled)
+        function checkFormValidity() {
+            // Check if name is filled
+            const isNameFilled = userNameInput.value.trim() !== '';
+
+            // Check if telephone is valid (not empty and >= 10 digits)
+            const cleanedTelValue = telNumberInput.value.replace(/[^\d+]/g, '');
+            const digitCount = cleanedTelValue.replace(/\+/g, '').length;
+            const isTelValid = telNumberInput.value.trim() !== '' && digitCount >= 10;
+
+            // Check if date is filled
+            const isBirthDateFilled = birthDateInput.value !== '';
+
+            // Check if sex is selected (value is not the default empty option)
+            const isSexSelected = sexSelect.value !== '';
+
+             // Check if Question 1 is answered
+            const isQuestion1Answered = question1Select.value !== '';
+
+            // Check if Question 2 is answered
+            const isQuestion2Answered = question2Select.value !== '';
+
+
+            // Check if Question 1 Details are required and filled
+            let isQuestion1DetailsValid = true; // Assume valid unless required and empty
+            if (question1Select.value === 'Evet') {
+                // If "Yes" is selected, the details field must be filled
+                isQuestion1DetailsValid = question1DetailsInput.value.trim() !== '';
+            }
+            // If question1Select.value is "no" or "", isQuestion1DetailsValid remains true
+
+
+            // Button is enabled ONLY if ALL required conditions are met
+            return isNameFilled && isTelValid && isBirthDateFilled && isSexSelected && isQuestion1Answered && isQuestion2Answered && isQuestion1DetailsValid;
+        }
+
+        // --- Auto-formatting for telephone number ---
+        telNumberInput.addEventListener('input', function() {
+            let value = telNumberInput.value;
+            const oldValueLength = value.length;
+            const oldCursorPosition = telNumberInput.selectionStart;
+
+            // Remove non-digits, but allow a leading '+'
+            let cleanedValue = value.replace(/[^\d+]/g, '');
+            if (cleanedValue.startsWith('+') && cleanedValue.length > 0) {
+                 cleanedValue = '+' + cleanedValue.substring(1).replace(/\D/g, ''); // Keep the first +, remove other non-digits
+            } else {
+                 cleanedValue = cleanedValue.replace(/\D/g, ''); // Remove all non-digits if no leading +
+            }
+
+
+            let formattedValue = '';
+            let tempDigits = cleanedValue.replace(/\+/g, ''); // Get digits only
+
+            if (cleanedValue.startsWith('+')) {
+                formattedValue += '+';
+            }
+
+
+            if (tempDigits.length > 0 &&  formattedValue !== "+") {
+                formattedValue += tempDigits.substring(0, Math.min(3, tempDigits.length));
+                if (tempDigits.length > 3) {
+                    formattedValue += '-';
+                    formattedValue += tempDigits.substring(3, Math.min(6, tempDigits.length));
+                    if (tempDigits.length > 6) {
+                         formattedValue += '-';
+                         formattedValue += tempDigits.substring(6, Math.min(10, tempDigits.length));
+                         // Stop after 10 digits for basic formatting
+                    }
+                }
+            }
+			else {
+				formattedValue += tempDigits.substring(0, Math.min(2, tempDigits.length));
+                if (tempDigits.length > 2) {
+                    formattedValue += '-';
+                    formattedValue += tempDigits.substring(2, Math.min(5, tempDigits.length));
+                    if (tempDigits.length > 5) {
+                        formattedValue += '-';
+                        formattedValue += tempDigits.substring(5, Math.min(8, tempDigits.length));
+                        if (tempDigits.length > 8) {
+                        formattedValue += '-';
+                        formattedValue += tempDigits.substring(8, Math.min(12, tempDigits.length));
+						}
+                    }
+                }
+			}
+			
+
+            telNumberInput.value = formattedValue;
+
+             // --- Restore Cursor Position ---
+             // This is a simplified attempt and might not be perfect in all cases
+            const newValueLength = telNumberInput.value.length;
+            const lengthDiff = newValueLength - oldValueLength;
+            const newCursorPosition = oldCursorPosition + lengthDiff;
+
+            // Adjust cursor position if it landed inside a newly added dash
+            if (lengthDiff > 0 && newCursorPosition > 0) {
+                 // Check if the character *before* the new cursor position is a dash
+                 // and the old cursor position was *before* where the dash was added
+                if (telNumberInput.value[newCursorPosition - 1] === '-' && oldCursorPosition <= (newCursorPosition - 1 - lengthDiff) ) {
+                     telNumberInput.setSelectionRange(newCursorPosition + 1, newCursorPosition + 1);
+                } else {
+                     telNumberInput.setSelectionRange(newCursorPosition, newCursorPosition);
+                }
+            } else {
+                telNumberInput.setSelectionRange(newCursorPosition, newCursorPosition);
+            }
+
+
+            // --- Update Button State After Formatting ---
+            proceedButton.disabled = !checkFormValidity();
+        });
+
+
+         // --- Conditional Input Display ---
+        question1Select.addEventListener('change', function() {
+            if (question1Select.value === 'Evet') {
+                conditionalInputContainer.style.display = 'block';
+                // Make the details input required if visible AND name/phone/other required fields are filled
+                // To simplify, we just make it required. checkFormValidity handles the rest.
+                 question1DetailsInput.required = true;
+            } else {
+                conditionalInputContainer.style.display = 'none';
+                question1DetailsInput.value = ''; // Clear value when hidden
+                question1DetailsInput.required = false; // Remove required status
+            }
+             // Also check button validity when this changes
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+
+        // --- Event Listeners for New Fields (Trigger Validation Check) ---
+        birthDateInput.addEventListener('input', function() {
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+        sexSelect.addEventListener('change', function() {
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+        // question1Select change listener is already above for conditional input
+
+        question2Select.addEventListener('change', function() {
+             proceedButton.disabled = !checkFormValidity();
+        });
+
+         // Also listen to input on the conditional details field if it's visible
+         question1DetailsInput.addEventListener('input', function() {
+             // Only check validity if the container is displayed (means question1 is 'yes')
+            if (conditionalInputContainer.style.display !== 'none') {
+                 proceedButton.disabled = !checkFormValidity();
+            }
+         });
+
+
+
+        // --- Initial State and Form Submission ---
+        // Disable the button initially (also set in HTML)
+        proceedButton.disabled = true;
+
+
+        // If a target page is found (expecting this page is linked TO)
+        if (targetPage) {
+
+            // Add event listener to the name input field
+            userNameInput.addEventListener('input', function() {
+                proceedButton.disabled = !checkFormValidity();
+            });
+
+            // The telNumberInput listener is already defined above for formatting and validation
+
+            // Add submit listener to the form
+            dataForm.addEventListener('submit', function(event) { // Renamed form reference
+                // Only proceed if the form is valid (button should already be enabled)
+                if (!checkFormValidity()) {
+                    event.preventDefault();
+                    return;
+                }
+
+                event.preventDefault(); // Prevent the default form submission
+
+                // Collect form data from ALL fields with a 'name' attribute
+                const formData = new FormData(dataForm); // Renamed form reference
+                const dataToStore = {};
+                formData.forEach((value, key) => {
+                    // Exclude the details input if the answer was 'no'
+                     if (key === 'question1Details' && question1Select.value !== 'Evet') {
+                         // Skip this field
+                     } else {
+                         dataToStore[key] = value;
+                     }
+
+                });
+
+                // Store data in sessionStorage as a JSON string
+                sessionStorage.setItem('confirmationFormData', JSON.stringify(dataToStore));
+
+                // Redirect to the target page
+                window.location.href = targetPage;
+
+            });
+
+            // Check validity on page load in case fields are pre-filled by the browser
+            checkFormValidity(); // Call once to set initial button state
+            proceedButton.disabled = !checkFormValidity();
+
+            // Trigger change event on question1Select to set initial visibility of conditional input
+            question1Select.dispatchEvent(new Event('change'));
+
+
+        } else {
+             // If no target is specified (e.g., user opened index.html directly without a target)
+             // You might want a default behavior here, or show a message.
+             // For now, we'll just allow the form to be filled but submission won't redirect.
+             console.warn("No target page specified in the URL. Form submission will not redirect.");
+             // You could also disable the form or show a message to the user.
+             // Example: Disable the submit button permanently and show a message
+             proceedButton.disabled = true;
+             proceedButton.textContent = 'Cannot Proceed (No Target)';
+             proceedButton.style.backgroundColor = '#ccc';
+             proceedButton.style.cursor = 'not-allowed';
+             const noTargetMsg = document.createElement('p');
+             noTargetMsg.style.color = 'orange';
+             noTargetMsg.textContent = 'Warning: No destination specified. Form data will not be saved.';
+              dataForm.insertBefore(noTargetMsg, dataForm.firstChild); // Add message inside form
+
+             // Still need listeners to enable/disable button based on validation, even if submit does nothing
+              userNameInput.addEventListener('input', function() { proceedButton.disabled = !checkFormValidity(); });
+              telNumberInput.addEventListener('input', function() { proceedButton.disabled = !checkFormValidity(); });
+              birthDateInput.addEventListener('input', function() { proceedButton.disabled = !checkFormValidity(); });
+              sexSelect.addEventListener('change', function() { proceedButton.disabled = !checkFormValidity(); });
+              question1Select.addEventListener('change', function() {
+                 if (question1Select.value === 'yes') {
+                    conditionalInputContainer.style.display = 'block';
+                 } else {
+                    conditionalInputContainer.style.display = 'none';
+                    question1DetailsInput.value = '';
+                 }
+                 proceedButton.disabled = !checkFormValidity();
+              });
+               question2Select.addEventListener('change', function() { proceedButton.disabled = !checkFormValidity(); });
+               question1DetailsInput.addEventListener('input', function() {
+                   if (conditionalInputContainer.style.display !== 'none') {
+                     proceedButton.disabled = !checkFormValidity();
+                   }
+               });
+               // Initial check
+               checkFormValidity();
+               proceedButton.disabled = !checkFormValidity();
+               question1Select.dispatchEvent(new Event('change')); // Trigger conditional display init
+
+        }
     </script>
 
 </body>
