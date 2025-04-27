@@ -176,12 +176,12 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
             <div class="form-group">
 				<h3 style="text-align: left;">KİŞİSEL BİLGİ FORMU</h3>
                 <label for="userName" style="margin-top: 15px;">Ad-Soyad:</label>
-                <input type="text" id="userName" name="userName" required>
+                <input type="text" id="userName" name="userName" required autocomplete="off">
             </div>
 
              <div class="form-group">
                 <label for="telNumber">Telefon Numarası:</label>
-                <input type="text" id="telNumber" name="telNumber" required placeholder="örn: +90-123-456-7890, 123-456-7890">
+                <input type="text" id="telNumber" name="telNumber" required placeholder="örn: +90-123-456-7890, 123-456-7890" autocomplete="off">
             </div>
 
             <div class="form-group">
@@ -209,7 +209,7 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
                 <!-- Conditional Input Container -->
                 <div id="conditionalInputContainer" class="conditional-input-container">
                     <label for="question1Details">Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız:</label>
-                    <input type="text" id="question1Details" name="question1Details"> <!-- 'required' handled by JS -->
+                    <input type="text" id="question1Details" name="question1Details" autocomplete="off"> <!-- 'required' handled by JS -->
                 </div>
             </div>
 
@@ -225,23 +225,14 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
 
              <div class="button-container">
                  <!-- Button starts disabled -->
-                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Anladım ve Devam Etmek İstiyorum</button> <!-- Changed button text -->
-                 <!-- Assuming no "Cancel" needed if this is the homepage, or maybe a link to another page? -->
-                 <!-- <a href="#" class="cancel-button">Cancel</a> -->
+                 <button type="submit" class="confirm-button" id="proceedButton" disabled>Anladım ve Devam Etmek İstiyorum</button>
              </div>
         </form>
-
-
-         <!-- Assuming links to target pages might be elsewhere or triggered by the form -->
-         <!-- If you need the block structure elsewhere, you'd add it below this form -->
-         <!-- For now, this page IS the entry point with the form -->
-
-
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const targetPage = "https://1001encore.github.io/experiments-homepage/home.html" //urlParams.get('target'); // Still expecting a target parameter
+        const targetPage = "https://1001encore.github.io/experiments-homepage/home.html"
 
         const dataForm = document.getElementById('dataForm'); // Renamed form reference
         const proceedButton = document.getElementById('proceedButton');
