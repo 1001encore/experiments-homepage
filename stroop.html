@@ -348,7 +348,201 @@
     </div>
 
     <script>
-	    let t=0;const e=document.querySelectorAll(".page");let o={};let r={};let b={};let S={};let v={};function showPage(n){e.forEach((t,e)=>{t.classList.toggle("active",e===n)});t=n}function startTest(){resetTestState();showPage(1)}function startTimer(e){r[e]=Date.now();const t=document.getElementById(`page-${e}`);t.querySelector('button[onclick^="startTimer"]').disabled=true;t.querySelector('button[onclick^="stopTimer"]').disabled=false;document.getElementById(`error-inputs-${e}`).classList.remove("visible");const n=document.getElementById(`nav-button-container-${e}`);n.innerHTML="";o[e]=setInterval(()=>{const t=(Date.now()-r[e])/1e3;document.getElementById(`timer-${e}`).textContent=`Süre: ${t.toFixed(3)} saniye`},10)}function stopTimer(t){if(o[t]){clearInterval(o[t]);o[t]=null;b[t]=(Date.now()-r[t])/1e3;document.getElementById(`timer-${t}`).textContent=`Süre: ${b[t].toFixed(3)} saniye`;const e=document.getElementById(`page-${t}`);e.querySelector('button[onclick^="stopTimer"]').disabled=true;document.getElementById(`error-inputs-${t}`).classList.add("visible");addNavButton(t)}}function recordAndProceed(t){const e=document.getElementById(`errors-${t}`);const n=document.getElementById(`corrections-${t}`);S[t]=parseInt(e.value,10)||0;v[t]=parseInt(n.value,10)||0;document.getElementById(`error-inputs-${t}`).classList.remove("visible");if(t<5){showPage(t+1)}else{displayResults()}}function addNavButton(t){const e=document.getElementById(`nav-button-container-${t}`);e.innerHTML="";const n=document.createElement("button");n.textContent=t<5?"Sonraki Kart":"Sonuçları Gör";n.className="next-button";n.onclick=()=>recordAndProceed(t);e.appendChild(n)}function displayResults(){const t=sessionStorage.getItem("confirmationFormData");const e=JSON.parse(t);document.getElementById("namesurname").textContent="(Ad-Soyad: "+e["userName"]+")";for(let t=1;t<=5;t++){document.getElementById(`result-time-${t}`).textContent=b[t]!==undefined?b[t].toFixed(3):"--";document.getElementById(`result-errors-${t}`).textContent=S[t]!==undefined?S[t]:"--";document.getElementById(`result-corrections-${t}`).textContent=v[t]!==undefined?v[t]:"--"}showPage(6)}function resetTestState(){o={};r={};b={};S={};v={};for(let t=1;t<=5;t++){if(o[t])clearInterval(o[t]);document.getElementById(`timer-${t}`).textContent="Süre: 0.000 saniye";document.getElementById(`errors-${t}`).value=0;document.getElementById(`corrections-${t}`).value=0;document.getElementById(`error-inputs-${t}`).classList.remove("visible");const e=document.getElementById(`page-${t}`);e.querySelector('button[onclick^="startTimer"]').disabled=false;e.querySelector('button[onclick^="stopTimer"]').disabled=true;const n=document.getElementById(`nav-button-container-${t}`);n.innerHTML=""}for(let t=1;t<=5;t++){document.getElementById(`result-time-${t}`).textContent="--";document.getElementById(`result-errors-${t}`).textContent="--";document.getElementById(`result-corrections-${t}`).textContent="--"}}function resetTest(){resetTestState();showPage(0)}showPage(0);function downloadResults(){const t=sessionStorage.getItem("confirmationFormData");const e=JSON.parse(t);const n=e["userName"];const o=e["telNumber"];const r=e["birthDate"];const s=e["question1"];const c=e["question1Details"];const i=e["question2"];const a=e["sex"];let u="Stroop Test Sonuçları\n\n";u+=`Ad-Soyad: ${n}\n`;u+=`Telefon Numarası: ${o}\n\n`;u+=`Doğum Tarihi: ${r}\n`;u+=`Cinsiyeti: ${a}\n`;u+=`Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${s}\n`;u+=`Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${c}\n`;u+=`Renk körlüğü ya da görme bozukluğu var mı?: ${i}\n\n`;for(let t=1;t<=5;t++){const $=b[t]!==undefined?b[t].toFixed(3):"--";const f=S[t]!==undefined?S[t]:"--";const p=v[t]!==undefined?v[t]:"--";u+=`Kart ${t}:\n`;u+=`  Süre: ${$} saniye\n`;u+=`  Hata Sayısı: ${f}\n`;u+=`  Düzeltme Sayısı: ${p}\n\n`}const d=new Blob([u],{type:"text/plain"});const l=URL.createObjectURL(d);const m=document.createElement("a");m.href=l;m.download="stroop_testi_sonuçlar.txt";document.body.appendChild(m);m.click();document.body.removeChild(m);URL.revokeObjectURL(l)}
+	    let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+        let timers = {}; // To store timer intervals
+        let startTimes = {}; // To store start times
+        let elapsedTimes = {}; // To store elapsed times for each page
+        let errorCounts = {}; // To store error counts
+        let correctionCounts = {}; // To store correction counts
+
+        function showPage(pageIndex) {
+            pages.forEach((page, index) => {
+                page.classList.toggle('active', index === pageIndex);
+            });
+            currentPage = pageIndex;
+        }
+
+        function startTest() {
+            resetTestState(); // Ensure clean state before starting
+            showPage(1); // Show first card page
+        }
+
+        function startTimer(pageIndex) {
+            startTimes[pageIndex] = Date.now();
+            // Disable start button, enable stop button
+            const pageElement = document.getElementById(`page-${pageIndex}`);
+            pageElement.querySelector('button[onclick^="startTimer"]').disabled = true;
+            pageElement.querySelector('button[onclick^="stopTimer"]').disabled = false;
+             // Hide error inputs if they were somehow visible
+            document.getElementById(`error-inputs-${pageIndex}`).classList.remove('visible');
+            // Remove any existing next button
+             const navContainer = document.getElementById(`nav-button-container-${pageIndex}`);
+             navContainer.innerHTML = '';
+
+
+            // Update timer display every 10ms
+            timers[pageIndex] = setInterval(() => {
+                const elapsed = (Date.now() - startTimes[pageIndex]) / 1000;
+                document.getElementById(`timer-${pageIndex}`).textContent = `Süre: ${elapsed.toFixed(3)} saniye`;
+            }, 10);
+        }
+
+        function stopTimer(pageIndex) {
+            if (timers[pageIndex]) {
+                clearInterval(timers[pageIndex]);
+                timers[pageIndex] = null;
+                elapsedTimes[pageIndex] = (Date.now() - startTimes[pageIndex]) / 1000;
+                document.getElementById(`timer-${pageIndex}`).textContent = `Süre: ${elapsedTimes[pageIndex].toFixed(3)} saniye`;
+                // Disable stop button
+                 const pageElement = document.getElementById(`page-${pageIndex}`);
+                 pageElement.querySelector('button[onclick^="stopTimer"]').disabled = true;
+
+                 // Show error inputs
+                 document.getElementById(`error-inputs-${pageIndex}`).classList.add('visible');
+
+                // Add the next/results button
+                addNavButton(pageIndex);
+            }
+        }
+
+         function recordAndProceed(currentPageIndex) {
+             // Record errors and corrections
+             const errorsInput = document.getElementById(`errors-${currentPageIndex}`);
+             const correctionsInput = document.getElementById(`corrections-${currentPageIndex}`);
+
+             errorCounts[currentPageIndex] = parseInt(errorsInput.value, 10) || 0;
+             correctionCounts[currentPageIndex] = parseInt(correctionsInput.value, 10) || 0;
+
+            // Hide error inputs again
+            document.getElementById(`error-inputs-${currentPageIndex}`).classList.remove('visible');
+
+             // Proceed to next step
+              if (currentPageIndex < 5) {
+                  showPage(currentPageIndex + 1);
+              } else {
+                  displayResults();
+              }
+         }
+
+
+        function addNavButton(currentPageIndex) {
+             const navContainer = document.getElementById(`nav-button-container-${currentPageIndex}`);
+             navContainer.innerHTML = ''; // Clear previous button if any
+
+             const nextButton = document.createElement('button');
+             nextButton.textContent = (currentPageIndex < 5) ? 'Sonraki Kart' : 'Sonuçları Gör';
+             nextButton.className = 'next-button';
+             nextButton.onclick = () => recordAndProceed(currentPageIndex); // Record values before proceeding
+             navContainer.appendChild(nextButton);
+        }
+
+         function displayResults() {
+	    const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
+	    document.getElementById("namesurname").textContent = "(Ad-Soyad: " + receivedData["userName"] + ")";
+            // Populate results summary table
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`result-time-${i}`).textContent = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
+                document.getElementById(`result-errors-${i}`).textContent = errorCounts[i] !== undefined ? errorCounts[i] : '--';
+                document.getElementById(`result-corrections-${i}`).textContent = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
+            }
+            showPage(6); // Show results page
+        }
+
+        function resetTestState() {
+            timers = {};
+            startTimes = {};
+            elapsedTimes = {};
+            errorCounts = {};
+            correctionCounts = {};
+
+             // Reset timer displays, buttons, inputs, and hide error sections
+             for (let i = 1; i <= 5; i++) {
+                 if(timers[i]) clearInterval(timers[i]); // Clear any running timers
+                 document.getElementById(`timer-${i}`).textContent = 'Süre: 0.000 saniye';
+                 document.getElementById(`errors-${i}`).value = 0; // Reset input
+                 document.getElementById(`corrections-${i}`).value = 0; // Reset input
+                 document.getElementById(`error-inputs-${i}`).classList.remove('visible'); // Hide inputs
+
+                 const pageElement = document.getElementById(`page-${i}`);
+                 pageElement.querySelector('button[onclick^="startTimer"]').disabled = false;
+                 pageElement.querySelector('button[onclick^="stopTimer"]').disabled = true;
+
+                // Clear navigation button container
+                const navContainer = document.getElementById(`nav-button-container-${i}`);
+                navContainer.innerHTML = '';
+             }
+             // Reset results page table
+            for (let i = 1; i <= 5; i++) {
+                 document.getElementById(`result-time-${i}`).textContent = '--';
+                 document.getElementById(`result-errors-${i}`).textContent = '--';
+                 document.getElementById(`result-corrections-${i}`).textContent = '--';
+            }
+        }
+
+
+        function resetTest() {
+            resetTestState(); // Clear current state
+            showPage(0); // Go back to initial instructions
+        }
+
+        // Initialize by showing the first page (instructions)
+        showPage(0);
+
+    // {{change 3: Add downloadResults function}}
+    function downloadResults() {
+        // Get user info
+		
+	    const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
+		//userName, telNumber
+		
+		
+        	const name = receivedData["userName"];
+		const telNo = receivedData["telNumber"];
+	    	const birthDate = receivedData["birthDate"];
+		const question1 = receivedData["question1"];
+		const question1Details = receivedData["question1Details"];
+		const question2 = receivedData["question2"];
+		const sex = receivedData["sex"];
+	    
+		//sessionStorage.removeItem('confirmationFormData');
+		
+        // Get test results
+        let resultsText = "Stroop Test Sonuçları\n\n";
+        	 resultsText +=  `Ad-Soyad: ${name}\n`;
+		 resultsText +=  `Telefon Numarası: ${telNo}\n\n`;
+		 resultsText +=  `Doğum Tarihi: ${birthDate}\n`;
+		 resultsText +=  `Cinsiyeti: ${sex}\n`;
+		 resultsText +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+		 resultsText +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+		 resultsText +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
+
+        for (let i = 1; i <= 5; i++) {
+            const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
+            const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
+            const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
+            resultsText += `Kart ${i}:\n`;
+            resultsText += `  Süre: ${time} saniye\n`;
+            resultsText += `  Hata Sayısı: ${errors}\n`;
+            resultsText += `  Düzeltme Sayısı: ${corrections}\n\n`;
+        }
+
+        // Create a blob
+        const blob = new Blob([resultsText], { type: 'text/plain' });
+
+        // Create a link and download it
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'stroop_testi_sonuçlar.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // Free up memory
+    }
+
     </script>
 
 </body>
