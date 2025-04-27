@@ -191,7 +191,943 @@
     </div>
 
     <script>
-	    const d={t:25,o:8,i:65,margin:15,l:{u:"bg-white border-2 border-blue-500 text-blue-800",m:"bg-green-100 border-2 border-green-500 text-green-800",error:"bg-red-100 border-2 border-red-500 text-red-800",p:"bg-gray-100 border-2 border-blue-500 text-blue-800 font-extrabold",h:"bg-white border-2 border-purple-500 text-purple-800",g:"bg-purple-100 border-2 border-purple-500 text-purple-800",T:"bg-red-100 border-2 border-red-500 text-red-800"},k:"1\n(başla)"};const A=["A","B","C","Ç","D","E","F","G","Ğ","H","I","İ","J","K","L"];const a={1:{x:62,y:72.2},2:{x:41,y:83.8},3:{x:72,y:83.8},4:{x:73.3,y:38},5:{x:46,y:49},6:{x:59,y:59.3},7:{x:41.3,y:65.8},8:{x:18.6,y:82.5},9:{x:24,y:91.6},10:{x:34.6,y:82.5},11:{x:46,y:94.2},12:{x:7.6,y:95.4},13:{x:14,y:52.9},14:{x:6,y:61.9},15:{x:6,y:12.2},16:{x:15.6,y:29},17:{x:33.3,y:6.4},18:{x:39.6,y:29},19:{x:63.6,y:21.9},20:{x:46,y:20},21:{x:52.3,y:5.1},22:{x:91,y:15.4},23:{x:93.3,y:90.3},24:{x:83,y:51.6},25:{x:79.3,y:94.1}};const o={1:{x:54.6,y:61.6},2:{x:63.8,y:24.6},3:{x:85.3,y:48},4:{x:72.3,y:57.7},5:{x:78.8,y:88.9},6:{x:21.5,y:80.5},7:{x:10.3,y:42.8},8:{x:39.2,y:41.5}};const l={1:{x:54.7,y:61.76},C:{x:63.2,y:25.2},2:{x:85.8,y:47.8},$:{x:72.6,y:57.3},3:{x:79.2,y:88.2},M:{x:21.6,y:80.1},4:{x:10.3,y:44.1},S:{x:39.1,y:38.2}};const u={1:{x:50.6,y:42.6},C:{x:70.3,y:74.6},2:{x:36.6,y:70.6},$:{x:46.2,y:18.6},3:{x:57.3,y:30.6},M:{x:70.6,y:52},4:{x:70.6,y:14.1},S:{x:85.2,y:16},5:{x:85,y:58.6},v:{x:78.6,y:82.6},6:{x:54.3,y:80},E:{x:30,y:89.3},7:{x:23.6,y:44.6},A:{x:15.3,y:57.3},8:{x:12,y:5.8},D:{x:26.6,y:26.6},9:{x:26.6,y:12.6},P:{x:62.6,y:4.8},10:{x:93.3,y:5.3},B:{x:88.3,y:68},11:{x:93.3,y:92},N:{x:7.3,y:94.6},12:{x:5.6,y:48.8},I:{x:17.3,y:74.6}};let p={F:[],L:1,R:false,G:0,O:[],U:[],startTime:null,J:null,q:{time:"00:00.0",H:0,V:0},j:{time:"00:00.0",H:0,V:0},K:{time:"00:00.0",H:0,V:0},Y:{time:"00:00.0",H:0,V:0}};const f=document.getElementById("test-container");const h=document.getElementById("results-screen");const D=document.getElementById("namesurname");const n=document.getElementById("test-area");const m=document.getElementById("node-container");const t=document.getElementById("connection-canvas");const c=t.getContext("2d");const i=document.getElementById("start-btn");const r=document.getElementById("start-part2-btn");const s=document.getElementById("next-training-btn");const y=document.getElementById("reset-btn");const x=document.getElementById("restart-btn");const g=document.getElementById("time-display");const e=document.getElementById("progress-display");const T=document.getElementById("total-nodes");const k=document.getElementById("general-instruction");const C=document.getElementById("training-instruction-part1");const b=document.getElementById("training-instruction-part2");const $=document.getElementById("main-instruction-part1");const M=document.getElementById("main-instruction-part2");const S=document.getElementById("accuracy-info");const v=document.getElementById("accuracy-display");const P=document.getElementById("training-part1-time");const B=document.getElementById("training-part1-accuracy");const N=document.getElementById("training-part1-correct");const E=document.getElementById("training-part1-total");const I=document.getElementById("part1-time");const w=document.getElementById("part1-accuracy");const z=document.getElementById("part1-correct");const F=document.getElementById("part1-total");const L=document.getElementById("training-part2-time");const R=document.getElementById("training-part2-accuracy");const G=document.getElementById("training-part2-correct");const O=document.getElementById("training-part2-total");const U=document.getElementById("part2-time");const J=document.getElementById("part2-accuracy");const q=document.getElementById("part2-correct");const H=document.getElementById("part2-total");function init(){resizeCanvas();setupEventListeners();resetTest()}function setupEventListeners(){i.addEventListener("click",()=>startTraining(1));r.addEventListener("click",()=>startTraining(2));s.addEventListener("click",startMainTest);y.addEventListener("click",resetTest);x.addEventListener("click",resetTest);window.addEventListener("resize",handleResize)}function handleResize(){resizeCanvas()}function resizeCanvas(){t.width=n.clientWidth;t.height=n.clientHeight;updateNodePositions();if(p.U.length>0){drawConnections()}}function updateNodePositions(){const c=n.clientWidth;const i=n.clientHeight;const r=d.i/2;let s;if(p.R){s=p.L===1?o:l}else{s=p.L===1?a:u}p.F.forEach(t=>{const e=s[t.value];if(e){const n=e.x/100*c-r;const o=e.y/100*i-r;t.element.style.left=`${n}px`;t.element.style.top=`${o}px`;t.x=n+r;t.y=o+r}else{console.warn(`Position not found for node value ${t.value} during resize.`)}})}function resetUI(){g.textContent="00:00.0";e.textContent="0";T.textContent=d.t;k.classList.remove("hidden");C.classList.add("hidden");b.classList.add("hidden");$.classList.add("hidden");M.classList.add("hidden");i.classList.remove("hidden");r.classList.add("hidden");s.classList.add("hidden");y.classList.add("hidden");x.classList.add("hidden");S.classList.add("hidden");v.textContent="--";f.classList.remove("hidden");h.classList.add("hidden");m.innerHTML="";p.F=[];clearConnections()}function startTraining(t){resetUI();p.R=true;p.L=t;p.G=0;p.U=[];let e;let n;if(t===1){e=[1,2,3,4,5,6,7,8];n=o;C.classList.remove("hidden");p.K={time:"00:00.0",H:0,V:0}}else{e=[1,"A",2,"B",3,"C",4,"Ç"];n=l;b.classList.remove("hidden");p.Y={time:"00:00.0",H:0,V:0}}p.O=e;generateNodes(p.O,n);k.classList.add("hidden");updateProgress();i.classList.add("hidden");y.classList.remove("hidden");S.classList.remove("hidden");startTimer()}function startMainTest(){stopTimer();if(p.L===1){p.K.time=g.textContent;const n=p.K.V>0?Math.round(p.K.H/p.K.V*100):0;p.K.accuracy=n}else{p.Y.time=g.textContent;const n=p.Y.V>0?Math.round(p.Y.H/p.Y.V*100):0;p.Y.accuracy=n}m.innerHTML="";p.F=[];clearConnections();p.R=false;p.G=0;p.U=[];let e;let t;if(p.L===1){e=Array.from({length:d.t},(t,e)=>e+1);t=a;$.classList.remove("hidden");C.classList.add("hidden");p.q={time:"00:00.0",H:0,V:0}}else{e=[];const o=12;const c=12;for(let t=0;t<d.t;t++){if(t%2===0){const i=Math.floor(t/2)+1;if(i<=o){e.push(i)}}else{const r=Math.floor(t/2);if(r<c){e.push(A[r])}}}e=e.slice(0,d.t);t=u;M.classList.remove("hidden");b.classList.add("hidden");p.j={time:"00:00.0",H:0,V:0}}p.O=e;generateNodes(p.O,t);updateProgress();s.classList.add("hidden");y.classList.remove("hidden");updateAccuracyDisplay();startTimer()}function resetTest(){stopTimer();resetUI();p={F:[],L:1,R:false,G:0,O:[],U:[],startTime:null,J:null,q:{time:"00:00.0",H:0,V:0},j:{time:"00:00.0",H:0,V:0},K:{time:"00:00.0",H:0,V:0},Y:{time:"00:00.0",H:0,V:0}};i.classList.remove("hidden")}function generateNodes(t,i){m.innerHTML="";p.F=[];const r=n.clientWidth;const s=n.clientHeight;const e=d.i;const a=e/2;t.forEach(t=>{const e=i[t];if(!e){console.error(`Fixed position not found for value: ${t} in the provided map.`);return}const n=e.x/100*r-a;const o=e.y/100*s-a;const c=document.createElement("div");c.className=`node ${p.R?d.l.h:d.l.u}`;c.style.left=`${n}px`;c.style.top=`${o}px`;c.dataset.value=t;c.textContent=t;c.addEventListener("click",handleNodeClick);m.appendChild(c);p.F.push({element:c,value:t,x:n+a,y:o+a})});updateNodeLabelsAndValues();T.textContent=p.F.length}function updateNodeLabelsAndValues(){const c=p.O;const i=c[c.length-1];p.F.forEach(t=>{const e=t.value;let n=e;let o=`node ${p.R?d.l.h:d.l.u}`;if(e==c[0]){n=`${e}\n(başla)`;o=`node ${d.l.p}`}else if(e==i){n=`${e}\n(bitir)`;o=`node ${d.l.p}`}else{o=`node ${p.R?d.l.h:d.l.u}`}t.element.className=o;t.element.textContent=n})}function handleNodeClick(t){if(p.startTime===null)return;const e=t.target;const n=p.F.find(t=>t.element===e);if(!n||n.value===null){console.warn("Clicked on an unassigned node.");return}const o=n.value;const c=p.O[p.G];if(p.R){if(p.L===1)p.K.V++;else p.Y.V++}else{if(p.L===1)p.q.V++;else p.j.V++}updateAccuracyDisplay();if(o==c){handleCorrectTap(n)}else{handleIncorrectTap(e)}}function updateAccuracyDisplay(){let t,e;if(p.R){if(p.L===1){t=p.K.H;e=p.K.V}else{t=p.Y.H;e=p.Y.V}}else{if(p.L===1){t=p.q.H;e=p.q.V}else{t=p.j.H;e=p.j.V}}const n=e>0?Math.round(t/e*100):0;v.textContent=n;S.classList.remove("hidden")}function handleCorrectTap(t){if(p.R){if(p.L===1)p.K.H++;else p.Y.H++}else{if(p.L===1)p.q.H++;else p.j.H++}updateAccuracyDisplay();p.U.push(t);const e=t.value==p.O[0];const n=t.value==p.O[p.O.length-1];if(!e&&!n){t.element.className=`node ${p.R?d.l.g:d.l.m}`}else if(n&&p.G===p.O.length-1){t.element.className=`node ${p.R?d.l.g:d.l.m}`}if(p.U.length>1){drawConnections()}p.G++;updateProgress();if(p.G>=p.O.length){if(p.R){handleTrainingComplete()}else{handleMainTestPartComplete()}}}function handleIncorrectTap(t){const e=t.className;const n=e.includes(d.l.p.split(" ")[0]);t.classList.add("error-shake");if(!n){t.className=`node ${p.R?d.l.T:d.l.error}`}if(p.R){const o=p.O[p.G];const c=p.F.find(t=>t.value==o);if(c){c.element.classList.add("highlight-correct");setTimeout(()=>{c.element.classList.remove("highlight-correct");if(!n){t.className=e}},1e3)}else{if(!n){setTimeout(()=>{t.className=e},500)}}}else{if(!n){setTimeout(()=>{t.className=e},500)}}setTimeout(()=>{t.classList.remove("error-shake")},500)}function handleTrainingComplete(){stopTimer();const t=g.textContent;if(p.L===1){p.K.time=t}else{p.Y.time=t}s.classList.remove("hidden");y.classList.add("hidden");S.classList.add("hidden");m.innerHTML="";p.F=[];clearConnections();if(p.L===1){C.textContent="Eğitim Tamamlandı! Ana Teste Geçmek İçin 'Ana Teste Geç' Butonuna Tıklayın."}else{b.textContent="Eğitim Tamamlandı! Ana Teste Geçmek İçin 'Ana Teste Geç' Butonuna Tıklayın."}}function handleMainTestPartComplete(){const t=g.textContent;stopTimer();if(p.L===1){p.q.time=t;const e=p.q.V>0?Math.round(p.q.H/p.q.V*100):0;p.q.accuracy=e;S.classList.add("hidden");if(p.L===1){r.classList.remove("hidden")}y.classList.add("hidden")}else{p.j.time=t;const n=p.j.V>0?Math.round(p.j.H/p.j.V*100):0;p.j.accuracy=n;S.classList.add("hidden");y.classList.add("hidden");displayResults()}}function displayResults(){const t=sessionStorage.getItem("confirmationFormData");const e=JSON.parse(t);const n=e["userName"];f.classList.add("hidden");h.classList.remove("hidden");x.classList.remove("hidden");D.textContent="(Ad-Soyad: "+n+")";P.textContent=p.K.time;B.textContent=p.K.accuracy;N.textContent=p.K.H;E.textContent=p.K.V;I.textContent=p.q.time;w.textContent=p.q.accuracy;z.textContent=p.q.H;F.textContent=p.q.V;L.textContent=p.Y.time;R.textContent=p.Y.accuracy;G.textContent=p.Y.H;O.textContent=p.Y.V;U.textContent=p.j.time;J.textContent=p.j.accuracy;q.textContent=p.j.H;H.textContent=p.j.V;const o=timeToMs(p.K.time)+timeToMs(p.Y.time)+timeToMs(p.q.time)+timeToMs(p.j.time);const c=msToTime(o);const i=p.K.H+p.Y.H+p.q.H+p.j.H;const r=p.K.V+p.Y.V+p.q.V+p.j.V;const s=r>0?Math.round(i/r*100):0;const a=timeToMs(p.Y.time)-timeToMs(p.K.time);const d=msToTime(a);const l=timeToMs(p.j.time)-timeToMs(p.q.time);const u=msToTime(l);const m=p.K.accuracy!=0?Math.round((p.Y.accuracy-p.K.accuracy)/p.K.accuracy*100):0;const y=p.q.accuracy!=0?Math.round((p.j.accuracy-p.q.accuracy)/p.q.accuracy*100):0;document.getElementById("total-time").textContent=c;document.getElementById("average-accuracy").textContent=s;document.getElementById("training-time-difference").textContent=d;document.getElementById("test-time-difference").textContent=u;document.getElementById("training-accuracy-difference").textContent=m;document.getElementById("test-accuracy-difference").textContent=y;function timeToMs(t){const[e,n]=t.split(":");const[o,c]=n.split(".");return(parseInt(e)*60+parseInt(o))*1e3+parseInt(c)*100}function msToTime(t){const e=Math.floor(t/(1e3*60)).toString().padStart(2,"0");const n=Math.floor(t/1e3%60).toString().padStart(2,"0");const o=Math.floor(t%1e3/100).toString();return`${e}:${n}.${o}`}}function drawConnections(){c.clearRect(0,0,t.width,t.height);c.strokeStyle="#10b981";c.lineWidth=3;c.lineCap="round";for(let t=1;t<p.U.length;t++){const e=p.U[t-1];const n=p.U[t];c.beginPath();c.moveTo(e.x,e.y);c.lineTo(n.x,n.y);c.stroke()}}function clearConnections(){c.clearRect(0,0,t.width,t.height)}function updateProgress(){e.textContent=p.G;T.textContent=p.O.length}function startTimer(){stopTimer();p.startTime=Date.now();p.J=setInterval(updateTimer,100);updateTimer()}function stopTimer(){clearInterval(p.J);p.J=null;p.startTime=null}function updateTimer(){if(!p.startTime){g.textContent="00:00.0";return}const t=Date.now()-p.startTime;const e=Math.floor(t/1e3);const n=Math.floor(e/60).toString().padStart(2,"0");const o=(e%60).toString().padStart(2,"0");const c=Math.floor(t%1e3/100).toString();g.textContent=`${n}:${o}.${c}`}window.addEventListener("DOMContentLoaded",init);function downloadResults(){const t=sessionStorage.getItem("confirmationFormData");const e=JSON.parse(t);const n=e["userName"];const o=e["telNumber"];const c=e["birthDate"];const i=e["question1"];const r=e["question1Details"];const s=e["question2"];const a=e["sex"];const d=document.getElementById("part1-time").textContent;const l=document.getElementById("part1-accuracy").textContent;const u=document.getElementById("part2-time").textContent;const m=document.getElementById("part2-accuracy").textContent;const y=document.getElementById("training-part1-time").textContent;const p=document.getElementById("training-part1-accuracy").textContent;const f=document.getElementById("training-part2-time").textContent;const h=document.getElementById("training-part2-accuracy").textContent;const x=document.getElementById("total-time").textContent;const g=document.getElementById("average-accuracy").textContent;const T=document.getElementById("training-time-difference").textContent;const k=document.getElementById("test-time-difference").textContent;const C=document.getElementById("training-accuracy-difference").textContent;const b=document.getElementById("test-accuracy-difference").textContent;let $=text+=`Ad-Soyad: ${n}\n`;$+=`Telefon Numarası: ${o}\n\n`;$+=`Doğum Tarihi: ${c}\n`;$+=`Cinsiyeti: ${a}\n`;$+=`Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${i}\n`;$+=`Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${r}\n`;$+=`Renk körlüğü ya da görme bozukluğu var mı?: ${s}\n\n`;$+=`1. Bölüm Eğitim Süresi: ${y}\n`;$+=`1. Bölüm Eğitim Doğruluğu: ${p}\n`;$+=`1. Bölüm Süresi: ${d}\n`;$+=`1. Bölüm Doğruluğu: ${l}\n\n`;$+=`2. Bölüm Eğitim Süresi: ${f}\n`;$+=`2. Bölüm Eğitim Doğruluğu: ${h}\n`;$+=`2. Bölüm Süresi: ${u}\n`;$+=`2. Bölüm Doğruluğu: ${m}\n\n`;$+=`Toplam Süre: ${x}\n`;$+=`Ortalama Doğruluk: ${g}\n`;$+=`Eğitimler Arası Süre Farkı: ${T}\n`;$+=`Bölümler Arası Süre Farkı: ${k}\n`;$+=`Bölümler Arası Doğruluk Farkı: ${C}\n`;$+=`Eğitimler Arası Doğruluk Farkı: ${b}\n`;const M="tmt_sonuçlar.txt";const S=document.createElement("a");S.setAttribute("href","data:text/plain;charset=utf-8,"+encodeURIComponent($));S.setAttribute("download",M);S.style.display="none";document.body.appendChild(S);S.click();document.body.removeChild(S)}document.addEventListener("DOMContentLoaded",function(){const t=document.getElementById("download-btn");t.addEventListener("click",downloadResults)});
+	    // Configuration
+        const config = {
+            nodesPerPart: 25, // Fixed number of nodes for the main test
+            trainingNodesCount: 8, // Number of nodes for training
+            nodeSize: 65,     // Increased size slightly based on image appearance
+            margin: 15,       // Increased margin slightly
+            colors: {
+                neutral: 'bg-white border-2 border-blue-500 text-blue-800',
+                correct: 'bg-green-100 border-2 border-green-500 text-green-800',
+                error: 'bg-red-100 border-2 border-red-500 text-red-800',
+                startEnd: 'bg-gray-100 border-2 border-blue-500 text-blue-800 font-extrabold', // Style for Start/End
+                trainingNeutral: 'bg-white border-2 border-purple-500 text-purple-800', // Training node style
+                 trainingCorrect: 'bg-purple-100 border-2 border-purple-500 text-purple-800',
+                 trainingError: 'bg-red-100 border-2 border-red-500 text-red-800'
+            },
+            startLabel: '1\n(başla)',
+            //endLabel: '(bitiş)'
+        };
+
+        // Turkish alphabet sequence (only need up to L for 13 letters)
+        const turkishAlphabet = ['A', 'B', 'C', 'Ç', 'D', 'E', 'F', 'G', 'Ğ', 'H', 'I', 'İ', 'J', 'K', 'L']; // L is the 12th letter needed (0-indexed)
+
+        // Fixed positions for Main Part 1 nodes (estimated percentages for the center of the node)
+        // Based on image.png
+		//15, 7.75
+        const mainPart1NodePositions = {
+            1: { x: 62, y: 72.2 },
+            2: { x: 41, y: 83.8 },
+            3: { x: 72, y: 83.8 },
+            4: { x: 73.3, y: 38 },
+            5: { x: 46, y: 49 },
+            6: { x: 59, y: 59.3 },
+            7: { x: 41.3, y: 65.8 },
+            8: { x: 18.6, y: 82.5 },
+            9: { x: 24, y: 91.6 },
+            10: { x: 34.6, y: 82.5 },
+            11: { x: 46, y: 94.2 },
+            12: { x: 7.6, y: 95.4 },
+            13: { x: 14, y: 52.9 },
+            14: { x: 6, y: 61.9 },
+            15: { x: 6, y: 12.2 },
+            16: { x: 15.6, y: 29 },
+            17: { x: 33.3, y: 6.4 },
+            18: { x: 39.6, y: 29 },
+            19: { x: 63.6, y: 21.9 },
+            20: { x: 46, y: 20 },
+            21: { x: 52.3, y: 5.1 },
+            22: { x: 91, y: 15.4 },
+            23: { x: 93.3, y: 90.3 },
+            24: { x: 83, y: 51.6 },
+            25: { x: 79.3, y: 94.1 }, // Adjusted 25 slightly
+        };
+
+        // Fixed positions for Training Part 1 nodes (placeholder)
+		//13, 7.7
+        const trainingPart1NodePositions = {
+            1: { x: 54.6, y: 61.6 },
+            2: { x: 63.8, y: 24.6 },
+            3: { x: 85.3, y: 48 },
+            4: { x: 72.3, y: 57.7 },
+            5: { x: 78.8, y: 88.9 },
+            6: { x: 21.5, y: 80.5 },
+            7: { x: 10.3, y: 42.8 },
+            8: { x: 39.2, y: 41.5 },
+        };
+
+        // Fixed positions for Training Part 2 nodes (placeholder)
+		//10.6, 6.8
+        const trainingPart2NodePositions = {
+            1: { x: 54.7, y: 61.76 },
+            'A': { x: 63.2, y: 25.2 },
+            2: { x: 85.8, y: 47.8 },
+            'B': { x: 72.6, y: 57.3 },
+            3: { x: 79.2, y: 88.2 },
+            'C': { x: 21.6, y: 80.1 },
+            4: { x: 10.3, y: 44.1 },
+            'Ç': { x: 39.1, y: 38.2 },
+        };
+
+        // Fixed positions for Main Part 2 nodes (estimated percentages for the center of the node)
+        // Based on Trail Making Test Part B image
+		//15, 7.5
+        const mainPart2NodePositions = {
+            1:   { x: 50.6, y: 42.6 },
+            'A': { x: 70.3, y: 74.6 },
+            2:   { x: 36.6, y: 70.6 },
+            'B': { x: 46.2, y: 18.6 },
+            3:   { x: 57.3, y: 30.6 },
+            'C': { x: 70.6, y: 52 },
+            4:   { x: 70.6, y: 14.1 },
+            'Ç': { x: 85.2, y: 16 },//d
+            5:   { x: 85, y: 58.6 },
+            'D': { x: 78.6, y: 82.6 },//e
+            6:   { x: 54.3, y: 80 },
+            'E': { x: 30, y: 89.3 },//f
+            7:   { x: 23.6, y: 44.6 },
+            'F': { x: 15.3, y: 57.3 },//g
+            8:   { x: 12, y: 5.8 },
+            'G': { x: 26.6, y: 26.6 },//h
+            9:   { x: 26.6, y: 12.6 },
+            'Ğ': { x: 62.6, y: 4.8 },//I
+            10:  { x: 93.3, y: 5.3 },
+            'H': { x: 88.3, y: 68 },//j
+            11:  { x: 93.3, y: 92 },
+            'I': { x: 7.3, y: 94.6 },//k
+            12:  { x: 5.6, y: 48.8 },
+            'İ': { x: 17.3, y: 74.6 },//L
+             // Estimate position for 13, near L as it's the next in sequence
+        };
+
+
+        // State variables
+        let state = {
+            nodes: [], // Stores { element, value, x, y } for current session (training or main)
+            currentPart: 1, // 1 or 2
+            isTraining: false,
+            currentStep: 0, // Current step in the current sequence (training or main)
+            correctSequence: [], // The sequence expected to be clicked for the current session
+            tappedNodes: [], // Nodes tapped correctly { element, value, x, y } in the current session
+            startTime: null,
+            timerInterval: null,
+            part1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+            part2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+            trainingPart1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+            trainingPart2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+        };
+
+        // DOM elements
+        const testContainer = document.getElementById('test-container');
+        const resultsScreen = document.getElementById('results-screen');
+		const nameSurnameH4 = document.getElementById("namesurname");
+        const testArea = document.getElementById('test-area');
+        const nodeContainer = document.getElementById('node-container');
+        const connectionCanvas = document.getElementById('connection-canvas');
+        const ctx = connectionCanvas.getContext('2d');
+        const startBtn = document.getElementById('start-btn');
+        const startPart2Btn = document.getElementById('start-part2-btn'); // Changed from next-part-btn
+        const nextTrainingBtn = document.getElementById('next-training-btn'); // New button for training to main
+        const resetBtn = document.getElementById('reset-btn'); // This becomes active mid-test
+        const restartBtn = document.getElementById('restart-btn'); // Button on results screen
+        const timeDisplay = document.getElementById('time-display');
+        const progressDisplay = document.getElementById('progress-display');
+        const totalNodesDisplay = document.getElementById('total-nodes');
+        const generalInstruction = document.getElementById('general-instruction');
+        const trainingInstructionPart1 = document.getElementById('training-instruction-part1');
+        const trainingInstructionPart2 = document.getElementById('training-instruction-part2');
+        const mainInstructionPart1 = document.getElementById('main-instruction-part1');
+        const mainInstructionPart2 = document.getElementById('main-instruction-part2');
+        const accuracyInfo = document.getElementById('accuracy-info');
+        const accuracyDisplay = document.getElementById('accuracy-display');
+
+        // Results Screen Elements
+        const trainingPart1TimeDisp = document.getElementById('training-part1-time');
+        const trainingPart1AccuracyDisp = document.getElementById('training-part1-accuracy');
+        const trainingPart1CorrectDisp = document.getElementById('training-part1-correct');
+        const trainingPart1TotalDisp = document.getElementById('training-part1-total');
+        const part1TimeDisp = document.getElementById('part1-time');
+        const part1AccuracyDisp = document.getElementById('part1-accuracy');
+        const part1CorrectDisp = document.getElementById('part1-correct');
+        const part1TotalDisp = document.getElementById('part1-total');
+
+        const trainingPart2TimeDisp = document.getElementById('training-part2-time');
+        const trainingPart2AccuracyDisp = document.getElementById('training-part2-accuracy');
+        const trainingPart2CorrectDisp = document.getElementById('training-part2-correct');
+        const trainingPart2TotalDisp = document.getElementById('training-part2-total');
+        const part2TimeDisp = document.getElementById('part2-time');
+        const part2AccuracyDisp = document.getElementById('part2-accuracy');
+        const part2CorrectDisp = document.getElementById('part2-correct');
+        const part2TotalDisp = document.getElementById('part2-total');
+
+
+        // Initialize the application
+        function init() {
+            resizeCanvas();
+            setupEventListeners();
+            resetTest(); // Start in a clean, initial state
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            startBtn.addEventListener('click', () => startTraining(1)); // Start training for Part 1
+            startPart2Btn.addEventListener('click', () => startTraining(2)); // Start training for Part 2
+            nextTrainingBtn.addEventListener('click', startMainTest); // Transition from training to main
+            resetBtn.addEventListener('click', resetTest); // Mid-test reset
+            restartBtn.addEventListener('click', resetTest); // Post-test reset
+            window.addEventListener('resize', handleResize); // Use a dedicated resize handler
+        }
+
+        // Handle window resize - redraw canvas and potentially reposition nodes if not fixed
+        function handleResize() {
+            resizeCanvas();
+            // Since all nodes are now fixed with percentages, they will naturally reposition.
+            // We just need to ensure connections are redrawn.
+        }
+
+        // Resize canvas to match test area
+        function resizeCanvas() {
+            connectionCanvas.width = testArea.clientWidth;
+            connectionCanvas.height = testArea.clientHeight;
+            // Update node positions and redraw connections on resize
+            updateNodePositions(); // Re-calculate pixel positions based on current testArea size
+            if (state.tappedNodes.length > 0) {
+                drawConnections(); // Redraw connections on resize
+            }
+        }
+
+         // Update the pixel positions (x, y in state.nodes) based on current container size and fixed percentages
+         function updateNodePositions() {
+             const containerWidth = testArea.clientWidth;
+             const containerHeight = testArea.clientHeight;
+             const nodeRadius = config.nodeSize / 2;
+
+             let fixedPositionsMap;
+             if (state.isTraining) {
+                 fixedPositionsMap = state.currentPart === 1 ? trainingPart1NodePositions : trainingPart2NodePositions;
+             } else {
+                 fixedPositionsMap = state.currentPart === 1 ? mainPart1NodePositions : mainPart2NodePositions;
+             }
+
+
+             state.nodes.forEach(nodeData => {
+                 const position = fixedPositionsMap[nodeData.value];
+                  if (position) { // Ensure position exists
+                      const x = (position.x / 100) * containerWidth - nodeRadius;
+                      const y = (position.y / 100) * containerHeight - nodeRadius;
+
+                      nodeData.element.style.left = `${x}px`;
+                      nodeData.element.style.top = `${y}px`;
+                      nodeData.x = x + nodeRadius; // Update center x
+                      nodeData.y = y + nodeRadius; // Update center y
+                  } else {
+                       console.warn(`Position not found for node value ${nodeData.value} during resize.`);
+                  }
+             });
+         }
+
+
+        // Reset UI elements and state to initial state
+         function resetUI() {
+            timeDisplay.textContent = '00:00.0';
+            progressDisplay.textContent = '0';
+            totalNodesDisplay.textContent = config.nodesPerPart; // Default to main test count initially
+
+            // Hide all instructions
+            generalInstruction.classList.remove('hidden');
+            trainingInstructionPart1.classList.add('hidden');
+            trainingInstructionPart2.classList.add('hidden');
+            mainInstructionPart1.classList.add('hidden');
+            mainInstructionPart2.classList.add('hidden');
+
+            // Hide all buttons except start
+            startBtn.classList.remove('hidden');
+            startPart2Btn.classList.add('hidden');
+            nextTrainingBtn.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            restartBtn.classList.add('hidden');
+
+            accuracyInfo.classList.add('hidden');
+            accuracyDisplay.textContent = '--';
+            testContainer.classList.remove('hidden');
+            resultsScreen.classList.add('hidden');
+            nodeContainer.innerHTML = ''; // Clear nodes
+            state.nodes = []; // Ensure state.nodes is cleared
+            clearConnections();
+         }
+
+        // Start a training session
+        function startTraining(part) {
+            resetUI(); // Ensure clean start
+            state.isTraining = true;
+            state.currentPart = part;
+            state.currentStep = 0;
+            state.tappedNodes = [];
+
+            let trainingSequence;
+            let trainingPositionsMap;
+
+            if (part === 1) {
+                trainingSequence = [1, 2, 3, 4, 5, 6, 7, 8];
+                trainingPositionsMap = trainingPart1NodePositions;
+                trainingInstructionPart1.classList.remove('hidden');
+                state.trainingPart1Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset stats for this training session
+            } else { // part === 2
+                trainingSequence = [1, 'A', 2, 'B', 3, 'C', 4, 'Ç'];
+                trainingPositionsMap = trainingPart2NodePositions;
+                trainingInstructionPart2.classList.remove('hidden');
+                state.trainingPart2Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset stats for this training session
+            }
+
+            state.correctSequence = trainingSequence; // Set correct sequence for the current session
+
+            // Generate training nodes using fixed positions
+            generateNodes(state.correctSequence, trainingPositionsMap);
+
+            // Update UI for training
+            generalInstruction.classList.add('hidden'); // Hide general instruction
+            updateProgress();
+            startBtn.classList.add('hidden');
+            resetBtn.classList.remove('hidden'); // Show mid-test reset
+            accuracyInfo.classList.remove('hidden'); // Show accuracy display
+
+            // Start timer for training
+            startTimer(); // Use the same timer logic
+        }
+
+        // Transition from training to the main test
+        function startMainTest() {
+             stopTimer(); // Stop training timer
+
+            // Store training stats
+             if (state.currentPart === 1) {
+                 state.trainingPart1Stats.time = timeDisplay.textContent;
+                 const acc = state.trainingPart1Stats.totalClicks > 0 ? Math.round((state.trainingPart1Stats.correctClicks / state.trainingPart1Stats.totalClicks) * 100) : 0;
+                 state.trainingPart1Stats.accuracy = acc;
+             } else { // Part 2
+                 state.trainingPart2Stats.time = timeDisplay.textContent;
+                  const acc = state.trainingPart2Stats.totalClicks > 0 ? Math.round((state.trainingPart2Stats.correctClicks / state.trainingPart2Stats.totalClicks) * 100) : 0;
+                 state.trainingPart2Stats.accuracy = acc;
+             }
+
+
+             // Clear training nodes and connections
+             nodeContainer.innerHTML = '';
+             state.nodes = []; // Clear node data
+             clearConnections();
+
+             state.isTraining = false; // Switch to main test mode
+             state.currentStep = 0; // Reset step for main test
+             state.tappedNodes = []; // Reset tapped nodes for main test
+
+             let mainSequence;
+             let mainPositionsMap;
+
+            // Set up correct sequence and fixed positions map for the main part
+            if (state.currentPart === 1) {
+                mainSequence = Array.from({length: config.nodesPerPart}, (_, i) => i + 1);
+                mainPositionsMap = mainPart1NodePositions; // Use the existing Part 1 fixed map
+                mainInstructionPart1.classList.remove('hidden'); // Show main Part 1 instruction
+                trainingInstructionPart1.classList.add('hidden'); // Hide training instruction
+                state.part1Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset main stats for this part
+            } else { // Part 2
+                 mainSequence = [];
+                 const numCount = 12;
+                 const letterCount = 12;
+                 for (let i = 0; i < config.nodesPerPart; i++) {
+                       // Sequence is 1, A, 2, B, ...
+                      if (i % 2 === 0) { // Even index -> Number
+                           const num = Math.floor(i / 2) + 1;
+                           if (num <= numCount) {
+                              mainSequence.push(num);
+                           }
+                       } else { // Odd index -> Letter
+                           const letterIndex = Math.floor(i / 2);
+                           if (letterIndex < letterCount) {
+                              mainSequence.push(turkishAlphabet[letterIndex]);
+                           }
+                       }
+                  }
+                   // Ensure sequence length is exactly nodesPerPart (it should be 13+12=25)
+                  mainSequence = mainSequence.slice(0, config.nodesPerPart);
+                 mainPositionsMap = mainPart2NodePositions; // Use the new Part 2 fixed map
+                 mainInstructionPart2.classList.remove('hidden');
+                 trainingInstructionPart2.classList.add('hidden'); // Hide training instruction
+                 state.part2Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset main stats for this part
+            }
+
+            state.correctSequence = mainSequence; // Set correct sequence for the current session
+
+            // Generate main test nodes using fixed positions
+            generateNodes(state.correctSequence, mainPositionsMap);
+
+             // Update UI for main test
+             updateProgress();
+             nextTrainingBtn.classList.add('hidden'); // Hide transition button
+             resetBtn.classList.remove('hidden'); // Keep reset active
+             updateAccuracyDisplay(); // Reset accuracy display for the new part
+
+             // Start timer for the main test
+             startTimer();
+        }
+
+
+        // Reset the entire test back to the beginning
+        function resetTest() {
+            stopTimer();
+            resetUI();
+            // Reset all state completely
+            state = {
+                 nodes: [],
+                 currentPart: 1,
+                 isTraining: false,
+                 currentStep: 0,
+                 correctSequence: [],
+                 tappedNodes: [],
+                 startTime: null,
+                 timerInterval: null,
+                 part1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+                 part2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+                 trainingPart1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+                 trainingPart2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+             };
+             // Ensure start button is visible for a new test run
+            startBtn.classList.remove('hidden');
+        }
+
+        // Generate physical node divs and assign initial values/positions
+        // Always uses fixed positions based on the provided map and sequence.
+        function generateNodes(sequence, fixedPositionsMap) {
+            nodeContainer.innerHTML = ''; // Clear previous nodes
+            state.nodes = []; // Clear node data
+
+            const containerWidth = testArea.clientWidth;
+            const containerHeight = testArea.clientHeight;
+            const nodeDiameter = config.nodeSize;
+            const nodeRadius = nodeDiameter / 2;
+
+            // Iterate through the provided sequence
+            sequence.forEach(value => {
+                const position = fixedPositionsMap[value];
+                if (!position) {
+                    console.error(`Fixed position not found for value: ${value} in the provided map.`);
+                    return; // Skip if position is missing
+                }
+
+                // Calculate top-left position so the center is at the desired percentage
+                const x = (position.x / 100) * containerWidth - nodeRadius;
+                const y = (position.y / 100) * containerHeight - nodeRadius;
+
+                const nodeElement = document.createElement('div');
+                // Style will be set by updateNodeLabelsAndValues based on state
+                nodeElement.className = `node ${state.isTraining ? config.colors.trainingNeutral : config.colors.neutral}`; // Default style initially
+                nodeElement.style.left = `${x}px`;
+                nodeElement.style.top = `${y}px`;
+                nodeElement.dataset.value = value; // Store the value
+                nodeElement.textContent = value; // Initial label (will be updated)
+
+                nodeElement.addEventListener('click', handleNodeClick);
+
+                nodeContainer.appendChild(nodeElement);
+                state.nodes.push({
+                    element: nodeElement,
+                    value: value,
+                    x: x + nodeRadius, // Center X
+                    y: y + nodeRadius  // Center Y
+                });
+            });
+
+            // After generating all nodes, update their final labels and styles
+            updateNodeLabelsAndValues(); // Call after all nodes for the sequence are created and added to state.nodes
+
+            totalNodesDisplay.textContent = state.nodes.length; // Update total count display
+        }
+
+         // Update node labels and data-values based on the current part and session (training/main)
+         // This function is called after nodes are generated and have their base values/positions
+        function updateNodeLabelsAndValues() {
+            const sequence = state.correctSequence;
+            const lastValue = sequence[sequence.length - 1];
+
+            state.nodes.forEach(nodeData => {
+                const value = nodeData.value; // Use the value already assigned during generation
+                let label = value; // Default label is the value itself
+
+                 // Apply Start/End labels and specific styles
+                 let nodeClass = `node ${state.isTraining ? config.colors.trainingNeutral : config.colors.neutral}`;
+
+                 if (value == sequence[0]) { // Check against the first element of the sequence
+                     label = `${value}\n(başla)`;
+                     nodeClass = `node ${config.colors.startEnd}`; // Use standard start/end style even in training
+                 } else if (value == lastValue) { // Check against the last element
+                      label = `${value}\n(bitir)`;
+                     nodeClass = `node ${config.colors.startEnd}`; // Use standard start/end style even in training
+                 } else {
+                     // For non-start/end nodes, apply session-specific neutral style
+                     nodeClass = `node ${state.isTraining ? config.colors.trainingNeutral : config.colors.neutral}`;
+                 }
+
+
+                nodeData.element.className = nodeClass;
+                nodeData.element.textContent = label;
+                 // data-value is already set in generateNodes
+                // nodeData.value is already set in generateNodes
+            });
+        }
+
+
+        // Check if a new node overlaps with existing nodes (No longer needed as positions are fixed)
+        // function checkOverlap(newNodeElement, existingNodeElements, nodeDiameter, margin) { ... }
+
+
+        // Handle node click
+        function handleNodeClick(event) {
+            if (state.startTime === null) return; // Don't process clicks if timer not running
+
+            const clickedNodeElement = event.target;
+            // Find the corresponding node data in our state array
+            const clickedNodeData = state.nodes.find(n => n.element === clickedNodeElement);
+
+            if (!clickedNodeData || clickedNodeData.value === null) {
+                 console.warn("Clicked on an unassigned node.");
+                 return; // Ignore clicks on nodes without assigned values
+            }
+
+            const clickedValue = clickedNodeData.value; // Use the stored value (1, A, 2, B...)
+            const expectedValue = state.correctSequence[state.currentStep];
+
+             // Increment total clicks for the current session's stats
+             if (state.isTraining) {
+                 if (state.currentPart === 1) state.trainingPart1Stats.totalClicks++;
+                 else state.trainingPart2Stats.totalClicks++;
+             } else {
+                  if (state.currentPart === 1) state.part1Stats.totalClicks++;
+                  else state.part2Stats.totalClicks++;
+             }
+             updateAccuracyDisplay();
+
+
+            // Check if clicked node is correct
+            if (clickedValue == expectedValue) { // Loose comparison (number vs string)
+                // Correct tap
+                 handleCorrectTap(clickedNodeData);
+            } else {
+                // Incorrect tap
+                handleIncorrectTap(clickedNodeElement);
+            }
+        }
+
+         // Update Accuracy Display during test/training
+        function updateAccuracyDisplay() {
+             let correct, total;
+             if (state.isTraining) {
+                 if (state.currentPart === 1) {
+                     correct = state.trainingPart1Stats.correctClicks;
+                     total = state.trainingPart1Stats.totalClicks;
+                 } else {
+                     correct = state.trainingPart2Stats.correctClicks;
+                     total = state.trainingPart2Stats.totalClicks;
+                 }
+             } else { // Main test
+                 if (state.currentPart === 1) {
+                     correct = state.part1Stats.correctClicks;
+                     total = state.part1Stats.totalClicks;
+                 } else {
+                     correct = state.part2Stats.correctClicks;
+                     total = state.part2Stats.totalClicks;
+                 }
+             }
+
+
+             const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+             accuracyDisplay.textContent = accuracy;
+             accuracyInfo.classList.remove('hidden'); // Make sure it's visible
+        }
+
+
+        // Handle correct node tap
+        function handleCorrectTap(nodeData) {
+             // Increment correct clicks for the current session's stats
+            if (state.isTraining) {
+                if (state.currentPart === 1) state.trainingPart1Stats.correctClicks++;
+                else state.trainingPart2Stats.correctClicks++;
+            } else { // Main test
+                 if (state.currentPart === 1) state.part1Stats.correctClicks++;
+                 else state.part2Stats.correctClicks++;
+            }
+            updateAccuracyDisplay(); // Update live accuracy
+
+            // Add to tapped nodes (for drawing lines)
+            state.tappedNodes.push(nodeData);
+
+            // Update node appearance (but keep start/end distinct if needed)
+            const isStartNode = nodeData.value == state.correctSequence[0];
+            const isEndNode = nodeData.value == state.correctSequence[state.correctSequence.length - 1];
+
+            // Apply correct style, but prioritize start/end styling
+            if (!isStartNode && !isEndNode) {
+                 nodeData.element.className = `node ${state.isTraining ? config.colors.trainingCorrect : config.colors.correct}`;
+            } else if (isEndNode && state.currentStep === state.correctSequence.length - 1) {
+                 // Apply correct style to the end node when it's the final correct click
+                 nodeData.element.className = `node ${state.isTraining ? config.colors.trainingCorrect : config.colors.correct}`;
+            }
+
+
+            // Draw connection to previous node
+            if (state.tappedNodes.length > 1) {
+                drawConnections();
+            }
+
+            // Advance to next step
+            state.currentStep++;
+
+            // Update progress
+            updateProgress();
+
+            // Check if the current session (training or main) is complete
+            if (state.currentStep >= state.correctSequence.length) {
+                 if (state.isTraining) {
+                     handleTrainingComplete();
+                 } else { // Main test part complete
+                     handleMainTestPartComplete();
+                 }
+            }
+        }
+
+        // Handle incorrect node tap
+        function handleIncorrectTap(nodeElement) {
+             // Visual feedback for error
+             const originalClasses = nodeElement.className; // Store original classes
+             const isStartOrEnd = originalClasses.includes(config.colors.startEnd.split(' ')[0]); // Check base color class
+
+             nodeElement.classList.add('error-shake');
+             // Apply error style based on session, but not to start/end nodes
+             if (!isStartOrEnd) {
+                 nodeElement.className = `node ${state.isTraining ? config.colors.trainingError : config.colors.error}`;
+             }
+
+
+             // Highlight the correct next node during training errors
+             if (state.isTraining) {
+                 const expectedValue = state.correctSequence[state.currentStep];
+                 const correctNodeData = state.nodes.find(n => n.value == expectedValue); // Loose comparison
+
+                 if (correctNodeData) {
+                     correctNodeData.element.classList.add('highlight-correct');
+                     setTimeout(() => {
+                         correctNodeData.element.classList.remove('highlight-correct');
+                         // If the element's class was changed to error, restore it after highlight
+                          if (!isStartOrEnd) {
+                              nodeElement.className = originalClasses;
+                          }
+                     }, 1000); // Remove highlight after 1 second
+                 } else {
+                      // If element not found (shouldn't happen if sequence matches nodes)
+                       if (!isStartOrEnd) {
+                           setTimeout(() => {
+                                nodeElement.className = originalClasses;
+                           }, 500); // Just restore original style after shake
+                       }
+                 }
+             } else {
+                 // For incorrect clicks in the main test, just shake and revert style
+                  if (!isStartOrEnd) {
+                      setTimeout(() => {
+                           nodeElement.className = originalClasses;
+                      }, 500); // Restore original style after shake
+                  }
+             }
+
+
+            // Remove error class after animation
+            setTimeout(() => {
+                nodeElement.classList.remove('error-shake');
+                 // Note: Style restoration is handled within the highlighting timeout for training
+                 // and in the else block above for main test.
+            }, 500);
+        }
+
+        // Handle training session completion
+        function handleTrainingComplete() {
+            stopTimer(); // Stop the training timer
+
+            // Store training stats (already done in startMainTest before timer restart, but ensure final time is captured)
+            const finalTrainingTime = timeDisplay.textContent;
+             if (state.currentPart === 1) {
+                 state.trainingPart1Stats.time = finalTrainingTime;
+             } else { // Part 2
+                 state.trainingPart2Stats.time = finalTrainingTime;
+             }
+
+            // Update UI
+            nextTrainingBtn.classList.remove('hidden'); // Show button to proceed to main test
+            resetBtn.classList.add('hidden'); // Hide reset during transition
+            accuracyInfo.classList.add('hidden'); // Hide live accuracy display
+
+             // Clear nodes and connections from training
+             nodeContainer.innerHTML = '';
+             state.nodes = [];
+             clearConnections();
+
+             // Display a message or update instructions to indicate training is complete and they can proceed
+             if (state.currentPart === 1) {
+                 trainingInstructionPart1.textContent = "Eğitim Tamamlandı! Ana Teste Geçmek İçin 'Ana Teste Geç' Butonuna Tıklayın.";
+             } else {
+                 trainingInstructionPart2.textContent = "Eğitim Tamamlandı! Ana Teste Geçmek İçin 'Ana Teste Geç' Butonuna Tıklayın.";
+             }
+        }
+
+
+        // Handle main test part completion (Part 1 or Part 2)
+        function handleMainTestPartComplete() {
+            const finalTime = timeDisplay.textContent;
+            stopTimer(); // Stop the timer for the completed part
+
+            // Store stats for the completed main part
+            if (state.currentPart === 1) {
+                state.part1Stats.time = finalTime;
+                // Accuracy already calculated live, but ensure final value is based on final clicks
+                const acc1 = state.part1Stats.totalClicks > 0 ? Math.round((state.part1Stats.correctClicks / state.part1Stats.totalClicks) * 100) : 0;
+                state.part1Stats.accuracy = acc1;
+                accuracyInfo.classList.add('hidden'); // Hide live accuracy display
+                 // If Part 1 is complete, show the button to start Part 2 training
+                 if (state.currentPart === 1) {
+                     startPart2Btn.classList.remove('hidden');
+                 }
+                resetBtn.classList.add('hidden'); // Hide reset during transition
+            } else { // Part 2 completed
+                state.part2Stats.time = finalTime;
+                const acc2 = state.part2Stats.totalClicks > 0 ? Math.round((state.part2Stats.correctClicks / state.part2Stats.totalClicks) * 100) : 0;
+                state.part2Stats.accuracy = acc2;
+                accuracyInfo.classList.add('hidden');
+                resetBtn.classList.add('hidden'); // Hide reset button
+                displayResults(); // Show the final results screen
+            }
+        }
+
+        // Display final results screen
+        function displayResults() {
+		const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    
+		const receivedData = JSON.parse(storedDataString);
+		const name = receivedData["userName"];
+			 //const telNo = receivedData["telNumber"];
+		
+		
+             testContainer.classList.add('hidden'); // Hide the test area
+             resultsScreen.classList.remove('hidden'); // Show results
+             restartBtn.classList.remove('hidden'); // Show restart button
+			 
+			 nameSurnameH4.textContent = "(Ad-Soyad: " + name + ")";
+
+             // Populate Training Part 1 Results
+            trainingPart1TimeDisp.textContent = state.trainingPart1Stats.time;
+            trainingPart1AccuracyDisp.textContent = state.trainingPart1Stats.accuracy;
+            trainingPart1CorrectDisp.textContent = state.trainingPart1Stats.correctClicks;
+            trainingPart1TotalDisp.textContent = state.trainingPart1Stats.totalClicks;
+
+             // Populate Main Part 1 Results
+             part1TimeDisp.textContent = state.part1Stats.time;
+             part1AccuracyDisp.textContent = state.part1Stats.accuracy;
+             part1CorrectDisp.textContent = state.part1Stats.correctClicks;
+             part1TotalDisp.textContent = state.part1Stats.totalClicks;
+
+              // Populate Training Part 2 Results
+            trainingPart2TimeDisp.textContent = state.trainingPart2Stats.time;
+            trainingPart2AccuracyDisp.textContent = state.trainingPart2Stats.accuracy;
+            trainingPart2CorrectDisp.textContent = state.trainingPart2Stats.correctClicks;
+            trainingPart2TotalDisp.textContent = state.trainingPart2Stats.totalClicks;
+
+              // Populate Main Part 2 Results
+             part2TimeDisp.textContent = state.part2Stats.time;
+             part2AccuracyDisp.textContent = state.part2Stats.accuracy;
+             part2CorrectDisp.textContent = state.part2Stats.correctClicks;
+             part2TotalDisp.textContent = state.part2Stats.totalClicks;
+
+             // Calculate statistics
+             const totalTimeMs = timeToMs(state.trainingPart1Stats.time) + timeToMs(state.trainingPart2Stats.time) + timeToMs(state.part1Stats.time) + timeToMs(state.part2Stats.time);
+             const totalTime = msToTime(totalTimeMs);
+
+             const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
+             const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
+             const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
+
+             const trainingTimeDifferenceMs = timeToMs(state.trainingPart2Stats.time) - timeToMs(state.trainingPart1Stats.time);
+             const trainingTimeDifference = msToTime(trainingTimeDifferenceMs);
+
+             const testTimeDifferenceMs = timeToMs(state.part2Stats.time) - timeToMs(state.part1Stats.time);
+             const testTimeDifference = msToTime(testTimeDifferenceMs);
+
+             const trainingAccuracyDifference = state.trainingPart1Stats.accuracy != 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
+
+             const testAccuracyDifference = state.part1Stats.accuracy != 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
+
+             // Populate general results
+             document.getElementById('total-time').textContent = totalTime;
+             document.getElementById('average-accuracy').textContent = averageAccuracy;
+             document.getElementById('training-time-difference').textContent = trainingTimeDifference;
+             document.getElementById('test-time-difference').textContent = testTimeDifference;
+             document.getElementById('training-accuracy-difference').textContent = trainingAccuracyDifference;
+             document.getElementById('test-accuracy-difference').textContent = testAccuracyDifference;
+
+             function timeToMs(timeStr) {
+                 const [minutes, secondsTenths] = timeStr.split(':');
+                 const [seconds, tenths] = secondsTenths.split('.');
+                 return (parseInt(minutes) * 60 + parseInt(seconds)) * 1000 + parseInt(tenths) * 100;
+             }
+
+             function msToTime(duration) {
+                 const minutes = Math.floor(duration / (1000 * 60)).toString().padStart(2, '0');
+                 const seconds = Math.floor((duration / 1000) % 60).toString().padStart(2, '0');
+                 const tenths = Math.floor((duration % 1000) / 100).toString();
+                 return `${minutes}:${seconds}.${tenths}`;
+             }
+        }
+
+
+        // Draw connections between tapped nodes
+        function drawConnections() {
+            // Clear canvas
+            ctx.clearRect(0, 0, connectionCanvas.width, connectionCanvas.height);
+
+            // Set line style
+            ctx.strokeStyle = '#10b981'; // Emerald-500
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round'; // Smoother line ends
+
+            // Draw lines between consecutive tapped nodes
+            for (let i = 1; i < state.tappedNodes.length; i++) {
+                const prevNode = state.tappedNodes[i - 1];
+                const currentNode = state.tappedNodes[i];
+
+                ctx.beginPath();
+                ctx.moveTo(prevNode.x, prevNode.y);
+                ctx.lineTo(currentNode.x, currentNode.y);
+                ctx.stroke();
+            }
+        }
+
+        // Clear all connections
+        function clearConnections() {
+            ctx.clearRect(0, 0, connectionCanvas.width, connectionCanvas.height);
+        }
+
+        // Update progress display based on the current session
+        function updateProgress() {
+             progressDisplay.textContent = state.currentStep;
+             totalNodesDisplay.textContent = state.correctSequence.length; // Update total based on current sequence length
+        }
+
+        // Start timer
+        function startTimer() {
+            stopTimer(); // Ensure no duplicate timers
+            state.startTime = Date.now(); // Use Date.now() for more reliable interval calculation
+            state.timerInterval = setInterval(updateTimer, 100); // Update every 100ms
+            updateTimer(); // Initial display
+        }
+
+        // Stop timer
+        function stopTimer() {
+            clearInterval(state.timerInterval);
+            state.timerInterval = null; // Clear interval ID
+            state.startTime = null; // Reset start time
+        }
+
+        // Update timer display
+        function updateTimer() {
+             if (!state.startTime) {
+                 timeDisplay.textContent = '00:00.0';
+                 return;
+             }
+            const elapsedMs = Date.now() - state.startTime;
+            const totalSeconds = Math.floor(elapsedMs / 1000);
+            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+            const tenths = Math.floor((elapsedMs % 1000) / 100).toString(); // Tenths of a second
+
+
+            timeDisplay.textContent = `${minutes}:${seconds}.${tenths}`;
+        }
+
+        // Initialize the application when the page loads
+        window.addEventListener('DOMContentLoaded', init);
+		
+		
+		
+        function downloadResults() {
+		
+	const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
+		//userName, telNumber
+		
+        	const name = receivedData["userName"];
+		const telNo = receivedData["telNumber"];
+	    	const birthDate = receivedData["birthDate"];
+		const question1 = receivedData["question1"];
+		const question1Details = receivedData["question1Details"];
+		const question2 = receivedData["question2"];
+		const sex = receivedData["sex"];
+
+		//sessionStorage.removeItem('confirmationFormData');
+
+        const part1Time = document.getElementById('part1-time').textContent;
+        const part1Accuracy = document.getElementById('part1-accuracy').textContent;
+        const part2Time = document.getElementById('part2-time').textContent;
+        const part2Accuracy = document.getElementById('part2-accuracy').textContent;
+		const trainingPart1Time = document.getElementById('training-part1-time').textContent;
+        const trainingPart1Accuracy = document.getElementById('training-part1-accuracy').textContent;
+        const trainingPart2Time = document.getElementById('training-part2-time').textContent;
+        const trainingPart2Accuracy = document.getElementById('training-part2-accuracy').textContent;
+
+        const totalTime = document.getElementById('total-time').textContent;
+        const averageAccuracy = document.getElementById('average-accuracy').textContent;
+        const trainingTimeDifference = document.getElementById('training-time-difference').textContent;
+        const testTimeDifference = document.getElementById('test-time-difference').textContent;
+        const trainingAccuracyDifference = document.getElementById('training-accuracy-difference').textContent;
+        const testAccuracyDifference = document.getElementById('test-accuracy-difference').textContent;
+
+        let resultsText = text +=  `Ad-Soyad: ${name}\n`;
+		 resultsText +=  `Telefon Numarası: ${telNo}\n\n`;
+		 resultsText +=  `Doğum Tarihi: ${birthDate}\n`;
+		 resultsText +=  `Cinsiyeti: ${sex}\n`;
+		 resultsText +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+		 resultsText +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+		 resultsText +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
+
+        resultsText += `1. Bölüm Eğitim Süresi: ${trainingPart1Time}\n`;
+        resultsText += `1. Bölüm Eğitim Doğruluğu: ${trainingPart1Accuracy}\n`;
+        resultsText += `1. Bölüm Süresi: ${part1Time}\n`;
+        resultsText += `1. Bölüm Doğruluğu: ${part1Accuracy}\n\n`;
+
+        resultsText += `2. Bölüm Eğitim Süresi: ${trainingPart2Time}\n`;
+        resultsText += `2. Bölüm Eğitim Doğruluğu: ${trainingPart2Accuracy}\n`;
+        resultsText += `2. Bölüm Süresi: ${part2Time}\n`;
+        resultsText += `2. Bölüm Doğruluğu: ${part2Accuracy}\n\n`;
+
+        resultsText += `Toplam Süre: ${totalTime}\n`;
+        resultsText += `Ortalama Doğruluk: ${averageAccuracy}\n`;
+        resultsText += `Eğitimler Arası Süre Farkı: ${trainingTimeDifference}\n`;
+        resultsText += `Bölümler Arası Süre Farkı: ${testTimeDifference}\n`;
+        resultsText += `Bölümler Arası Doğruluk Farkı: ${trainingAccuracyDifference}\n`;
+        resultsText += `Eğitimler Arası Doğruluk Farkı: ${testAccuracyDifference}\n`;
+
+        const filename = 'tmt_sonuçlar.txt';
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(resultsText));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const downloadBtn = document.getElementById('download-btn');
+        downloadBtn.addEventListener('click', downloadResults);});
     </script>
 </body>
 </html>
