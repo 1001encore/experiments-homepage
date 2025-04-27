@@ -166,7 +166,14 @@
 
 	
 <script>
-    const o=sessionStorage.getItem("confirmationFormData");const n=JSON.parse(o);const t=n["userName"];document.getElementById("userName").innerHTML="Oturum: "+t;function s(){sessionStorage.removeItem("confirmationFormData")}
+	const storedDataString = sessionStorage.getItem('confirmationFormData');
+ 	const receivedData = JSON.parse(storedDataString);
+     const name = receivedData["userName"];
+     document.getElementById("userName").innerHTML = "Oturum: " + name;
+ 
+ 	function resetSessionStorage(){
+ 		sessionStorage.removeItem('confirmationFormData');
+ 	}
 </script>
 </body>
 </html>
