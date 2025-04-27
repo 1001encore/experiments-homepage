@@ -516,11 +516,11 @@
                     }
                 }
             });
-             resultsAreaEl.innerHTML += `<h3>Hatırlama Testi Sonuçları</h3>`;
-             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınanlar(doğru):</strong> ${hits}</p>`;
+             resultsAreaEl.innerHTML += `<h3>Tanıma Testi Sonuçları</h3>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınanlar(doğru):</strong> ${list1Hits+list2Hits}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>    - Liste1'in içinden:</strong> ${list1Hits}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>    - Liste2'nin içinden:</strong> ${list2Hits}</p>`;
-             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınmayanlar(yanlış):</strong> ${misses}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınmayanlar(yanlış):</strong> ${list1Misses+list2Misses}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>    - Liste1'in içinden:</strong> ${list1Misses}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>    - Liste2'nin içinden:</strong> ${list2Misses}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınanlar(yanlış):</strong> ${falseAlarms}</p>`;
@@ -672,6 +672,9 @@
             });
 
             text += "\nTanıma Özeti:\n";
+
+            text += `Listelerde olup tanınanlar(doğru): ${list1Hits+list2Hits}\n`
+            text += `Listelerde olup tanınmayanlar(yanlış): ${list1Misses+list2Misses}\n\n`
 
             text += "Liste 1 Analizi:\n";
             text += `   - Listede olup tanınanlar(doğru): ${list1Hits}\n`; // In List 1, said yes
