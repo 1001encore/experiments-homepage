@@ -4,30 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bellek Deneyi</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f4f4; }
-        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; max-width: 600px; width: 90%; }
+        body { font-family: 'Roboto', sans-serif; /* Use Roboto */; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f8f9fa;; }
+        .container { background: #fff;; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; max-width: 600px; width: 90%; }
         .screen { display: none; } /* Hide all screens initially */
         .screen.active { display: block; } /* Show active screen */
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px 5px; border: none; border-radius: 5px; background-color: #878991; color: white; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px 5px; border: none; border-radius: 5px; background-color: #1a73e8; color: white; }
         button:hover { background-color: b3b1b1; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
+        button:disabled { background-color: #9c9c9c; cursor: not-allowed; }
+		
         #wordDisplay, #wordDisplay2 {
             font-size: 3em;
             font-weight: bold;
             margin: 20px 0;
             min-height: 1.5em;
         }
-        #timerDisplay { font-size: 1.2em; margin-bottom: 15px; color: #555; }
-        .game-card { border: 1px solid #ccc; padding: 15px; margin: 10px auto; border-radius: 5px; background-color: #f9f9f9; width: 80%; }
+		
+        #timerDisplay,
+        #recallTimerDisplay {
+             font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #5f6368; /* Medium gray */
+             font-family: 'Roboto Mono', monospace; /* Use Roboto Mono */
+             font-weight: 500;
+			 background-color: #e8f0fe; /* Light blue background */
+             color: #1a73e8; /* Google blue text */
+             padding: 8px 12px;
+             border-radius: 4px;
+             display: inline-block;
+             margin-bottom: 20px;
+        }
+		
+        .game-card { border: 1px solid #ccc; padding: 15px; margin: 10px auto; border-radius: 5px; background-color: #f9f9f9; width: 80%; font-weight: 900; font-size: larger;}
         .recall-input { display: block; width: calc(100% - 22px); margin: 5px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
         .recognition-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; flex-direction: row-reverse;  }
-        .recognition-item .word { flex-grow: 1; text-align: center; font-size: 1.3em; }
-        .recognition-item .seen-buttons button, .recognition-item .likert-scale button { padding: 5px 10px; font-size: 14px; margin: 0 2px; }
+        .recognition-item .word { flex-grow: 1; text-align: center; font-size: 1.2em; font-weight: normal; margin-right: 15px;
+    margin-left: 25px;}
+		
+        .recognition-item .seen-buttons button, .recognition-item .likert-scale button { 
+			padding: 8px 12px;
+			font-size: 0.9em;
+			margin: 2px;
+			border-radius: 4px;
+			border: 2px solid #dadce0;
+			background-color: transparent;
+			color: #1a73e8;
+			box-shadow: none;
+			transition: background-color 0.2s, border-color 0.2s; 
+		}
         .recognition-item .likert-scale { margin-left: 10px; }
         .likert-scale button.selected { background-color: #28a745; }
-        .seen-buttons button.selected { background-color: #28a745; }
-        #recognitionList { max-height: 400px; overflow-y: auto; margin-top: 15px; border: 1px solid #ccc; padding: 10px; }
+		
+        .seen-buttons button.selected { 
+		background-color: #1a73e8;
+		color: white; 
+		}
+		
+        #recognitionList { max-height: 600px; overflow-y: auto; margin-top: 15px; border: 1px solid #ccc; padding: 10px; max-width: 400px;}
         #resultsArea { text-align: left; margin-top: 20px; }
         #resultsArea h3 { text-align: center; }
         .game-card-buttons button { margin: 0 10px; padding: 8px 15px;}
@@ -59,7 +95,7 @@
     </style>
 </head>
 <body>
-	<a href="https://1001encore.github.io/experiments-homepage/home.html" class="return-home-button" aria-label="Anasayfaya Dön">
+	<a href="/experiments-homepage/home.html" class="return-home-button" aria-label="Anasayfaya Dön">
 	↩
 	</a>
 	<div class="container">
@@ -89,10 +125,10 @@
         </div>
 
         <div id="screen5" class="screen">
-            <h2>Oyun Zamanı</h2>
+            <h2>Oyun Zamanı!</h2>
             <div id="timerDisplay">Kalan Süre: 60s</div>
-			<p>Her başkent-ülke eşleştirmesi için "Doğru" ya da "Yanlış"'a tıklayın. Oyun 1 dakika sürecektir.</p>
-			<h3> Başkent   -   Ülke </h4>
+			<p>Her başkent-ülke eşleştirmesi için "Doğru" ya da "Yanlış"a tıklayın. Oyun 1 dakika sürecektir.</p>
+			<h3 style="font-weight: 400;"> (Başkent   -   Ülke) </h4>
             <div id="gameArea">
                 </div>
         </div>
@@ -113,8 +149,10 @@
              <p>Size şimdi bir tanıma testi vereceğim. Bu testteki kelimelerin bazıları gördüğünüz iki listedeki kelimelerdir; bazıları ise o iki listede görmediğiniz yeni kelimelerdir. Yapmanızı istediğim şey her bir kelimeyi dikkatle inceledikten sonra, o kelimenin listelerde gördüğünüz kelimelerden birisi olup olmadığına karar vermenizdir. Size gösterilen listede olduğunu düşünüyorsanız “GÖRDÜM” kutucuğunu işaretleyiniz. Görmediğinizi düşünüyorsanız “GÖRMEDİM” kutucuğunu işaretleyiniz.</p>
              
              <p>Ölçekleri sırayla ve eksiksiz olarak doldurun.</p>
-            <div id="recognitionList">
+			 <div style="justify-content: center; display: flex; margin-bottom: 15px;">
+				<div id="recognitionList">
                 </div>
+			</div>
             <button id="finishRecognitionBtn" disabled>Testi Bitir</button>
         </div>
 
@@ -130,8 +168,8 @@
 
     </div>
 
-    <script>
-	    // --- Configuration ---
+   <script>
+	   // --- Configuration ---
         const list1Words = [
   'Maaş',
   'Gece',
@@ -515,21 +553,21 @@
 	    resultsAreaEl.innerHTML += `<h4 style="text-align: center;">(Ad-Soyad: ${name})</h4>`;
 
             resultsAreaEl.innerHTML += `<h3>Serbest Hatırlama Sonuçları</h3>`;
-            resultsAreaEl.innerHTML += `<p>Toplam Hatırlanan Kelime Sayısı: ${recalledWords.length}</p>`;
-            resultsAreaEl.innerHTML += `<p>Doğru Hatırlanan Kelimeler: ${correctRecalls}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>Toplam Hatırlanan Kelime Sayısı:</strong> ${recalledWords.length}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>Doğru Hatırlanan Kelimeler:</strong> ${correctRecalls}</p>`;
             // Label recalls based on presentation order and original list name
-            resultsAreaEl.innerHTML += `<p>   - İlk Gösterilenden (${firstListName}): ${list1Recalls}</p>`;
-            resultsAreaEl.innerHTML += `<p>   - İkinci Gösterilenden (${secondListName}): ${list2Recalls}</p>`;
-            resultsAreaEl.innerHTML += `<p>Araya Girme Hataları (Listelerde olmayanlar): ${intrusionRecalls}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>   -- İlk Gösterilenden (${firstListName}):</strong> ${list1Recalls}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>   -- İkinci Gösterilenden (${secondListName}):</strong> ${list2Recalls}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>Araya Girme Hataları (Listelerde olmayanlar)</strong>: ${intrusionRecalls}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>Girilen Kelimeler:</strong> ${recalledWords.join(', ') || 'None'}</p><hr>`;
 
 
             // 2. Game Statistics (Unchanged)
             resultsAreaEl.innerHTML += `<h3>Oyun İstatistikleri</h3>`;
-            resultsAreaEl.innerHTML += `<p>Toplam Cevaplanan Eşleşmeler: ${gameTotalAnswered}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>Toplam Cevaplanan Eşleşmeler: </strong>${gameTotalAnswered}</p>`;
              const gameAccuracy = gameTotalAnswered > 0 ? ((gameScore / gameTotalAnswered) * 100).toFixed(1) : 0;
-            resultsAreaEl.innerHTML += `<p>Doğru Cevaplar: ${gameScore}</p>`;
-            resultsAreaEl.innerHTML += `<p>Doğruluk: ${gameAccuracy}%</p><hr>`;
+            resultsAreaEl.innerHTML += `<p><strong>Doğru Cevaplar: </strong>${gameScore}</p>`;
+            resultsAreaEl.innerHTML += `<p><strong>Doğruluk: </strong>${gameAccuracy}%</p><hr>`;
 
             // 3. Recognition Analysis (Unchanged - Checks against original lists)
             let list1Hits = 0, list1Misses = 0;
@@ -577,11 +615,11 @@
             });
              resultsAreaEl.innerHTML += `<h3>Tanıma Testi Sonuçları</h3>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınanlar(doğru):</strong> ${list1Hits+list2Hits}</p>`;
-             resultsAreaEl.innerHTML += `<p><strong>    - Liste1'in içinden:</strong> ${list1Hits}</p>`;
-             resultsAreaEl.innerHTML += `<p><strong>    - Liste2'nin içinden:</strong> ${list2Hits}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    -- Liste1'in içinden:</strong> ${list1Hits}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    -- Liste2'nin içinden:</strong> ${list2Hits}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olup tanınmayanlar(yanlış):</strong> ${list1Misses+list2Misses}</p>`;
-             resultsAreaEl.innerHTML += `<p><strong>    - Liste1'in içinden:</strong> ${list1Misses}</p>`;
-             resultsAreaEl.innerHTML += `<p><strong>    - Liste2'nin içinden:</strong> ${list2Misses}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    -- Liste1'in içinden:</strong> ${list1Misses}</p>`;
+             resultsAreaEl.innerHTML += `<p><strong>    -- Liste2'nin içinden:</strong> ${list2Misses}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınanlar(yanlış):</strong> ${falseAlarms}</p>`;
              resultsAreaEl.innerHTML += `<p><strong>Listelerde olmayıp tanınmayanlar(doğru):</strong> ${correctRejections}</p>`;
         }
@@ -620,7 +658,7 @@
              const blob = new Blob([resultsText], { type: 'text/plain' });
              const link = document.createElement('a');
              link.href = URL.createObjectURL(blob);
-             link.download = 'unutma_deneyi_2_sonuçları.txt';
+             link.download = 'unutma_deneyi_1_sonuçları.txt';
              link.click();
              URL.revokeObjectURL(link.href);
              console.log("Downloading results...");
@@ -754,6 +792,7 @@
         // --- Initial Setup ---
          switchScreen('screen1');
          console.log("App Initialized. Waiting for user to start. Initial list order swap:", listOrderSwapped);
-    </script>
+
+   </script>
 </body>
 </html>
