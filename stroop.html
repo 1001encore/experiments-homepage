@@ -4,149 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stroop Testi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
     <style>
+        /* Base Styles */
         body {
-            font-family: sans-serif;
+            font-family: 'Roboto', sans-serif; /* Use Roboto */
+            background-color: #f8f9fa; /* Light gray background */
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px; /* Consistent body padding */
+            color: #202124; /* Dark gray text color */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            box-sizing: border-box; /* Include padding in body height */
         }
+
+        /* Page Container (Card-like appearance) */
         .page {
             display: none; /* Hide pages by default */
             text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            min-width: 450px; /* Adjusted width */
+            margin-bottom: 24px;
+            padding: 24px; /* Consistent padding */
+            background-color: #fff; /* White background */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Subtle shadow */
+            min-width: 320px; /* Adjusted min-width */
+            max-width: 600px; /* Max width for content */
+            width: 100%; /* Ensure it takes full width up to max */
+            box-sizing: border-box; /* Include padding in element size */
         }
+
         .page.active {
             display: block; /* Show active page */
         }
+
+        /* Headings */
+         h1 {
+            font-size: 2.5rem; /* Larger heading */
+            font-weight: 400; /* Lighter weight for title */
+            text-align: center;
+            color: #202124; /* Dark gray */
+            margin-bottom: 32px; /* More space below title */
+        }
+
+        h2 {
+             font-size: 1.5rem; /* Slightly larger section title */
+             font-weight: 500; /* Medium weight */
+             margin-bottom: 16px;
+             color: #202124;
+        }
+
+         h3 {
+            font-size: 1.25rem; /* Sub-section title */
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #202124;
+            text-align: center; /* Center h3 specifically in results */
+        }
+
+
+        /* Instructions */
         .instructions {
             text-align: left;
-            margin-bottom: 15px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #e8f0fe; /* Light blue background */
+            padding: 16px; /* More padding */
+            border-radius: 4px; /* Subtle rounding */
+            color: #1a73e8; /* Google blue text */
+            line-height: 1.6; /* Improved readability */
+             font-size: 1rem;
+             font-weight: 400;
         }
+
+        /* Stimuli Grids */
         .stimuli-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); /* 4 columns */
-            gap: 15px; /* Spacing between items */
-            margin: 20px auto;
-            padding: 10px;
-            border: 1px solid #eee;
-            max-width: 350px; /* Adjust as needed */
-            font-size: 1.5em; /* Make words/dots larger */
-            font-weight: bold;
-		background-color: #f0f0f0;
-		text-shadow: 1px 1px 0px #000000;
+            gap: 16px; /* Consistent spacing */
+            margin: 24px auto; /* More margin */
+            padding: 16px;
+            /* Removed old border and background */
+             background-color: #f8f9fa; /* Very light gray */
+             border-radius: 4px;
+             border: 1px solid #dadce0; /* Light border */
+            max-width: 400px; /* Adjust as needed */
+            font-size: 1.8em; /* Make words larger */
+            font-weight: 1000; /* Medium weight */
+            text-shadow: none; /* Remove text shadow */
+             color: #202124; /* Default text color */
         }
-         .stimuli-dots {
+         .stimuli-grid span {
+            /* Ensure individual words don't have extra styles from grid container */
+         }
+
+        .stimuli-dots {
             display: grid;
             grid-template-columns: repeat(6, 1fr); /* 6 columns for dots */
-            gap: 20px;
-            margin: 20px auto;
-            padding: 10px;
-            max-width: 400px; /* Adjust as needed */
+            gap: 24px; /* More space between dots */
+            margin: 24px auto;
+            padding: 16px;
+            max-width: 480px; /* Adjust as needed */
+             background-color: #f8f9fa; /* Very light gray */
+             border-radius: 4px;
+             border: 1px solid #dadce0; /* Light border */
         }
+
         .dot {
-            width: 30px;
-            height: 30px;
+            width: 36px; /* Slightly larger dots */
+            height: 36px;
             border-radius: 50%;
             margin: auto;
+            /* Removed margin from here, grid gap handles spacing */
         }
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
+
+        /* Buttons */
+         button {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            font-weight: 500; /* Medium weight */
+            padding: 12px 24px; /* Standard padding */
+            border-radius: 4px; /* Subtle rounding */
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             cursor: pointer;
-            margin-top: 15px;
-            margin-right: 5px; /* Add some space between buttons */
+            border: none;
+            text-transform: none; /* Prevent uppercase */
+             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Subtle shadow */
+             margin-top: 16px; /* Add margin top */
+             margin-right: 8px; /* Add space between buttons */
         }
+
+        button:hover {
+             box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15); /* More prominent shadow */
+        }
+
+        /* Primary Button */
+        button:not([disabled]) {
+             background-color: #1a73e8; /* Google blue */
+             color: white;
+        }
+        button:not([disabled]):hover {
+            background-color: #1565c0; /* Darker blue */
+        }
+
+        /* Disabled Button Style */
+        button[disabled] {
+             background-color: #dadce0; /* Light gray */
+             color: #5f6368; /* Medium gray text */
+             cursor: not-allowed;
+             box-shadow: none;
+        }
+
+
         .timer-display {
-            margin-top: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .error-inputs {
             margin-top: 20px;
-            padding: 15px;
-            border: 1px dashed #aaa;
-            background-color: #fafafa;
+            font-size: 1.2em;
+            font-weight: 500; /* Medium weight */
+            font-family: 'Roboto Mono', monospace; /* Use Roboto Mono */
+            color: #1a73e8; /* Google blue */
+             background-color: #e8f0fe; /* Light blue background */
+             padding: 8px 12px;
+             border-radius: 4px;
+             display: inline-block; /* Make it inline-block to fit content */
+        }
+
+        .error-inputs {
+            margin-top: 24px;
+            padding: 16px;
+            border: 1px dashed #dadce0; /* Lighter dashed border */
+            background-color: #f8f9fa; /* Very light gray */
+            border-radius: 4px;
             display: none; /* Hide by default */
+            text-align: left; /* Align labels/inputs */
         }
         .error-inputs.visible {
             display: block; /* Show when needed */
         }
+        .error-inputs p {
+            margin-top: 0;
+             margin-bottom: 12px;
+             font-weight: 500;
+             color: #202124;
+        }
         .error-inputs label {
-            margin-right: 5px;
-            margin-left: 15px;
+            margin-right: 8px;
+            margin-left: 0; /* Remove left margin */
+             color: #5f6368; /* Medium gray */
+             font-size: 0.9em;
         }
-        .error-inputs input {
-            width: 50px;
-            padding: 5px;
-            text-align: center;
-        }
-        .results-table {
-            margin-top: 20px;
-            border-collapse: collapse;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .results-table th, .results-table td {
-            border: 1px solid #ddd;
+        .error-inputs input[type="number"] {
+            width: 60px; /* Slightly wider input */
             padding: 8px;
             text-align: center;
+            border: 1px solid #dadce0; /* Light border */
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .results-table {
+            margin-top: 24px;
+            border-collapse: collapse;
+            width: 100%; /* Full width within parent */
+            max-width: 500px; /* Max width for the table */
+            margin-left: auto;
+            margin-right: auto;
+             border: 1px solid #dadce0; /* Light table border */
+             border-radius: 8px; /* Rounded corners for table */
+             overflow: hidden; /* Hide overflowing border-radius */
+        }
+        .results-table th, .results-table td {
+            border: 1px solid #dadce0; /* Light cell borders */
+            padding: 12px; /* More padding */
+            text-align: center;
+             color: #202124;
         }
         .results-table th {
-            background-color: #f2f2f2;
+            background-color: #e8f0fe; /* Light blue header background */
+            font-weight: 500; /* Medium weight */
+             color: #1a73e8; /* Google blue text */
         }
+         .results-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa; /* Zebra striping */
+         }
 
-        /* Specific Colors for Stimuli */
-        .color-blue { color: blue; }
-        .color-yellow { color: yellow; } /* Added background for visibility */
-        .color-red { color: red; }
-        .color-green { color: green; }
-        .color-orange { color: orange; }
-        .color-black { color: black; }
+         #namesurname {
+            margin-bottom: 24px; /* Space below name */
+            font-size: 1.2em;
+            font-weight: 1000;
+            color: #202124;
+         }
 
-        /* Background colors for dots */
-        .bg-blue { background-color: blue; }
-        .bg-yellow { background-color: yellow; }
-        .bg-red { background-color: red; }
-        .bg-green { background-color: green; }
-        .bg-orange { background-color: orange; }
 
-	.return-home-button {
-            position: fixed; /* Keep the button in the same place on the screen */
-            top: 1rem; /* 16px from the top */
-            left: 1rem; /* 16px from the left */
-            width: 48px; /* Set width */
-            height: 48px; /* Set height */
-            border-radius: 50%; /* Make it circular */
-            background-color: #2563eb; /* Blue background color */
-            color: white; /* White text/emoji color */
-            display: flex; /* Use flexbox to center content */
-            align-items: center; /* Vertically center content */
-            justify-content: center; /* Horizontally center content */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow */
-            z-index: 50; /* Ensure it stays on top of other elements */
-            text-decoration: none; /* Remove underline from link */
-            font-size: 1.5rem; /* Adjust emoji size */
-            transition: background-color 0.2s ease-in-out; /* Smooth transition for hover effect */
-        }
+        /* Specific Colors for Stimuli (updated to Google palette) */
+        .color-blue { color: #1a73e8; }
+        .color-yellow { color: #fcc934; }
+        .color-red { color: #ea4335; }
+        .color-green { color: #34a853; }
+        .color-orange { color: #f57c00; } /* Standard Material Orange */
+        .color-black { color: #202124; } /* Dark gray for black text */
 
-        /* Hover effect for the button */
-        .return-home-button:hover {
-            background-color: #1d4ed8; /* Darker blue on hover */
-        }
+        /* Background colors for dots (updated to Google palette) */
+        .bg-blue { background-color: #1a73e8; }
+        .bg-yellow { background-color: #fcc934; }
+        .bg-red { background-color: #ea4335; }
+        .bg-green { background-color: #34a853; }
+        .bg-orange { background-color: #f57c00; }
+
+
+	/* Return Home Button (existing styles kept as requested) */
+    .return-home-button {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: #2563eb;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        text-decoration: none;
+        font-size: 1.5rem;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    /* Hover effect for the button (existing styles kept) */
+    .return-home-button:hover {
+        background-color: #1d4ed8;
+    }
 
     </style>
 </head>
 <body>
-	<a href="https://1001encore.github.io/experiments-homepage/home.html" class="return-home-button" aria-label="Anasayfaya Dön">
+	<a href="/experiments-homepage/home.html" class="return-home-button" aria-label="Anasayfaya Dön">
 	↩
 	</a>
 
@@ -184,9 +320,9 @@
             <input type="number" id="errors-1" min="0" value="0">
             <label for="corrections-1">Düzeltilen Hata Sayısı:</label>
             <input type="number" id="corrections-1" min="0" value="0">
-            
+
         </div>
-         <div id="nav-button-container-1"></div> </div>
+        <div id="nav-button-container-1"></div> </div>
 
     <div id="page-2" class="page">
         <h2>2. Kart</h2>
@@ -194,7 +330,7 @@
             <p>Şimdi de ekrandaki renk isimlerini mümkün olduğu kadar hızlı okumanızı istiyorum.</p>
             <p>Kelimenin basımında kullanılan renk önemli değil, buna dikkat etmeniz gerekmiyor. Sizden istenen, kelimeleri okumanız.</p>
             <p>Deminki gibi, sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
-            
+
         </div>
         <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
             <span class="color-yellow">yeşil</span><span class="color-red">mavi</span><span class="color-green">sarı</span><span class="color-blue">kırmızı</span>
@@ -206,45 +342,45 @@
         <button onclick="startTimer(2)">Başla</button>
         <button onclick="stopTimer(2)" disabled>Bitir</button>
         <div class="timer-display" id="timer-2">Süre: 0.000 saniye</div>
-         <div class="error-inputs" id="error-inputs-2">
+        <div class="error-inputs" id="error-inputs-2">
             <p><strong>Gözetmen Girişi:</strong></p>
             <label for="errors-2">Hatalı Cevap Sayısı:</label>
             <input type="number" id="errors-2" min="0" value="0">
             <label for="corrections-2">Düzeltilen Hata Sayısı:</label>
             <input type="number" id="corrections-2" min="0" value="0">
-            
-        </div>
-         <div id="nav-button-container-2"></div> </div>
 
-     <div id="page-3" class="page">
+        </div>
+        <div id="nav-button-container-2"></div> </div>
+
+    <div id="page-3" class="page">
         <h2>3. Kart</h2>
         <div class="instructions">
             <p>Şimdi bu karttaki dairelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum.</p>
-             <p>Sıranın başından başlayın ve soldan sağa doğru gidin. Hatalarınızı düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+            <p>Sıranın başından başlayın ve soldan sağa doğru gidin. Hatalarınızı düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
         </div>
         <div class="stimuli-dots"> <div class="dot bg-red"></div><div class="dot bg-green"></div><div class="dot bg-yellow"></div><div class="dot bg-blue"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
-            <div class="dot bg-orange"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-green"></div><div class="dot bg-orange"></div>
+            <div class="dot bg-yellow"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-green"></div><div class="dot bg-yellow"></div>
             <div class="dot bg-blue"></div><div class="dot bg-green"></div><div class="dot bg-green"></div><div class="dot bg-red"></div><div class="dot bg-yellow"></div><div class="dot bg-blue"></div>
-            <div class="dot bg-yellow"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-yellow"></div><div class="dot bg-orange"></div><div class="dot bg-red"></div>
-             <div class="dot bg-green"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
+            <div class="dot bg-yellow"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-yellow"></div><div class="dot bg-yellow"></div><div class="dot bg-red"></div>
+            <div class="dot bg-green"></div><div class="dot bg-blue"></div><div class="dot bg-red"></div><div class="dot bg-red"></div><div class="dot bg-blue"></div><div class="dot bg-green"></div>
         </div>
         <button onclick="startTimer(3)">Başla</button>
         <button onclick="stopTimer(3)" disabled>Bitir</button>
         <div class="timer-display" id="timer-3">Süre: 0.000 saniye</div>
-         <div class="error-inputs" id="error-inputs-3">
+        <div class="error-inputs" id="error-inputs-3">
             <p><strong>Gözetmen Girişi:</strong></p>
             <label for="errors-3">Hatalı Cevap Sayısı:</label>
             <input type="number" id="errors-3" min="0" value="0">
             <label for="corrections-3">Düzeltilen Hata Sayısı:</label>
             <input type="number" id="corrections-3" min="0" value="0">
-             
+
         </div>
-         <div id="nav-button-container-3"></div> </div>
+        <div id="nav-button-container-3"></div> </div>
 
     <div id="page-4" class="page">
         <h2>4. Kart</h2>
         <div class="instructions">
-             <p>Şimdi bu ekrandaki kelimelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum. Sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
+            <p>Şimdi bu ekrandaki kelimelerin renklerini mümkün olduğu kadar çabuk söylemenizi istiyorum. Sıranın başından başlayın ve soldan sağa doğru gidin. Hata yaparsanız düzeltin. Hazır olduğunuzda 'Başla' düğmesine basın.</p>
         </div>
         <div class="stimuli-grid"> <span class="color-green">kadar</span><span class="color-blue">zayıf</span><span class="color-yellow">ise</span><span class="color-red">orta</span>
             <span class="color-yellow">orta</span><span class="color-red">kadar</span><span class="color-green">zayıf</span><span class="color-blue">ise</span>
@@ -262,9 +398,9 @@
             <input type="number" id="errors-4" min="0" value="0">
             <label for="corrections-4">Düzeltilen Hata Sayısı:</label>
             <input type="number" id="corrections-4" min="0" value="0">
-            
+
         </div>
-         <div id="nav-button-container-4"></div> </div>
+        <div id="nav-button-container-4"></div> </div>
 
 
     <div id="page-5" class="page">
@@ -274,7 +410,7 @@
             <p>Kelimeyi okumayın, rengini söyleyin. Yine sıranın başından başlayın ve soldan sağa doğru gidin. Fark ettiğiniz hataları düzeltin.</p>
             <p>Hazır olduğunuzda 'Başla' düğmesine basın.</p>
         </div>
-         <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
+        <div class="stimuli-grid"> <span class="color-green">mavi</span><span class="color-blue">sarı</span><span class="color-yellow">kırmızı</span><span class="color-red">yeşil</span>
             <span class="color-yellow">yeşil</span><span class="color-red">mavi</span><span class="color-green">sarı</span><span class="color-blue">kırmızı</span>
             <span class="color-blue">yeşil</span><span class="color-green">kırmızı</span><span class="color-yellow">mavi</span><span class="color-red">sarı</span>
             <span class="color-blue">kırmızı</span><span class="color-yellow">yeşil</span><span class="color-red">sarı</span><span class="color-green">mavi</span>
@@ -290,66 +426,65 @@
             <input type="number" id="errors-5" min="0" value="0">
             <label for="corrections-5">Düzeltilen Hata Sayısı:</label>
             <input type="number" id="corrections-5" min="0" value="0">
-            
+
         </div>
-         <div id="nav-button-container-5"></div> </div>
+        <div id="nav-button-container-5"></div> </div>
 
     <div id="page-6" class="page">
         <h2>Test Bitti - Sonuçlar</h2>
-	<h3 id="namesurname" style="text-align: center;"></h3>
+    <h3 id="namesurname"></h3>
         <div id="results-summary">
              <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Kart</th>
-                        <th>Süre (saniye)</th>
-                        <th>Hata Sayısı</th>
-                        <th>Düzeltme Sayısı</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td id="result-time-1">--</td>
-                        <td id="result-errors-1">--</td>
-                        <td id="result-corrections-1">--</td>
-                    </tr>
+                 <thead>
                      <tr>
-                        <td>2</td>
-                        <td id="result-time-2">--</td>
-                        <td id="result-errors-2">--</td>
-                        <td id="result-corrections-2">--</td>
-                    </tr>
+                         <th>Kart</th>
+                         <th>Süre (saniye)</th>
+                         <th>Hata Sayısı</th>
+                         <th>Düzeltme Sayısı</th>
+                     </tr>
+                 </thead>
+                 <tbody>
                      <tr>
-                        <td>3</td>
-                        <td id="result-time-3">--</td>
-                        <td id="result-errors-3">--</td>
-                        <td id="result-corrections-3">--</td>
-                    </tr>
-                     <tr>
-                        <td>4</td>
-                        <td id="result-time-4">--</td>
-                        <td id="result-errors-4">--</td>
-                        <td id="result-corrections-4">--</td>
-                    </tr>
-                     <tr>
-                        <td>5</td>
-                        <td id="result-time-5">--</td>
-                        <td id="result-errors-5">--</td>
-                        <td id="result-corrections-5">--</td>
-                    </tr>
-                </tbody>
-            </table>
+                         <td>1</td>
+                         <td id="result-time-1">--</td>
+                         <td id="result-errors-1">--</td>
+                         <td id="result-corrections-1">--</td>
+                     </tr>
+                      <tr>
+                         <td>2</td>
+                         <td id="result-time-2">--</td>
+                         <td id="result-errors-2">--</td>
+                         <td id="result-corrections-2">--</td>
+                     </tr>
+                      <tr>
+                         <td>3</td>
+                         <td id="result-time-3">--</td>
+                         <td id="result-errors-3">--</td>
+                         <td id="result-corrections-3">--</td>
+                     </tr>
+                      <tr>
+                         <td>4</td>
+                         <td id="result-time-4">--</td>
+                         <td id="result-errors-4">--</td>
+                         <td id="result-corrections-4">--</td>
+                     </tr>
+                      <tr>
+                         <td>5</td>
+                         <td id="result-time-5">--</td>
+                         <td id="result-errors-5">--</td>
+                         <td id="result-corrections-5">--</td>
+                     </tr>
+                 </tbody>
+             </table>
         </div>
         <br>
-		<br>
-        
+        <br>
+
         <button onclick="downloadResults()">Sonuçları İndir</button>
 
         <button onclick="resetTest()">Testi Sıfırla</button>
     </div>
-
-    <script>
+	<script>
 	    let currentPage = 0;
         const pages = document.querySelectorAll('.page');
         let timers = {}; // To store timer intervals
