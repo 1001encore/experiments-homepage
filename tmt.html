@@ -4,35 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> İz Sürme Testi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
     <style>
-        .node {
-            position: absolute;
-            width: 65px; /* Slightly wider for longer text */
-            height: 65px; /* Slightly taller */
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            transition: background-color 0.2s, border-color 0.2s;
-            text-align: center;
-            font-size: 1rem; /* Adjust font size if needed */
-            line-height: 1.1; /* Adjust line height */
-            padding: 2px; /* Add padding for text */
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        /* Base Styles */
+        body {
+            font-family: 'Roboto', sans-serif; /* Use Roboto */
+            background-color: #f8f9fa; /* Light gray background */
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: #202124; /* Dark gray text color */
+			overflow-x: hidden;
         }
 
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1500px; /* Adjust max-width */
+            margin-right: auto;
+            margin-left: auto;
+            padding: 24px; /* Consistent padding */
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 2.5rem; /* Larger heading */
+            font-weight: 400; /* Lighter weight for title */
+            text-align: center;
+            color: #202124; /* Dark gray */
+            margin-bottom: 32px; /* More space below title */
+        }
+
+        h2 {
+             font-size: 1.5rem; /* Slightly larger section title */
+             font-weight: 500; /* Medium weight */
+             margin-bottom: 16px;
+             color: #202124;
+        }
+
+        h3 {
+            font-size: 1.25rem; /* Sub-section title */
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #202124;
+        }
+
+         h4 {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #5f6368; /* Medium gray */
+         }
+
+        /* Test Container (Card-like appearance) */
+        #test-container {
+            background-color: #fff; /* White background */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Subtle shadow */
+            padding: 24px; /* Consistent padding */
+            max-width: 1600px; /* Adjust max-width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Instructions */
+        #instructions {
+            margin-bottom: 24px;
+        }
+
+        #general-instruction {
+            margin-bottom: 16px;
+            color: #5f6368; /* Medium gray */
+        }
+
+        #training-instruction-part1,
+        #training-instruction-part2,
+        #main-instruction-part1,
+        #main-instruction-part2 {
+            font-weight: 400; /* Regular weight */
+            margin-bottom: 8px;
+        }
+
+        #training-instruction-part1,
+        #training-instruction-part2 {
+             color: #7c3aed; /* Purple accent */
+        }
+
+         #main-instruction-part1,
+         #main-instruction-part2 {
+             color: #1d4ed8; /* Blue accent */
+         }
+
+
+        /* Info Bar (Timer, Accuracy, Progress) */
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap; /* Allow items to wrap on small screens */
+            gap: 16px; /* Space between items */
+        }
+
+        .info-item {
+            font-size: 1rem;
+            font-family: 'Roboto Mono', monospace; /* Use Roboto Mono for numbers */
+            background-color: #e8f0fe; /* Light blue background */
+            color: #1a73e8; /* Google blue text */
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+         #accuracy-info {
+            /* hidden class is handled below */
+        }
+
+
+        /* Test Area (existing styles retained) */
         #test-area {
             position: relative;
             width: 100%;
-            height: 80vh; /* Increased height slightly */
-            border: 2px solid #e5e7eb;
-            border-radius: 0.5rem;
+            height: 80vh;
+            border: 1px solid #dadce0; /* Lighter border */
+            border-radius: 8px; /* Match container rounding */
             overflow: hidden;
-            margin: 1rem 0;
+            margin: 24px 0;
         }
 
         canvas {
@@ -52,6 +152,77 @@
             z-index: 2;
         }
 
+        /* Node styles (existing size/shape retained, colors updated) */
+         .node {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500; /* Medium weight */
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s; /* Add box-shadow transition */
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.2;
+            padding: 2px;
+            box-sizing: border-box;
+            border: 1px solid transparent; /* Start with transparent border */
+            box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px rgba(60,64,67,0.15); /* Subtle shadow */
+        }
+
+        /* Node Colors (mapping to Google-like states) */
+        .node.neutral {
+            background-color: #fff;
+            color: #202124;
+             border-color: #7c7c7c; /* Light gray border */
+        }
+
+        .node.correct {
+            background-color: #e6f4ea; /* Very light green */
+            color: #137333; /* Google green text */
+            border-color: #34a853; /* Google green border */
+        }
+
+        .node.error {
+            background-color: #fce8e6; /* Very light red */
+            color: #c5221f; /* Google red text */
+            border-color: #ea4335; /* Google red border */
+        }
+
+        .node.startEnd {
+            background-color: #e8f0fe; /* Light blue */
+            color: #1a73e8; /* Google blue text */
+             border-color: #4285f4; /* Google blue border */
+            font-weight: 700; /* Bold */
+        }
+
+        .node.trainingNeutral {
+            background-color: #fff;
+            color: #202124;
+             border-color: #7c7c7c; /* Light gray border */
+        }
+         .node.trainingCorrect {
+            background-color: #f3e8fd; /* Very light purple */
+            color: #7c3aed; /* Purple text */
+            border-color: #7c3aed; /* Purple border */
+         }
+        .node.trainingError {
+             background-color: #fce8e6; /* Very light red */
+             color: #c5221f; /* Google red text */
+             border-color: #ea4335; /* Google red border */
+         }
+
+        /* Hover effect for nodes */
+        .node:hover {
+             box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15); /* More prominent shadow on hover */
+        }
+
+
+        /* Animations (existing styles retained) */
         .error-shake {
             animation: shake 0.5s;
         }
@@ -63,65 +234,213 @@
         }
 
         .highlight-correct {
-             border-color: #f59e0b !important; /* Amber-500 for highlight, use !important to override other borders */
-             box-shadow: 0 0 8px #f59e0b;
+            border-color: #fcc934 !important; /* Google yellow for highlight */
+            box-shadow: 0 0 8px #fcc934; /* Yellow glow */
         }
 
-        /* Utility class */
+        /* Utility class (existing styles retained) */
         .hidden {
            display: none;
         }
 
-	.return-home-button {
-            position: fixed; /* Keep the button in the same place on the screen */
-            top: 1rem; /* 16px from the top */
-            left: 1rem; /* 16px from the left */
-            width: 48px; /* Set width */
-            height: 48px; /* Set height */
-            border-radius: 50%; /* Make it circular */
-            background-color: #2563eb; /* Blue background color */
-            color: white; /* White text/emoji color */
-            display: flex; /* Use flexbox to center content */
-            align-items: center; /* Vertically center content */
-            justify-content: center; /* Horizontally center content */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow */
-            z-index: 50; /* Ensure it stays on top of other elements */
-            text-decoration: none; /* Remove underline from link */
-            font-size: 1.5rem; /* Adjust emoji size */
-            transition: background-color 0.2s ease-in-out; /* Smooth transition for hover effect */
+        /* Buttons */
+        .button {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            font-weight: 500; /* Medium weight */
+            padding: 12px 24px; /* Standard padding */
+            border-radius: 4px; /* Subtle rounding */
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+            text-transform: none; /* Prevent uppercase */
+             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Subtle shadow */
         }
 
-        /* Hover effect for the button */
-        .return-home-button:hover {
-            background-color: #1d4ed8; /* Darker blue on hover */
+        .button:hover {
+             box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15); /* More prominent shadow */
         }
-	    
+
+
+        #start-btn,
+        #restart-btn,
+        #download-btn {
+            background-color: #1a73e8; /* Google blue */
+            color: white;
+        }
+
+        #start-btn:hover,
+         #restart-btn:hover,
+         #download-btn:hover {
+            background-color: #1565c0; /* Darker blue on hover */
+        }
+
+        #start-part2-btn {
+            background-color: #34a853; /* Google green */
+            color: white;
+             margin-left: 16px; /* Space between buttons */
+        }
+
+        #start-part2-btn:hover {
+            background-color: #2e7d32; /* Darker green */
+        }
+
+        #next-training-btn {
+            background-color: #7c3aed; /* Purple */
+            color: white;
+             margin-left: 16px; /* Space between buttons */
+        }
+
+        #next-training-btn:hover {
+            background-color: #6d28d9; /* Darker purple */
+        }
+
+        #reset-btn {
+            background-color: #ea4335; /* Google red */
+            color: white;
+            margin-left: 16px; /* Space between buttons */
+        }
+
+        #reset-btn:hover {
+            background-color: #d32f2f; /* Darker red */
+        }
+
+        /* Button group styling */
+        .button-group {
+             display: flex;
+             justify-content: center;
+             margin-top: 24px;
+             flex-wrap: wrap; /* Allow buttons to wrap */
+             gap: 16px; /* Space between buttons when wrapped */
+        }
+
+
+        /* Results Screen (Card-like appearance) */
+        #results-screen {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            padding: 24px;
+            max-width: 800px; /* Adjust max-width */
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 32px; /* More space above results */
+        }
+
+        #results-screen h2 {
+            font-size: 2rem; /* Larger heading */
+            font-weight: 400;
+            text-align: center;
+            color: #137333; /* Google green */
+            margin-bottom: 24px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 24px; /* More gap */
+            margin-bottom: 24px; /* Space before general results */
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            .results-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .result-box {
+            background-color: #f8f9fa; /* Light gray background */
+            padding: 16px;
+            border-radius: 8px;
+             border: 1px solid #dadce0; /* Light border */
+        }
+
+        .result-item {
+            font-size: 1rem;
+            line-height: 1.5; /* Standard line height */
+            margin-bottom: 8px;
+            color: #5f6368; /* Medium gray */
+        }
+
+        .result-item.large {
+             font-size: 1.125rem;
+             font-weight: 500; /* Medium weight for main results */
+             color: #202124; /* Dark gray for main results */
+        }
+
+        .result-item span {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500; /* Medium weight */
+            color: #202124; /* Dark gray */
+        }
+        
+         .result-box .text-purple-800 {
+             color: #5b21b6; /* Retain purple for training results */
+         }
+         .result-box .text-purple-800 span {
+             color: #5b21b6; /* Retain purple for training results spans */
+         }
+
+
+        /* Download Button Container */
+        .download-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        /* Return Home Button (existing styles kept as requested) */
+         .return-home-button {
+             position: fixed;
+             top: 1rem;
+             left: 1rem;
+             width: 48px;
+             height: 48px;
+             border-radius: 50%;
+             background-color: #2563eb;
+             color: white;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+             z-index: 50;
+             text-decoration: none;
+             font-size: 1.5rem;
+             transition: background-color 0.2s ease-in-out;
+         }
+
+         /* Hover effect for the button (existing styles kept) */
+         .return-home-button:hover {
+             background-color: #1d4ed8;
+         }
+
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-	<a href="https://1001encore.github.io/experiments-homepage/home.html" class="return-home-button" aria-label="Anasayfaya Dön">
-	↩
-	</a>
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center text-blue-800 mb-6">TMT İz Sürme Testi</h1>
+<body>
+    <a href="/home.html" class="return-home-button" aria-label="Anasayfaya Dön">
+        ↩
+    </a>
+    <div class="container">
+        <h1>İz Sürme Testi</h1>
 
-        <div id="test-container" class="bg-white rounded-lg shadow-lg p-6 max-w-7xl mx-auto"> <div id="instructions" class="mb-6">
-                <h2 class="text-xl font-semibold mb-2">Talimatlar:</h2>
-                <p id="general-instruction" class="mb-4">Dairelere sırasıyla olabildiğince hızlı şekilde tıklayın.</p>
-                <p id="training-instruction-part1" class="font-medium text-purple-700 hidden">Eğitim - 1. Bölüm: Aşağıdaki 5 daireye sırasıyla tıklayın: 1 → 2 → 3 → 4 → 5</p>
-                 <p id="training-instruction-part2" class="font-medium text-purple-700 hidden">Eğitim - 2. Bölüm: Aşağıdaki 5 daireye sırasıyla tıklayın: 1 → A → 2 → B → 3</p>
-                <p id="main-instruction-part1" class="font-medium text-blue-700 hidden">1. Bölüm: Bu sırayla tıklayın: 1 → 2 → 3 → 4 → ... → 24 → 25</p>
-                <p id="main-instruction-part2" class="font-medium text-blue-700 hidden">2. Bölüm: Bu sırayla tıklayın: 1 → A → 2 → B → 3 → C → ... → L → 13</p>
+        <div id="test-container">
+            <div id="instructions" class="instructions">
+                <h2>Talimatlar:</h2>
+                <p id="general-instruction">Dairelere sırasıyla olabildiğince hızlı şekilde tıklayın.</p>
+                <p id="training-instruction-part1" class="hidden">Eğitim - 1. Bölüm: Aşağıdaki 5 daireye sırasıyla tıklayın: 1 → 2 → 3 → 4 → 5</p>
+                <p id="training-instruction-part2" class="hidden">Eğitim - 2. Bölüm: Aşağıdaki 5 daireye sırasıyla tıklayın: 1 → A → 2 → B → 3</p>
+                <p id="main-instruction-part1" class="hidden">1. Bölüm: Bu sırayla tıklayın: 1 → 2 → 3 → 4 → ... → 24 → 25</p>
+                <p id="main-instruction-part2" class="hidden">2. Bölüm: Bu sırayla tıklayın: 1 → A → 2 → B → 3 → C → ... → L → 13</p>
             </div>
 
-            <div class="flex justify-between items-center mb-4">
-                <div id="timer" class="text-lg font-mono bg-gray-100 px-4 py-2 rounded">
+            <div class="info-bar">
+                <div id="timer" class="info-item">
                     Süre: <span id="time-display">00:00.0</span>
                 </div>
-                 <div id="accuracy-info" class="text-lg font-mono bg-gray-100 px-4 py-2 rounded hidden">
-                     Doğruluk: <span id="accuracy-display">--</span>%
-                 </div>
-                <div id="progress" class="text-lg font-mono bg-gray-100 px-4 py-2 rounded">
+                <div id="accuracy-info" class="info-item hidden">
+                    Doğruluk: <span id="accuracy-display">--</span>%
+                </div>
+                <div id="progress" class="info-item">
                     İlerleme: <span id="progress-display">0</span>/<span id="total-nodes">0</span>
                 </div>
             </div>
@@ -131,84 +450,90 @@
                 <div id="node-container" class="node-container"></div>
             </div>
 
-            <div class="flex justify-center mt-6">
-                <button id="start-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
+            <div class="button-group">
+                <button id="start-btn" class="button">
                     Testi Başlat
                 </button>
-                 <button id="start-part2-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition hidden ml-4">
+                <button id="start-part2-btn" class="button hidden">
                     2. Bölümü Başlat
-                 </button>
-                 <button id="next-training-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition hidden ml-4">
-                     Ana Teste Geç
-                 </button>
-                <button id="reset-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition hidden ml-4">
+                </button>
+                <button id="next-training-btn" class="button hidden">
+                    Ana Teste Geç
+                </button>
+                <button id="reset-btn" class="button hidden">
                     Sıfırla
                 </button>
             </div>
         </div>
 
-         <div id="results-screen" class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto mt-8 hidden">
-             <h2 class="text-2xl font-bold text-center text-green-700 mb-6">Test Bitti!</h2>
-		 <h4 class="text-base mb-1" id="namesurname"></h4>
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div class="bg-gray-100 p-4 rounded-lg">
-                      <h3 class="text-xl font-semibold mb-3 text-blue-800">1. Bölüm Sonuçları</h3>
-                       <p class="text-base mb-1 text-purple-800">Eğitim Süresi: <span id="training-part1-time" class="font-mono font-semibold">--:--.-</span></p>
-                       <p class="text-base mb-2 text-purple-800">Eğitim Doğruluk: <span id="training-part1-accuracy" class="font-mono font-semibold">--</span>% (<span id="training-part1-correct">0</span>/<span id="training-part1-total">0</span>)</p>
-                      <p class="text-lg mb-2">Ana Test Süresi: <span id="part1-time" class="font-mono font-semibold">--:--.-</span></p>
-                      <p class="text-lg">Ana Test Doğruluk: <span id="part1-accuracy" class="font-mono font-semibold">--</span>% (<span id="part1-correct">0</span>/<span id="part1-total">0</span>)</p>
-                 </div>
-                 <div class="bg-gray-100 p-4 rounded-lg">
-                      <h3 class="text-xl font-semibold mb-3 text-blue-800">2. Bölüm Sonuçları</h3>
-                       <p class="text-base mb-1 text-purple-800">Eğitim Süresi: <span id="training-part2-time" class="font-mono font-semibold">--:--.-</span></p>
-                       <p class="text-base mb-2 text-purple-800">Eğitim Doğruluk: <span id="training-part2-accuracy" class="font-mono font-semibold">--</span>% (<span id="training-part2-correct">0</span>/<span id="training-part2-total">0</span>)</p>
-                      <p class="text-lg mb-2">Ana Test Süresi: <span id="part2-time" class="font-mono font-semibold">--:--.-</span></p>
-                      <p class="text-lg">Ana Test Doğruluk: <span id="part2-accuracy" class="font-mono font-semibold">--</span>% (<span id="part2-correct">0</span>/<span id="part2-total">0</span>)</p>
-                    </div>
+        <div id="results-screen" class="hidden">
+            <h2>Test Bitti!</h2>
+            <h4 id="namesurname"></h4>
+            <div class="results-grid">
+                <div class="result-box">
+                    <h3>1. Bölüm Sonuçları</h3>
+                    <p class="result-item text-purple-800">Eğitim Süresi: <span id="training-part1-time">--:--.-</span></p>
+                    <p class="result-item text-purple-800">Eğitim Doğruluk: <span id="training-part1-accuracy">--</span>% (<span id="training-part1-correct">0</span>/<span id="training-part1-total">0</span>)</p>
+                    <p class="result-item large">Ana Test Süresi: <span id="part1-time">--:--.-</span></p>
+                    <p class="result-item large">Ana Test Doğruluk: <span id="part1-accuracy">--</span>% (<span id="part1-correct">0</span>/<span id="part1-total">0</span>)</p>
                 </div>
-                <div class="flex justify-center mt-8">
-                    <button id="restart-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
-                        Tekrar Uygula
-                    </button>
+                <div class="result-box">
+                    <h3>2. Bölüm Sonuçları</h3>
+                    <p class="result-item text-purple-800">Eğitim Süresi: <span id="training-part2-time">--:--.-</span></p>
+                    <p class="result-item text-purple-800">Eğitim Doğruluk: <span id="training-part2-accuracy">--</span>% (<span id="training-part2-correct">0</span>/<span id="training-part2-total">0</span>)</p>
+                    <p class="result-item large">Ana Test Süresi: <span id="part2-time">--:--.-</span></p>
+                    <p class="result-item large">Ana Test Doğruluk: <span id="part2-accuracy">--</span>% (<span id="part2-correct">0</span>/<span id="part2-total">0</span>)</p>
                 </div>
-                <br><br><br>
-                 <div class="bg-gray-100 p-4 rounded-lg">
-                      <h3 class="text-xl font-semibold mb-3 text-blue-800">Genel Sonuçlar</h3>
-                      <p class="text-base mb-1">Toplam Süre: <span id="total-time" class="font-mono font-semibold">--:--.-</span></p>
-                      <p class="text-base mb-1">Ortalama Doğruluk: <span id="average-accuracy" class="font-mono font-semibold">--</span>%</p>
-                      <p class="text-base mb-1">Eğitim Süre Farkı: <span id="training-time-difference" class="font-mono font-semibold">--:--.-</span></p>
-                      <p class="text-base mb-1">Test Süre Farkı: <span id="test-time-difference" class="font-mono font-semibold">--:--.-</span></p>
-                      <p class="text-base mb-1">Eğitim Doğruluk Farkı: <span id="training-accuracy-difference" class="font-mono font-semibold">--</span>%</p>
-                      <p class="text-base mb-1">Test Doğruluk Farkı: <span id="test-accuracy-difference" class="font-mono font-semibold">--</span>%</p>
-                 </div>
-                
-                <div class="flex justify-center mt-8">
-                    <button id="download-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
-                        Sonuçları İndir
-                    </button>
-                </div>
-           </div>
+            </div>
+             <div class="button-group">
+                <button id="restart-btn" class="button">
+                    Tekrar Uygula
+                </button>
+            </div>
+            <br><br><br> <div class="result-box">
+                <h3>Genel Sonuçlar</h3>
+                <p class="result-item">Toplam Süre: <span id="total-time">--:--.-</span></p>
+                <p class="result-item">Ortalama Doğruluk: <span id="average-accuracy">--</span>%</p>
+                <p class="result-item">Eğitim Süre Farkı: <span id="training-time-difference">--:--.-</span></p>
+                <p class="result-item">Test Süre Farkı: <span id="test-time-difference">--:--.-</span></p>
+                <p class="result-item">Eğitim Doğruluk Farkı: <span id="training-accuracy-difference">--</span>%</p>
+                <p class="result-item">Test Doğruluk Farkı: <span id="test-accuracy-difference">--</span>%</p>
+            </div>
+
+            <div class="button-group"> <button id="download-btn" class="button">
+                    Sonuçları İndir
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
-	    // Configuration
+        // Configuration
         const config = {
             nodesPerPart: 25, // Fixed number of nodes for the main test
             trainingNodesCount: 8, // Number of nodes for training
-            nodeSize: 65,     // Increased size slightly based on image appearance
-            margin: 15,       // Increased margin slightly
+            nodeSize: 65,      // Increased size slightly based on image appearance
+            margin: 15,        // Increased margin slightly
             colors: {
-                neutral: 'bg-white border-2 border-blue-500 text-blue-800',
-                correct: 'bg-green-100 border-2 border-green-500 text-green-800',
-                error: 'bg-red-100 border-2 border-red-500 text-red-800',
-                startEnd: 'bg-gray-100 border-2 border-blue-500 text-blue-800 font-extrabold', // Style for Start/End
-                trainingNeutral: 'bg-white border-2 border-purple-500 text-purple-800', // Training node style
-                 trainingCorrect: 'bg-purple-100 border-2 border-purple-500 text-purple-800',
-                 trainingError: 'bg-red-100 border-2 border-red-500 text-red-800'
+                neutral: 'neutral', // Mapped to CSS class 'node.neutral'
+                correct: 'correct', // Mapped to CSS class 'node.correct'
+                error: 'error',   // Mapped to CSS class 'node.error'
+                startEnd: 'startEnd', // Mapped to CSS class 'node.startEnd'
+                trainingNeutral: 'trainingNeutral', // Mapped to CSS class 'node.trainingNeutral'
+                trainingCorrect: 'trainingCorrect', // Mapped to CSS class 'node.trainingCorrect'
+                trainingError: 'trainingError' // Mapped to CSS class 'node.trainingError'
             },
             startLabel: '1\n(başla)',
             //endLabel: '(bitiş)'
         };
+
+        // --- Existing JavaScript code goes here ---
+        // (Assuming the rest of the JavaScript functionality remains unchanged)
+
+
+        // --- Existing JavaScript code goes here ---
+        // (The provided HTML only contained config and the start of the script)
+        // (Assuming the rest of the JavaScript functionality remains unchanged)
 
         // Turkish alphabet sequence (only need up to L for 13 letters)
         const turkishAlphabet = ['A', 'B', 'C', 'Ç', 'D', 'E', 'F', 'G', 'Ğ', 'H', 'I', 'İ', 'J', 'K', 'L']; // L is the 12th letter needed (0-indexed)
