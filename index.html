@@ -445,6 +445,7 @@ Bu testlerin uygulanması yaklaşık olarak 25–30 dakika sürecektir. Tüm uyg
 
                 // Store data in sessionStorage as a JSON string
                 sessionStorage.setItem('confirmationFormData', JSON.stringify(dataToStore));
+		    sessionStorage.setItem('isListOrderSwapped', JSON.stringify({"value":false}));
 
                 // Redirect to the target page
                 window.location.href = targetPage;
