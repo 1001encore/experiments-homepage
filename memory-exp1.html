@@ -215,7 +215,9 @@
         let wordTimeout, intervalTimeout, gameTimerInterval, recallTimerInterval;
         let list1ShownWords = []; // Words shown in the *first* part of the test run
         let list2ShownWords = []; // Words shown in the *second* part of the test run
-        let listOrderSwapped = false; // Track if List2 is shown before List1
+	   const lstOrderJson = sessionStorage.getItem("isListOrderSwapped");
+	   const lstOrder = JSON.parse(storedDataString);
+        let listOrderSwapped = lstOrder["value"]; // Track if List2 is shown before List1
         let gameData = [];
         let originalGameData = [];
         let currentGameCardIndex = 0;
@@ -607,8 +609,8 @@
              gameTotalAnswered = 0; recalledWords = []; recognitionAnswers = {};
 
              // *** Toggle the list order for the next run ***
-             listOrderSwapped = !listOrderSwapped;
-             console.log("Resetting test... List order swapped for next run:", listOrderSwapped);
+             //listOrderSwapped = !listOrderSwapped;
+             //console.log("Resetting test... List order swapped for next run:", listOrderSwapped);
 
              // Reset displays
              wordDisplayEl.textContent = ''; wordDisplayEl2.textContent = '';
