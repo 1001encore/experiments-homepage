@@ -216,7 +216,7 @@
         let list1ShownWords = []; // Words shown in the *first* part of the test run
         let list2ShownWords = []; // Words shown in the *second* part of the test run
 	   const lstOrderJson = sessionStorage.getItem("isListOrderSwapped");
-	   const lstOrder = JSON.parse(storedDataString);
+	   const lstOrder = JSON.parse(lstOrderJson);
         let listOrderSwapped = lstOrder["value"]; // Track if List2 is shown before List1
         let gameData = [];
         let originalGameData = [];
