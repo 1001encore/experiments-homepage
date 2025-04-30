@@ -173,6 +173,7 @@
  
  	function resetSessionStorage(){
  		sessionStorage.removeItem('confirmationFormData');
+		sessionStorage.setItem('isListOrderSwapped', JSON.stringify({"value":!JSON.parse(sessionStorage.getItem("isListOrderSwapped"))["value"]}));
  	}
 </script>
 </body>
