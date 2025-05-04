@@ -641,8 +641,8 @@
         showPage(1);
 
     // {{change 3: Add downloadResults function}}
-    function downloadResults() {
-    // Get user info
+    function downloadResults() { // Renamed the function for clarity
+    // Get user info (this part is the same for both formats)
     const storedDataString = sessionStorage.getItem('confirmationFormData');
     const receivedData = JSON.parse(storedDataString);
 
@@ -654,23 +654,45 @@
     const question2 = receivedData["question2"];
     const sex = receivedData["sex"];
 
-    // Prepare data for CSV
-    // Define the headers for the CSV file
-    let csvContent = "Ad-Soyad,Telefon Numarası,Doğum Tarihi,Cinsiyeti,\"Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?\",\"Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı?\",\"Renk körlüğü ya da görme bozukluğu var mı?\",Kart 1 Süre (s),Kart 1 Hata Sayısı,Kart 1 Düzeltme Sayısı,Kart 2 Süre (s),Kart 2 Hata Sayısı,Kart 2 Düzeltme Sayısı,Kart 3 Süre (s),Kart 3 Hata Sayısı,Kart 3 Düzeltme Sayısı,Kart 4 Süre (s),Kart 4 Hata Sayısı,Kart 4 Düzeltme Sayısı,Kart 5 Süre (s),Kart 5 Hata Sayısı,Kart 5 Düzeltme Sayısı\n";
+    // --- Logic to create TEXT content ---
+    let resultsText = "Stroop Test Sonuçları\n\n";
+    resultsText += `Ad-Soyad: ${name}\n`;
+    resultsText += `Telefon Numarası: ${telNo}\n\n`;
+    resultsText += `Doğum Tarihi: ${birthDate}\n`;
+    resultsText += `Cinsiyeti: ${sex}\n`;
+    resultsText += `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+    resultsText += `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+    resultsText += `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
 
-    // Add user and test results data
-    // Ensure data with commas or quotes are enclosed in double quotes
+    for (let i = 1; i <= 5; i++) {
+        const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
+        const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
+        const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
+        resultsText += `Kart ${i}:\n`;
+        resultsText += `  Süre: ${time} saniye\n`;
+        resultsText += `  Hata Sayısı: ${errors}\n`;
+        resultsText += `  Düzeltme Sayısı: ${corrections}\n\n`;
+    }
+
+    // --- Logic to create CSV content ---
+    // Helper function for escaping CSV values
     const escapeCsvValue = (value) => {
         if (value === undefined || value === null) {
             return '';
         }
         let stringValue = String(value);
+        // Check if value contains comma, double quote, or newline
         if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+            // Escape double quotes by doubling them, then wrap in double quotes
             return `"${stringValue.replace(/"/g, '""')}"`;
         }
         return stringValue;
     };
 
+    // Define the headers for the CSV file
+    let csvContent = "Ad-Soyad,Telefon Numarası,Doğum Tarihi,Cinsiyeti,\"Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?\",\"Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı?\",\"Renk körlüğü ya da görme bozukluğu var mı?\",Kart 1 Süre (s),Kart 1 Hata Sayısı,Kart 1 Düzeltme Sayısı,Kart 2 Süre (s),Kart 2 Hata Sayısı,Kart 2 Düzeltme Sayısı,Kart 3 Süre (s),Kart 3 Hata Sayısı,Kart 3 Düzeltme Sayısı,Kart 4 Süre (s),Kart 4 Hata Sayısı,Kart 4 Düzeltme Sayısı,Kart 5 Süre (s),Kart 5 Hata Sayısı,Kart 5 Düzeltme Sayısı\n";
+
+    // Add user and test results data to the CSV row
     let rowData = [
         escapeCsvValue(name),
         escapeCsvValue(telNo),
@@ -692,83 +714,36 @@
 
     csvContent += rowData.join(',') + '\n';
 
-    // Create a blob with CSV type
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-    // Create a link and download it
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'stroop_testi_sonuçlar.csv'; // Change file extension to .csv
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url); // Free up memory
+    // --- Download the TEXT file ---
+    const textBlob = new Blob([resultsText], { type: 'text/plain' });
+    const textUrl = URL.createObjectURL(textBlob);
+    const textLink = document.createElement('a');
+    textLink.href = textUrl;
+    textLink.download = 'stroop_testi_sonuçlar.txt';
+    document.body.appendChild(textLink);
+    textLink.click();
+    document.body.removeChild(textLink);
+    URL.revokeObjectURL(textUrl); // Free up memory
 
 
-	    	let resultsText = "Stroop Test Sonuçları\n\n";
+    // --- Download the CSV file ---
+    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const csvUrl = URL.createObjectURL(csvBlob);
+    const csvLink = document.createElement('a');
+    csvLink.href = csvUrl;
+    csvLink.download = 'stroop_testi_sonuçlar.csv'; // Change file extension to .csv
+    document.body.appendChild(csvLink);
+    // Add a slight delay for the second download might help in some browsers, though not strictly necessary
+    // if the first download completes quickly.
+	setTimeout(() => {
+         csvLink.click();
+         document.body.removeChild(csvLink);
+         URL.revokeObjectURL(csvUrl); // Free up memory
+     }, 100); // Small delay
 
-		resultsText += `Ad-Soyad: ${name}\n`;
-		
-		resultsText += `Telefon Numarası: ${telNo}\n\n`;
-		
-		resultsText += `Doğum Tarihi: ${birthDate}\n`;
-		
-		resultsText += `Cinsiyeti: ${sex}\n`;
-		
-		resultsText += `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
-		
-		resultsText += `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
-		
-		resultsText += `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
-		
-		
-		
-		for (let i = 1; i <= 5; i++) {
-		
-		const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
-		
-		const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
-		
-		const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
-		
-		resultsText += `Kart ${i}:\n`;
-		
-		resultsText += ` Süre: ${time} saniye\n`;
-		
-		resultsText += ` Hata Sayısı: ${errors}\n`;
-		
-		resultsText += ` Düzeltme Sayısı: ${corrections}\n\n`;
-		
-		}
-		
-		
-		
-		// Create a blob
-		
-		const blob = new Blob([resultsText], { type: 'text/plain' });
-		
-		
-		
-		// Create a link and download it
-		
-		const url = URL.createObjectURL(blob);
-		
-		const a = document.createElement('a');
-		
-		a.href = url;
-		
-		a.download = 'stroop_testi_sonuçlar.txt';
-		
-		document.body.appendChild(a);
-		
-		a.click();
-		
-		document.body.removeChild(a);
-		
-		URL.revokeObjectURL(url); // Free up memory
+
 }
-
 
     </script>
 
