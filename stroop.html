@@ -287,8 +287,8 @@
 	</a>
 
     <h1>Stroop Testi</h1>
-
-    <div id="page-0" class="page active">
+<!--
+    <div id="page-0" class="page">
         <h2>Başlangıç Yönergesi</h2>
         <div class="instructions">
             <p>Ekranda bazı kelimeler göreceksiniz.</p>
@@ -298,8 +298,8 @@
         </div>
         <button onclick="startTest()">Deneye Başla</button>
     </div>
-
-    <div id="page-1" class="page">
+-->
+    <div id="page-1" class="page active">
         <h2>1. Kart</h2>
         <div class="instructions">
             <p>Ekrandaki kelimeleri sesli olarak mümkün olduğu kadar doğru ve hızlı okumanızı istiyorum. </p> 
@@ -634,11 +634,11 @@
 
         function resetTest() {
             resetTestState(); // Clear current state
-            showPage(0); // Go back to initial instructions
+            showPage(1); // Go back to initial instructions
         }
 
         // Initialize by showing the first page (instructions)
-        showPage(0);
+        showPage(1);
 
     // {{change 3: Add downloadResults function}}
     function downloadResults() {
