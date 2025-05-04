@@ -1272,21 +1272,23 @@
 
              // Calculate statistics
              const totalTimeMs = timeToMs(state.trainingPart1Stats.time) + timeToMs(state.trainingPart2Stats.time) + timeToMs(state.part1Stats.time) + timeToMs(state.part2Stats.time);
-             const totalTime = msToTime(totalTimeMs);
+const totalTime = msToTime(totalTimeMs);
 
-             const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
-             const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
-             const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
+const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
+const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
+// Calculate average accuracy, preventing division by zero
+const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
 
-             const trainingTimeDifferenceMs = timeToMs(state.trainingPart2Stats.time) - timeToMs(state.trainingPart1Stats.time);
-             const trainingTimeDifference = msToTime(trainingTimeDifferenceMs);
+const trainingTimeDifferenceMs = timeToMs(state.trainingPart2Stats.time) - timeToMs(state.trainingPart1Stats.time);
+const trainingTimeDifference = msToTime(trainingTimeDifferenceMs);
 
-             const testTimeDifferenceMs = timeToMs(state.part2Stats.time) - timeToMs(state.part1Stats.time);
-             const testTimeDifference = msToTime(testTimeDifferenceMs);
+const testTimeDifferenceMs = timeToMs(state.part2Stats.time) - timeToMs(state.part1Stats.time);
+const testTimeDifference = msToTime(testTimeDifferenceMs);
 
-             const trainingAccuracyDifference = state.trainingPart1Stats.accuracy != 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
+// Calculate percentage accuracy differences, handling division by zero
+const trainingAccuracyDifference = state.trainingPart1Stats.accuracy !== undefined && state.trainingPart1Stats.accuracy !== 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
 
-             const testAccuracyDifference = state.part1Stats.accuracy != 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
+const testAccuracyDifference = state.part1Stats.accuracy !== undefined && state.part1Stats.accuracy !== 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
 
              // Populate general results
              document.getElementById('total-time').textContent = totalTime;
@@ -1297,17 +1299,48 @@
              document.getElementById('test-accuracy-difference').textContent = testAccuracyDifference;
 
              function timeToMs(timeStr) {
-                 const [minutes, secondsTenths] = timeStr.split(':');
-                 const [seconds, tenths] = secondsTenths.split('.');
-                 return (parseInt(minutes) * 60 + parseInt(seconds)) * 1000 + parseInt(tenths) * 100;
-             }
+    if (!timeStr) return 0; // Handle cases where timeStr might be undefined or null
+    const parts = timeStr.split(':');
+    if (parts.length !== 2) return 0; // Handle incorrect format
 
-             function msToTime(duration) {
-                 const minutes = Math.floor(duration / (1000 * 60)).toString().padStart(2, '0');
-                 const seconds = Math.floor((duration / 1000) % 60).toString().padStart(2, '0');
-                 const tenths = Math.floor((duration % 1000) / 100).toString();
-                 return `${minutes}:${seconds}.${tenths}`;
-             }
+    const minutes = parseInt(parts[0]);
+    const secondsAndTenths = parts[1].split('.');
+
+    if (secondsAndTenths.length !== 2) {
+         // Handle format like "MM:SS" without tenths
+         const seconds = parseInt(secondsAndTenths[0]);
+         if (isNaN(minutes) || isNaN(seconds)) return 0;
+         return (minutes * 60 + seconds) * 1000;
+    }
+
+
+    const seconds = parseInt(secondsAndTenths[0]);
+    const tenths = parseInt(secondsAndTenths[1]);
+
+    if (isNaN(minutes) || isNaN(seconds) || isNaN(tenths)) return 0; // Handle non-numeric parts
+
+    // Original correct calculation for MM:SS.T format
+    return (minutes * 60 + seconds) * 1000 + tenths * 100;
+}
+
+
+function msToTime(duration) {
+    if (typeof duration !== 'number') return "00:00.0"; // Handle non-numeric input
+
+    const sign = duration < 0 ? "-" : ""; // Determine the sign
+    const absDuration = Math.abs(duration); // Work with the absolute value
+
+    const minutes = Math.floor(absDuration / (1000 * 60));
+    const seconds = Math.floor((absDuration / 1000) % 60);
+    const tenths = Math.floor((absDuration % 1000) / 100); // Get the first digit of milliseconds
+
+    // Pad minutes and seconds to ensure two digits
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    const paddedSeconds = seconds.toString().padStart(2, '0');
+
+    return `${sign}${paddedMinutes}:${paddedSeconds}.${tenths}`; // Prepend the sign and format
+}
+
         }
 
 
