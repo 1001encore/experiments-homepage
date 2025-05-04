@@ -642,56 +642,70 @@
 
     // {{change 3: Add downloadResults function}}
     function downloadResults() {
-        // Get user info
-		
-	    const storedDataString = sessionStorage.getItem('confirmationFormData');
-	    const receivedData = JSON.parse(storedDataString);
-		//userName, telNumber
-		
-		
-        	const name = receivedData["userName"];
-		const telNo = receivedData["telNumber"];
-	    	const birthDate = receivedData["birthDate"];
-		const question1 = receivedData["question1"];
-		const question1Details = receivedData["question1Details"];
-		const question2 = receivedData["question2"];
-		const sex = receivedData["sex"];
-	    
-		//sessionStorage.removeItem('confirmationFormData');
-		
-        // Get test results
-        let resultsText = "Stroop Test Sonuçları\n\n";
-        	 resultsText +=  `Ad-Soyad: ${name}\n`;
-		 resultsText +=  `Telefon Numarası: ${telNo}\n\n`;
-		 resultsText +=  `Doğum Tarihi: ${birthDate}\n`;
-		 resultsText +=  `Cinsiyeti: ${sex}\n`;
-		 resultsText +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
-		 resultsText +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
-		 resultsText +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
+    // Get user info
+    const storedDataString = sessionStorage.getItem('confirmationFormData');
+    const receivedData = JSON.parse(storedDataString);
 
-        for (let i = 1; i <= 5; i++) {
-            const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
-            const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
-            const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
-            resultsText += `Kart ${i}:\n`;
-            resultsText += `  Süre: ${time} saniye\n`;
-            resultsText += `  Hata Sayısı: ${errors}\n`;
-            resultsText += `  Düzeltme Sayısı: ${corrections}\n\n`;
+    const name = receivedData["userName"];
+    const telNo = receivedData["telNumber"];
+    const birthDate = receivedData["birthDate"];
+    const question1 = receivedData["question1"];
+    const question1Details = receivedData["question1Details"];
+    const question2 = receivedData["question2"];
+    const sex = receivedData["sex"];
+
+    // Prepare data for CSV
+    // Define the headers for the CSV file
+    let csvContent = "Ad-Soyad,Telefon Numarası,Doğum Tarihi,Cinsiyeti,\"Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?\",\"Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı?\",\"Renk körlüğü ya da görme bozukluğu var mı?,\"Kart 1 Süre (s),Kart 1 Hata Sayısı,Kart 1 Düzeltme Sayısı,Kart 2 Süre (s),Kart 2 Hata Sayısı,Kart 2 Düzeltme Sayısı,Kart 3 Süre (s),Kart 3 Hata Sayısı,Kart 3 Düzeltme Sayısı,Kart 4 Süre (s),Kart 4 Hata Sayısı,Kart 4 Düzeltme Sayısı,Kart 5 Süre (s),Kart 5 Hata Sayısı,Kart 5 Düzeltme Sayısı\n";
+
+    // Add user and test results data
+    // Ensure data with commas or quotes are enclosed in double quotes
+    const escapeCsvValue = (value) => {
+        if (value === undefined || value === null) {
+            return '';
         }
+        let stringValue = String(value);
+        if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+            return `"${stringValue.replace(/"/g, '""')}"`;
+        }
+        return stringValue;
+    };
 
-        // Create a blob
-        const blob = new Blob([resultsText], { type: 'text/plain' });
+    let rowData = [
+        escapeCsvValue(name),
+        escapeCsvValue(telNo),
+        escapeCsvValue(birthDate),
+        escapeCsvValue(sex),
+        escapeCsvValue(question1),
+        escapeCsvValue(question1Details),
+        escapeCsvValue(question2)
+    ];
 
-        // Create a link and download it
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'stroop_testi_sonuçlar.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url); // Free up memory
+    for (let i = 1; i <= 5; i++) {
+        const time = elapsedTimes[i] !== undefined ? elapsedTimes[i].toFixed(3) : '--';
+        const errors = errorCounts[i] !== undefined ? errorCounts[i] : '--';
+        const corrections = correctionCounts[i] !== undefined ? correctionCounts[i] : '--';
+        rowData.push(escapeCsvValue(time));
+        rowData.push(escapeCsvValue(errors));
+        rowData.push(escapeCsvValue(corrections));
     }
+
+    csvContent += rowData.join(',') + '\n';
+
+    // Create a blob with CSV type
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    // Create a link and download it
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stroop_testi_sonuçlar.csv'; // Change file extension to .csv
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); // Free up memory
+}
+
 
     </script>
 
