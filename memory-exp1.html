@@ -764,7 +764,7 @@ function generateResultsText() {
 
         const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
 
-        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}\n`;
+        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}, ${Özgüveni: answer.confidence}\n`;
 
         // Update counters based on origin and response
         if (inList1) {
