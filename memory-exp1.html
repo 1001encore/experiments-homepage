@@ -747,7 +747,7 @@ function generateResultsText() {
     let falseAlarms = 0, correctRejections = 0;
 
     text += "Tanıma Bölümü (Detaylı):\n";
-    text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?\n";
+    text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?, Özgüveni(1-4)\n";
 
     Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
         const lowerWord = word.toLowerCase();
@@ -764,7 +764,7 @@ function generateResultsText() {
 
         const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
 
-        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}, ${Özgüveni: answer.confidence}\n`;
+        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"},${answer.confidence}\n`;
 
         // Update counters based on origin and response
         if (inList1) {
