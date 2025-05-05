@@ -102,7 +102,7 @@
         <div id="screen1" class="screen active">
             <h2>Yönerge</h2>
             <p>Bu bir bellek deneyidir. Test değildir, belleğinizi ölçmez. Amaç belleğin nasıl çalıştığına dair bilgi edinmektir. Deneyde verilen yönergelere uymanız önemlidir. Katılımınız için şimdiden teşekkür ederiz.</p>
-            <p id="instructionText1">Şimdi sizlere birer saniye aralıklarla 14 kelimelik bir liste sunulacaktır. Kelimeleri dikkatle inceleyin aklınızda tutmaya çalışın, daha sonra bir hatırlama testi verilecektir.</p>
+            <p id="instructionText1">“Şimdi sizlere birer saniye aralıklarla 14 kelimelik bir liste sunulacaktır. Kelimeleri dikkatle inceleyin aklınızda tutmaya çalışın, daha sonra bir hatırlama testi verilecektir</p>
             <button id="startTestBtn">Testi Başlat</button>
         </div>
 
@@ -114,7 +114,9 @@
 
         <div id="screen3" class="screen">
             <h2>Yönerge</h2>
-            <p id="instructionText2">Az önce görmüş olduğunuz kelimeler, asıl listeyi sorunsuz şekilde uygulamak için sadece alıştırma amacıyla verildi. Hatırlama testine dahil değildir. Testte sorumlu olacağınız asıl liste şimdi sunulacaktır. Dikkatle inceleyin ve aklınızda tutmaya çalışın.</p>
+            <p id="instructionText2">Az önce görmüş olduğunuz kelimeler, asıl listeyi sorunsuz şekilde uygulamak için sadece
+alıştırma amacıyla verildi. Hatırlama testine dahil değildir. Testte sorumlu olacağınız asıl
+liste şimdi sunulacaktır. Dikkatle inceleyin ve aklınızda tutmaya çalışın.</p>
             <button id="startList2Btn">Asıl Teste Geç</button>
         </div>
 
@@ -127,8 +129,13 @@
         <div id="screen5" class="screen">
             <h2>Oyun Zamanı!</h2>
             <div id="timerDisplay">Kalan Süre: 60s</div>
-			<p>Her başkent-ülke eşleştirmesi için "Doğru" ya da "Yanlış"a tıklayın. Oyun 1 dakika sürecektir.</p>
-			<h3 style="font-weight: 400;"> (Başkent   -   Ülke) </h4>
+			<p>Aşağıda ülkelerin başkentleri ile eşleştirildiğini görüyorsunuz. Bunların kimisi hatalıdır.</p>
+		<p>Doğru olanların her biri için “doğru” seçeneğini işaretleyiniz. Yanlış olanların her biri
+için de “yanlış” seçeneğini işaretleyiniz.</p> 
+		<p> Ülke-başkent isimlerinin bulunduğu kutu doğru
+yanıtlarınız için yeşil, hatalı yanıtlarınız için kırmızı renge dönecektir. Süreniz bir
+dakikadır.</p>
+			<h3 style="font-weight: 400;"> (Başkent - Ülke) </h3>
             <div id="gameArea">
                 </div>
         </div>
@@ -136,7 +143,11 @@
         <div id="screen6" class="screen">
             <h2>Serbest Hatırlama</h2>
             <div id="recallTimerDisplay">Kalan Süre: 180s</div>
-            <p>Şimdi her iki listedeki kelimelerden aklınızda kalan kelimeleri aşağıdaki boşluğa yazınız. Yazdığınız her bir kelimeden sonra “enter” tuşuna basarak yanıtınızı kaydediniz. Süreniz 3 dakikadır (180 saniye). Enter tuşuna bastığınızda yazdığınız kelime kaydedilecektir. Bitirmek için “Tamamladım” tuşuna basınız.</p>
+            <p>Şimdi her iki listedeki kelimelerden aklınızda kalan kelimeleri az sonra önünüze
+gelecek ekrandaki boşluğa yazınız. Yazdığınız her bir kelimeden sonra “Enter” tuşuna
+basarak yanıtınızı kaydediniz. Süreniz 3 dakikadır (180 saniye).</p> 
+		<p>Enter tuşuna bastığınızda yazdığınız kelime ekrandan kaybolacak ve kaydedilecektir.
+Bitirmek için “Tamamladım” tuşuna basınız.</p>
             <form id="recallForm">
                 <input type="text" id="recallInput" class="recall-input" placeholder="Hatırladığınız kelimeleri yazın ve Enter'a basın" autocomplete="off">
             </form>
@@ -146,12 +157,13 @@
 
         <div id="screen7" class="screen">
             <h2>Tanıma Testi</h2>
-             <p>Size şimdi bir tanıma testi vereceğim. Bu testteki kelimelerin bazıları gördüğünüz iki listedeki kelimelerdir; bazıları ise o iki listede görmediğiniz yeni kelimelerdir. Yapmanızı istediğim şey her bir kelimeyi dikkatle inceledikten sonra, o kelimenin listelerde gördüğünüz kelimelerden birisi olup olmadığına karar vermenizdir. Size gösterilen listede olduğunu düşünüyorsanız “GÖRDÜM” kutucuğunu işaretleyiniz. Görmediğinizi düşünüyorsanız “GÖRMEDİM” kutucuğunu işaretleyiniz.</p>
-             
-             <p>Ölçekleri sırayla ve eksiksiz olarak doldurun.</p>
+                <p>“Size şimdi bir tanıma testi vereceğim. Bu testteki kelimelerin bazıları gördüğünüz iki listedeki kelimelerdir; bazıları ise o iki listede görmediğiniz yeni kelimelerdir.</p> 
+		<p>Yapmanızı istediğim şey her bir kelimeyi dikkatle inceledikten sonra, o kelimenin listelerde gördüğünüz kelimelerden birisi olup olmadığına karar vermenizdir.</p> 
+		<p>Size gösterilen listede olduğuna karar verdiğiniz kelimeler için “GÖRDÜM” kutucuğunu, olmadığına karar verdiğiniz kelimeler için ise “GÖRMEDİM” kutucuğunu işaretleyiniz.</p>  
+		<p>En sağda gördüğünüz ölçek üzerinde ise o kelimeyi gördüğünüzden veya görmediğinizden ne kadar emin olduğunuzu belirtmenizi istiyoruz. 1: “Gördüğümden veya görmediğimden hiç emin değilim”; 4: “Gördüğümden veya görmediğimden kesinlikle eminim”</p>
 			 <div style="justify-content: center; display: flex; margin-bottom: 15px;">
-				<div id="recognitionList">
-                </div>
+			 	 <div id="recognitionList">
+                		 </div>
 			</div>
             <button id="finishRecognitionBtn" disabled>Testi Bitir</button>
         </div>
@@ -486,8 +498,9 @@
              checkAllRecognitionAnswered();
          }
          function checkAllRecognitionAnswered() {
-             const allAnswered = Object.values(recognitionAnswers).every(answer => answer.seen !== 'unanswered');
-             finishRecognitionBtn.disabled = !allAnswered; console.log("All recognition questions answered:", allAnswered);
+             const allAnswered = Object.values(recognitionAnswers).every(answer => answer.seen !== 'unanswered') && Object.values(recognitionAnswers).every(answer => answer.confidence !== 'unanswered');
+             finishRecognitionBtn.disabled = !allAnswered; 
+		 console.log("All recognition questions answered:", allAnswered);
          }
          document.getElementById('finishRecognitionBtn').addEventListener('click', () => {
              console.log("Recognition finished. Answers:", recognitionAnswers);
