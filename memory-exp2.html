@@ -58,16 +58,16 @@
         .recognition-item .likert-scale { margin-left: 10px; }
         .likert-scale button.selected { background-color: #28a745; }
 		
-        .seen-buttons button.selected { 
+        .seen-buttons button.selected, .likert-scale button.selected {
 		background-color: #1a73e8;
 		color: white; 
 		}
 		
-        #recognitionList { max-height: 600px; overflow-y: auto; margin-top: 15px; border: 1px solid #ccc; padding: 10px; max-width: 400px;}
+        #recognitionList { max-height: 600px; overflow-y: auto; margin-top: 15px; border: 1px solid #ccc; padding: 10px; max-width: 600px;}
         #resultsArea { text-align: left; margin-top: 20px; }
         #resultsArea h3 { text-align: center; }
         .game-card-buttons button { margin: 0 10px; padding: 8px 15px;}
-	.likert-scale { display: none; }
+	.likert-scale { display: flex; flex-direction: row; }
 
 	.return-home-button {
             position: fixed; /* Keep the button in the same place on the screen */
@@ -750,7 +750,7 @@ function generateResultsText() {
     let falseAlarms = 0, correctRejections = 0;
 
     text += "Tanıma Bölümü (Detaylı):\n";
-    text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?\n";
+    text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?, Özgüveni(1-4)\n";
 
     Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
         const lowerWord = word.toLowerCase();
@@ -767,7 +767,7 @@ function generateResultsText() {
 
         const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
 
-        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}\n`;
+        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}, ${answer.confidence}\n`;
 
         // Update counters based on origin and response
         if (inList1) {
