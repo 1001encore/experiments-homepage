@@ -1272,23 +1272,21 @@
 
              // Calculate statistics
              const totalTimeMs = timeToMs(state.trainingPart1Stats.time) + timeToMs(state.trainingPart2Stats.time) + timeToMs(state.part1Stats.time) + timeToMs(state.part2Stats.time);
-const totalTime = msToTime(totalTimeMs);
+             const totalTime = msToTime(totalTimeMs);
 
-const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
-const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
-// Calculate average accuracy, preventing division by zero
-const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
+             const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
+             const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
+             const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
 
-const trainingTimeDifferenceMs = timeToMs(state.trainingPart2Stats.time) - timeToMs(state.trainingPart1Stats.time);
-const trainingTimeDifference = msToTime(trainingTimeDifferenceMs);
+             const trainingTimeDifferenceMs = timeToMs(state.trainingPart2Stats.time) - timeToMs(state.trainingPart1Stats.time);
+             const trainingTimeDifference = msToTime(trainingTimeDifferenceMs);
 
-const testTimeDifferenceMs = timeToMs(state.part2Stats.time) - timeToMs(state.part1Stats.time);
-const testTimeDifference = msToTime(testTimeDifferenceMs);
+             const testTimeDifferenceMs = timeToMs(state.part2Stats.time) - timeToMs(state.part1Stats.time);
+             const testTimeDifference = msToTime(testTimeDifferenceMs);
 
-// Calculate percentage accuracy differences, handling division by zero
-const trainingAccuracyDifference = state.trainingPart1Stats.accuracy !== undefined && state.trainingPart1Stats.accuracy !== 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
+             const trainingAccuracyDifference = state.trainingPart1Stats.accuracy != 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
 
-const testAccuracyDifference = state.part1Stats.accuracy !== undefined && state.part1Stats.accuracy !== 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
+             const testAccuracyDifference = state.part1Stats.accuracy != 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
 
              // Populate general results
              document.getElementById('total-time').textContent = totalTime;
@@ -1298,53 +1296,18 @@ const testAccuracyDifference = state.part1Stats.accuracy !== undefined && state.
              document.getElementById('training-accuracy-difference').textContent = trainingAccuracyDifference;
              document.getElementById('test-accuracy-difference').textContent = testAccuracyDifference;
 
-             // This function converts input time string (e.g., "MM:SS:TTT") to total milliseconds.
-function timeToMs(timeStr) {
-    if (!timeStr) return 0; // Handle cases where timeStr might be undefined or null
+             function timeToMs(timeStr) {
+                 const [minutes, secondsTenths] = timeStr.split(':');
+                 const [seconds, tenths] = secondsTenths.split('.');
+                 return (parseInt(minutes) * 60 + parseInt(seconds)) * 1000 + parseInt(tenths) * 100;
+             }
 
-    // Split by the colon
-    const parts = timeStr.split(':');
-
-    // Expecting 3 parts: Minutes, Seconds, Milliseconds
-    if (parts.length !== 3) {
-        console.error(`Invalid time format: ${timeStr}. Expected MM:SS:TTT`);
-        return 0; // Handle incorrect format
-    }
-
-    const minutes = parseInt(parts[0]);
-    const seconds = parseInt(parts[1]);
-    const milliseconds = parseInt(parts[2]);
-
-    // Check if parsed parts are valid numbers
-    if (isNaN(minutes) || isNaN(seconds) || isNaN(milliseconds)) {
-         console.error(`Invalid numeric values in time string: ${timeStr}`);
-         return 0; // Handle non-numeric parts
-    }
-
-    // Calculate total milliseconds
-    return (minutes * 60 + seconds) * 1000 + milliseconds;
-}
-
-
-function msToTime(duration) {
-    if (typeof duration !== 'number') return "00:00:000"; // Handle non-numeric input
-
-    const sign = duration < 0 ? "-" : ""; // Determine the sign
-    const absDuration = Math.abs(duration); // Work with the absolute value
-
-    const minutes = Math.floor(absDuration / (1000 * 60));
-    const seconds = Math.floor((absDuration / 1000) % 60);
-    const milliseconds = Math.floor(absDuration % 1000); // Get the remaining milliseconds (0-999)
-
-    // Pad minutes, seconds, and milliseconds to ensure correct number of digits
-    const paddedMinutes = minutes.toString().padStart(2, '0');
-    const paddedSeconds = seconds.toString().padStart(2, '0');
-    const paddedMilliseconds = milliseconds.toString().padStart(3, '0'); // Pad milliseconds to 3 digits
-
-    // Return in MM:SS:TTT format with the sign
-    return `${sign}${paddedMinutes}:${paddedSeconds}:${paddedMilliseconds}`;
-}
-
+             function msToTime(duration) {
+                 const minutes = Math.floor(duration / (1000 * 60)).toString().padStart(2, '0');
+                 const seconds = Math.floor((duration / 1000) % 60).toString().padStart(2, '0');
+                 const tenths = Math.floor((duration % 1000) / 100).toString();
+                 return `${minutes}:${seconds}.${tenths}`;
+             }
         }
 
 
@@ -1383,131 +1346,110 @@ function msToTime(duration) {
 
         // Start timer
         function startTimer() {
-    stopTimer(); // Ensure no duplicate timers
-    state.startTime = Date.now(); // Use Date.now() for more reliable interval calculation
-    state.timerInterval = setInterval(updateTimer, 100); // Update display every 100ms
-    updateTimer(); // Initial display
-}
+            stopTimer(); // Ensure no duplicate timers
+            state.startTime = Date.now(); // Use Date.now() for more reliable interval calculation
+            state.timerInterval = setInterval(updateTimer, 100); // Update every 100ms
+            updateTimer(); // Initial display
+        }
 
-// Stop timer
-function stopTimer() {
-    clearInterval(state.timerInterval);
-    state.timerInterval = null; // Clear interval ID
-    // state.startTime is not reset here, it's needed to calculate elapsedMs when stopping
-}
+        // Stop timer
+        function stopTimer() {
+            clearInterval(state.timerInterval);
+            state.timerInterval = null; // Clear interval ID
+            state.startTime = null; // Reset start time
+        }
 
-// Update timer display
-function updateTimer() {
-    // Only update if the timer is running
-    if (state.startTime === null) {
-        // Ensure display is reset if timer is explicitly stopped without a final update
-         if(timeDisplay.textContent !== '00:00.0') {
-             timeDisplay.textContent = '00:00.0';
-         }
-         return;
-    }
+        // Update timer display
+        function updateTimer() {
+             if (!state.startTime) {
+                 timeDisplay.textContent = '00:00.0';
+                 return;
+             }
+            const elapsedMs = Date.now() - state.startTime;
+            const totalSeconds = Math.floor(elapsedMs / 1000);
+            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+            const tenths = Math.floor((elapsedMs % 1000) / 100).toString(); // Tenths of a second
 
-    const elapsedMs = Date.now() - state.startTime;
 
-    // Use msToTime function to format the elapsed time for the display
-    // Using the MM:SS:TTT format from our previous correction
-    timeDisplay.textContent = msToTime(elapsedMs);
+            timeDisplay.textContent = `${minutes}:${seconds}.${tenths}`;
+        }
 
-     // Note: The raw elapsedMs is calculated here but not stored in state yet.
-     // It should be stored when the *part ends*.
-}
         // Initialize the application when the page loads
         window.addEventListener('DOMContentLoaded', init);
 		
 		
 		
         function downloadResults() {
+		
+	const storedDataString = sessionStorage.getItem('confirmationFormData');
+	    const receivedData = JSON.parse(storedDataString);
+		//userName, telNumber
+		
+        	const name = receivedData["userName"];
+		const telNo = receivedData["telNumber"];
+	    	const birthDate = receivedData["birthDate"];
+		const question1 = receivedData["question1"];
+		const question1Details = receivedData["question1Details"];
+		const question2 = receivedData["question2"];
+		const sex = receivedData["sex"];
 
-    const storedDataString = sessionStorage.getItem('confirmationFormData');
-    const receivedData = JSON.parse(storedDataString);
+		//sessionStorage.removeItem('confirmationFormData');
 
-    const name = receivedData["userName"];
-    const telNo = receivedData["telNumber"];
-    const birthDate = receivedData["birthDate"];
-    const question1 = receivedData["question1"];
-    const question1Details = receivedData["question1Details"];
-    const question2 = receivedData["question2"];
-    const sex = receivedData["sex"];
+        const part1Time = document.getElementById('part1-time').textContent;
+        const part1Accuracy = document.getElementById('part1-accuracy').textContent;
+        const part2Time = document.getElementById('part2-time').textContent;
+        const part2Accuracy = document.getElementById('part2-accuracy').textContent;
+		const trainingPart1Time = document.getElementById('training-part1-time').textContent;
+        const trainingPart1Accuracy = document.getElementById('training-part1-accuracy').textContent;
+        const trainingPart2Time = document.getElementById('training-part2-time').textContent;
+        const trainingPart2Accuracy = document.getElementById('training-part2-accuracy').textContent;
 
-    // Assuming 'state' object is available containing the raw time strings (MM:SS:TTT)
-    // and accuracy numbers.
-    // We directly use the 'state' object to get the source data for calculations.
+        const totalTime = document.getElementById('total-time').textContent;
+        const averageAccuracy = document.getElementById('average-accuracy').textContent;
+        const trainingTimeDifference = document.getElementById('training-time-difference').textContent;
+        const testTimeDifference = document.getElementById('test-time-difference').textContent;
+        const trainingAccuracyDifference = document.getElementById('training-accuracy-difference').textContent;
+        const testAccuracyDifference = document.getElementById('test-accuracy-difference').textContent;
 
-    // Use the adjusted timeToMs to convert MM:SS:TTT strings to total milliseconds
-    const trainingPart1TimeMs = timeToMs(state.trainingPart1Stats.time);
-    const trainingPart2TimeMs = timeToMs(state.trainingPart2Stats.time);
-    const part1TimeMs = timeToMs(state.part1Stats.time);
-    const part2TimeMs = timeToMs(state.part2Stats.time);
+        let resultsText = "";
+		 resultsText +=  `Ad-Soyad: ${name}\n`;
+		 resultsText +=  `Telefon Numarası: ${telNo}\n\n`;
+		 resultsText +=  `Doğum Tarihi: ${birthDate}\n`;
+		 resultsText +=  `Cinsiyeti: ${sex}\n`;
+		 resultsText +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+		 resultsText +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+		 resultsText +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
 
-    const totalTimeMs = trainingPart1TimeMs + trainingPart2TimeMs + part1TimeMs + part2TimeMs;
-    const trainingTimeDifferenceMs = trainingPart2TimeMs - trainingPart1TimeMs;
-    const testTimeDifferenceMs = part2TimeMs - part1TimeMs;
+        resultsText += `1. Bölüm Eğitim Süresi: ${trainingPart1Time}\n`;
+        resultsText += `1. Bölüm Eğitim Doğruluğu: ${trainingPart1Accuracy}\n`;
+        resultsText += `1. Bölüm Süresi: ${part1Time}\n`;
+        resultsText += `1. Bölüm Doğruluğu: ${part1Accuracy}\n\n`;
 
-    // Get accuracy values directly from state (assuming they are numbers)
-    const trainingPart1Accuracy = state.trainingPart1Stats.accuracy !== undefined ? state.trainingPart1Stats.accuracy : 'N/A';
-    const trainingPart2Accuracy = state.trainingPart2Stats.accuracy !== undefined ? state.trainingPart2Stats.accuracy : 'N/A';
-    const part1Accuracy = state.part1Stats.accuracy !== undefined ? state.part1Stats.accuracy : 'N/A';
-    const part2Accuracy = state.part2Stats.accuracy !== undefined ? state.part2Stats.accuracy : 'N/A';
+        resultsText += `2. Bölüm Eğitim Süresi: ${trainingPart2Time}\n`;
+        resultsText += `2. Bölüm Eğitim Doğruluğu: ${trainingPart2Accuracy}\n`;
+        resultsText += `2. Bölüm Süresi: ${part2Time}\n`;
+        resultsText += `2. Bölüm Doğruluğu: ${part2Accuracy}\n\n`;
 
-    // Recalculate or get average accuracy and accuracy differences from state
-    const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
-    const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
-    const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
+        resultsText += `Toplam Süre: ${totalTime}\n`;
+        resultsText += `Ortalama Doğruluk: ${averageAccuracy}\n`;
+        resultsText += `Eğitimler Arası Süre Farkı: ${trainingTimeDifference}\n`;
+        resultsText += `Bölümler Arası Süre Farkı: ${testTimeDifference}\n`;
+        resultsText += `Bölümler Arası Doğruluk Farkı: ${trainingAccuracyDifference}\n`;
+        resultsText += `Eğitimler Arası Doğruluk Farkı: ${testAccuracyDifference}\n`;
 
-     const trainingAccuracyDifference = state.trainingPart1Stats.accuracy !== undefined && state.trainingPart1Stats.accuracy !== 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
-     const testAccuracyDifference = state.part1Stats.accuracy !== undefined && state.part1Stats.accuracy !== 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
+        const filename = 'tmt_sonuçlar.txt';
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(resultsText));
+        element.setAttribute('download', filename);
 
+        element.style.display = 'none';
+        document.body.appendChild(element);
 
-    let resultsText = "";
-    resultsText += `Ad-Soyad: ${name}\n`;
-    resultsText += `Telefon Numarası: ${telNo}\n\n`;
-    resultsText += `Doğum Tarihi: ${birthDate}\n`;
-    resultsText += `Cinsiyeti: ${sex}\n`;
-    resultsText += `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
-    resultsText += `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
-    resultsText += `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
+        element.click();
 
-    // Use the msToTime function to format the millisecond values into MM:SS:TTT for the download
-    resultsText += `1. Bölüm Eğitim Süresi (MM:SS:TTT): ${msToTime(trainingPart1TimeMs)}\n`;
-    resultsText += `1. Bölüm Eğitim Doğruluğu (%): ${trainingPart1Accuracy}\n`;
-    resultsText += `1. Bölüm Süresi (MM:SS:TTT): ${msToTime(part1TimeMs)}\n`;
-    resultsText += `1. Bölüm Doğruluğu (%): ${part1Accuracy}\n\n`;
-
-    resultsText += `2. Bölüm Eğitim Süresi (MM:SS:TTT): ${msToTime(trainingPart2TimeMs)}\n`;
-    resultsText += `2. Bölüm Eğitim Doğruluğu (%): ${trainingPart2Accuracy}\n`;
-    resultsText += `2. Bölüm Süresi (MM:SS:TTT): ${msToTime(part2TimeMs)}\n`;
-    resultsText += `2. Bölüm Doğruluğu (%): ${part2Accuracy}\n\n`;
-
-    resultsText += `Toplam Süre (MM:SS:TTT): ${msToTime(totalTimeMs)}\n`;
-    resultsText += `Ortalama Doğruluk (%): ${averageAccuracy}\n`;
-    // Format time differences using the msToTime function for MM:SS:TTT output
-    resultsText += `Eğitimler Arası Süre Farkı (MM:SS:TTT): ${msToTime(trainingTimeDifferenceMs)}\n`;
-    resultsText += `Bölümler Arası Süre Farkı (MM:SS:TTT): ${msToTime(testTimeDifferenceMs)}\n`;
-    resultsText += `Bölümler Arası Doğruluk Farkı (%): ${trainingAccuracyDifference}\n`;
-    resultsText += `Eğitimler Arası Doğruluk Farkı (%): ${testAccuracyDifference}\n`;
-
-
-    const filename = 'tmt_sonuçlar.txt';
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(resultsText));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-}
-
-// Ensure timeToMs and msToTime functions are defined and accessible in this scope.
-// (They were included in the previous corrected code block).
-// Also ensure the 'state' object is accessible and contains the necessary raw data.
+        document.body.removeChild(element);
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const downloadBtn = document.getElementById('download-btn');
