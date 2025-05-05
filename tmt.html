@@ -171,7 +171,7 @@
             padding: 2px;
             box-sizing: border-box;
             border: 1px solid transparent; /* Start with transparent border */
-            box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px rgba(60,64,67,0.15); /* Subtle shadow */
+            box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Subtle shadow */
         }
 
         /* Node Colors (mapping to Google-like states) */
@@ -373,7 +373,7 @@
             font-weight: 500; /* Medium weight */
             color: #202124; /* Dark gray */
         }
-        
+
          .result-box .text-purple-800 {
              color: #5b21b6; /* Retain purple for training results */
          }
@@ -435,7 +435,7 @@
 
             <div class="info-bar">
                 <div id="timer" class="info-item">
-                    Süre: <span id="time-display">00:00.0</span>
+                    Süre: <span id="time-display">00:00:000</span>
                 </div>
                 <div id="accuracy-info" class="info-item hidden">
                     Doğruluk: <span id="accuracy-display">--</span>%
@@ -472,16 +472,16 @@
             <div class="results-grid">
                 <div class="result-box">
                     <h3>1. Bölüm Sonuçları</h3>
-                    <p class="result-item text-purple-800">Eğitim Süresi: <span id="training-part1-time">--:--.-</span></p>
+                    <p class="result-item text-purple-800">Eğitim Süresi: <span id="training-part1-time">--:--:---</span></p>
                     <p class="result-item text-purple-800">Eğitim Doğruluk: <span id="training-part1-accuracy">--</span>% (<span id="training-part1-correct">0</span>/<span id="training-part1-total">0</span>)</p>
-                    <p class="result-item large">Ana Test Süresi: <span id="part1-time">--:--.-</span></p>
+                    <p class="result-item large">Ana Test Süresi: <span id="part1-time">--:--:---</span></p>
                     <p class="result-item large">Ana Test Doğruluk: <span id="part1-accuracy">--</span>% (<span id="part1-correct">0</span>/<span id="part1-total">0</span>)</p>
                 </div>
                 <div class="result-box">
                     <h3>2. Bölüm Sonuçları</h3>
-                    <p class="result-item text-purple-800">Eğitim Süresi: <span id="training-part2-time">--:--.-</span></p>
+                    <p class="result-item text-purple-800">Eğitim Süresi: <span id="training-part2-time">--:--:---</span></p>
                     <p class="result-item text-purple-800">Eğitim Doğruluk: <span id="training-part2-accuracy">--</span>% (<span id="training-part2-correct">0</span>/<span id="training-part2-total">0</span>)</p>
-                    <p class="result-item large">Ana Test Süresi: <span id="part2-time">--:--.-</span></p>
+                    <p class="result-item large">Ana Test Süresi: <span id="part2-time">--:--:---</span></p>
                     <p class="result-item large">Ana Test Doğruluk: <span id="part2-accuracy">--</span>% (<span id="part2-correct">0</span>/<span id="part2-total">0</span>)</p>
                 </div>
             </div>
@@ -492,10 +492,10 @@
             </div>
             <br> <div class="result-box">
                 <h3>Genel Sonuçlar</h3>
-                <p class="result-item">Toplam Süre: <span id="total-time">--:--.-</span></p>
+                <p class="result-item">Toplam Süre: <span id="total-time">--:--:---</span></p>
                 <p class="result-item">Ortalama Doğruluk: <span id="average-accuracy">--</span>%</p>
-                <p class="result-item">Eğitim Süre Farkı: <span id="training-time-difference">--:--.-</span></p>
-                <p class="result-item">Test Süre Farkı: <span id="test-time-difference">--:--.-</span></p>
+                <p class="result-item">Eğitim Süre Farkı: <span id="training-time-difference">--:--:---</span></p>
+                <p class="result-item">Test Süre Farkı: <span id="test-time-difference">--:--:---</span></p>
                 <p class="result-item">Eğitim Doğruluk Farkı: <span id="training-accuracy-difference">--</span>%</p>
                 <p class="result-item">Test Doğruluk Farkı: <span id="test-accuracy-difference">--</span>%</p>
             </div>
@@ -637,10 +637,10 @@
             tappedNodes: [], // Nodes tapped correctly { element, value, x, y } in the current session
             startTime: null,
             timerInterval: null,
-            part1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
-            part2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
-            trainingPart1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
-            trainingPart2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+            part1Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 }, // Store time in ms
+            part2Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 }, // Store time in ms
+            trainingPart1Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 }, // Store time in ms
+            trainingPart2Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 }, // Store time in ms
         };
 
         // DOM elements
@@ -755,7 +755,7 @@
 
         // Reset UI elements and state to initial state
          function resetUI() {
-            timeDisplay.textContent = '00:00.0';
+            timeDisplay.textContent = '00:00:000'; // Reset timer display
             progressDisplay.textContent = '0';
             totalNodesDisplay.textContent = config.nodesPerPart; // Default to main test count initially
 
@@ -797,12 +797,12 @@
                 trainingSequence = [1, 2, 3, 4, 5, 6, 7, 8];
                 trainingPositionsMap = trainingPart1NodePositions;
                 trainingInstructionPart1.classList.remove('hidden');
-                state.trainingPart1Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset stats for this training session
+                state.trainingPart1Stats = { timeMs: 0, correctClicks: 0, totalClicks: 0 }; // Reset stats for this training session
             } else { // part === 2
                 trainingSequence = [1, 'A', 2, 'B', 3, 'C', 4, 'Ç'];
                 trainingPositionsMap = trainingPart2NodePositions;
                 trainingInstructionPart2.classList.remove('hidden');
-                state.trainingPart2Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset stats for this training session
+                state.trainingPart2Stats = { timeMs: 0, correctClicks: 0, totalClicks: 0 }; // Reset stats for this training session
             }
 
             state.correctSequence = trainingSequence; // Set correct sequence for the current session
@@ -825,13 +825,14 @@
         function startMainTest() {
              stopTimer(); // Stop training timer
 
-            // Store training stats
+            // Store training stats (time in milliseconds)
+             const finalTrainingTimeMs = Date.now() - state.startTime;
              if (state.currentPart === 1) {
-                 state.trainingPart1Stats.time = timeDisplay.textContent;
+                 state.trainingPart1Stats.timeMs = finalTrainingTimeMs;
                  const acc = state.trainingPart1Stats.totalClicks > 0 ? Math.round((state.trainingPart1Stats.correctClicks / state.trainingPart1Stats.totalClicks) * 100) : 0;
                  state.trainingPart1Stats.accuracy = acc;
              } else { // Part 2
-                 state.trainingPart2Stats.time = timeDisplay.textContent;
+                 state.trainingPart2Stats.timeMs = finalTrainingTimeMs;
                   const acc = state.trainingPart2Stats.totalClicks > 0 ? Math.round((state.trainingPart2Stats.correctClicks / state.trainingPart2Stats.totalClicks) * 100) : 0;
                  state.trainingPart2Stats.accuracy = acc;
              }
@@ -855,7 +856,7 @@
                 mainPositionsMap = mainPart1NodePositions; // Use the existing Part 1 fixed map
                 mainInstructionPart1.classList.remove('hidden'); // Show main Part 1 instruction
                 trainingInstructionPart1.classList.add('hidden'); // Hide training instruction
-                state.part1Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset main stats for this part
+                state.part1Stats = { timeMs: 0, correctClicks: 0, totalClicks: 0 }; // Reset main stats for this part
             } else { // Part 2
                  mainSequence = [];
                  const numCount = 12;
@@ -879,7 +880,7 @@
                  mainPositionsMap = mainPart2NodePositions; // Use the new Part 2 fixed map
                  mainInstructionPart2.classList.remove('hidden');
                  trainingInstructionPart2.classList.add('hidden'); // Hide training instruction
-                 state.part2Stats = { time: '00:00.0', correctClicks: 0, totalClicks: 0 }; // Reset main stats for this part
+                 state.part2Stats = { timeMs: 0, correctClicks: 0, totalClicks: 0 }; // Reset main stats for this part
             }
 
             state.correctSequence = mainSequence; // Set correct sequence for the current session
@@ -912,10 +913,10 @@
                  tappedNodes: [],
                  startTime: null,
                  timerInterval: null,
-                 part1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
-                 part2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
-                 trainingPart1Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
-                 trainingPart2Stats: { time: '00:00.0', correctClicks: 0, totalClicks: 0 },
+                 part1Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 },
+                 part2Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 },
+                 trainingPart1Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 },
+                 trainingPart2Stats: { timeMs: 0, correctClicks: 0, totalClicks: 0 },
              };
              // Ensure start button is visible for a new test run
             startBtn.classList.remove('hidden');
@@ -1177,12 +1178,12 @@
         function handleTrainingComplete() {
             stopTimer(); // Stop the training timer
 
-            // Store training stats (already done in startMainTest before timer restart, but ensure final time is captured)
-            const finalTrainingTime = timeDisplay.textContent;
+            // Store training stats (time in milliseconds)
+            const finalTrainingTimeMs = Date.now() - state.startTime;
              if (state.currentPart === 1) {
-                 state.trainingPart1Stats.time = finalTrainingTime;
+                 state.trainingPart1Stats.timeMs = finalTrainingTimeMs;
              } else { // Part 2
-                 state.trainingPart2Stats.time = finalTrainingTime;
+                 state.trainingPart2Stats.timeMs = finalTrainingTimeMs;
              }
 
             // Update UI
@@ -1206,12 +1207,12 @@
 
         // Handle main test part completion (Part 1 or Part 2)
         function handleMainTestPartComplete() {
-            const finalTime = timeDisplay.textContent;
+            const finalTimeMs = Date.now() - state.startTime;
             stopTimer(); // Stop the timer for the completed part
 
-            // Store stats for the completed main part
+            // Store stats for the completed main part (time in milliseconds)
             if (state.currentPart === 1) {
-                state.part1Stats.time = finalTime;
+                state.part1Stats.timeMs = finalTimeMs;
                 // Accuracy already calculated live, but ensure final value is based on final clicks
                 const acc1 = state.part1Stats.totalClicks > 0 ? Math.round((state.part1Stats.correctClicks / state.part1Stats.totalClicks) * 100) : 0;
                 state.part1Stats.accuracy = acc1;
@@ -1222,7 +1223,7 @@
                  }
                 resetBtn.classList.add('hidden'); // Hide reset during transition
             } else { // Part 2 completed
-                state.part2Stats.time = finalTime;
+                state.part2Stats.timeMs = finalTimeMs;
                 const acc2 = state.part2Stats.totalClicks > 0 ? Math.round((state.part2Stats.correctClicks / state.part2Stats.totalClicks) * 100) : 0;
                 state.part2Stats.accuracy = acc2;
                 accuracyInfo.classList.add('hidden');
@@ -1234,81 +1235,83 @@
         // Display final results screen
         function displayResults() {
 		const storedDataString = sessionStorage.getItem('confirmationFormData');
-	    
+
 		const receivedData = JSON.parse(storedDataString);
 		const name = receivedData["userName"];
 			 //const telNo = receivedData["telNumber"];
-		
-		
+
+
              testContainer.classList.add('hidden'); // Hide the test area
              resultsScreen.classList.remove('hidden'); // Show results
              restartBtn.classList.remove('hidden'); // Show restart button
-			 
+
 			 nameSurnameH4.textContent = "(Ad-Soyad: " + name + ")";
 
-             // Populate Training Part 1 Results
-            trainingPart1TimeDisp.textContent = state.trainingPart1Stats.time;
+             // Populate Training Part 1 Results (formatted time)
+            trainingPart1TimeDisp.textContent = msToTime(state.trainingPart1Stats.timeMs);
             trainingPart1AccuracyDisp.textContent = state.trainingPart1Stats.accuracy;
             trainingPart1CorrectDisp.textContent = state.trainingPart1Stats.correctClicks;
             trainingPart1TotalDisp.textContent = state.trainingPart1Stats.totalClicks;
 
-             // Populate Main Part 1 Results
-             part1TimeDisp.textContent = state.part1Stats.time;
+             // Populate Main Part 1 Results (formatted time)
+             part1TimeDisp.textContent = msToTime(state.part1Stats.timeMs);
              part1AccuracyDisp.textContent = state.part1Stats.accuracy;
              part1CorrectDisp.textContent = state.part1Stats.correctClicks;
              part1TotalDisp.textContent = state.part1Stats.totalClicks;
 
-              // Populate Training Part 2 Results
-            trainingPart2TimeDisp.textContent = state.trainingPart2Stats.time;
+              // Populate Training Part 2 Results (formatted time)
+            trainingPart2TimeDisp.textContent = msToTime(state.trainingPart2Stats.timeMs);
             trainingPart2AccuracyDisp.textContent = state.trainingPart2Stats.accuracy;
             trainingPart2CorrectDisp.textContent = state.trainingPart2Stats.correctClicks;
             trainingPart2TotalDisp.textContent = state.trainingPart2Stats.totalClicks;
 
-              // Populate Main Part 2 Results
-             part2TimeDisp.textContent = state.part2Stats.time;
+              // Populate Main Part 2 Results (formatted time)
+             part2TimeDisp.textContent = msToTime(state.part2Stats.timeMs);
              part2AccuracyDisp.textContent = state.part2Stats.accuracy;
              part2CorrectDisp.textContent = state.part2Stats.correctClicks;
              part2TotalDisp.textContent = state.part2Stats.totalClicks;
 
-             // Calculate statistics
-             const totalTimeMs = timeToMs(state.trainingPart1Stats.time) + timeToMs(state.trainingPart2Stats.time) + timeToMs(state.part1Stats.time) + timeToMs(state.part2Stats.time);
-             const totalTime = msToTime(totalTimeMs);
+             // Calculate statistics (using milliseconds for calculation, then format for display)
+             const totalTimeMs = state.trainingPart1Stats.timeMs + state.trainingPart2Stats.timeMs + state.part1Stats.timeMs + state.part2Stats.timeMs;
+             const totalTimeFormatted = msToTime(totalTimeMs);
 
              const totalCorrectClicks = state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks;
              const totalClicks = state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks;
              const averageAccuracy = totalClicks > 0 ? Math.round((totalCorrectClicks / totalClicks) * 100) : 0;
 
-             const trainingTimeDifferenceMs = timeToMs(state.trainingPart2Stats.time) - timeToMs(state.trainingPart1Stats.time);
-             const trainingTimeDifference = msToTime(trainingTimeDifferenceMs);
+             const trainingTimeDifferenceMs = state.trainingPart2Stats.timeMs - state.trainingPart1Stats.timeMs;
+             const trainingTimeDifferenceFormatted = msToTime(trainingTimeDifferenceMs);
 
-             const testTimeDifferenceMs = timeToMs(state.part2Stats.time) - timeToMs(state.part1Stats.time);
-             const testTimeDifference = msToTime(testTimeDifferenceMs);
+             const testTimeDifferenceMs = state.part2Stats.timeMs - state.part1Stats.timeMs;
+             const testTimeDifferenceFormatted = msToTime(testTimeDifferenceMs);
 
              const trainingAccuracyDifference = state.trainingPart1Stats.accuracy != 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
 
              const testAccuracyDifference = state.part1Stats.accuracy != 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
 
-             // Populate general results
-             document.getElementById('total-time').textContent = totalTime;
+             // Populate general results (formatted time)
+             document.getElementById('total-time').textContent = totalTimeFormatted;
              document.getElementById('average-accuracy').textContent = averageAccuracy;
-             document.getElementById('training-time-difference').textContent = trainingTimeDifference;
-             document.getElementById('test-time-difference').textContent = testTimeDifference;
+             document.getElementById('training-time-difference').textContent = trainingTimeDifferenceFormatted;
+             document.getElementById('test-time-difference').textContent = testTimeDifferenceFormatted;
              document.getElementById('training-accuracy-difference').textContent = trainingAccuracyDifference;
              document.getElementById('test-accuracy-difference').textContent = testAccuracyDifference;
-
-             function timeToMs(timeStr) {
-                 const [minutes, secondsTenths] = timeStr.split(':');
-                 const [seconds, tenths] = secondsTenths.split('.');
-                 return (parseInt(minutes) * 60 + parseInt(seconds)) * 1000 + parseInt(tenths) * 100;
-             }
-
-             function msToTime(duration) {
-                 const minutes = Math.floor(duration / (1000 * 60)).toString().padStart(2, '0');
-                 const seconds = Math.floor((duration / 1000) % 60).toString().padStart(2, '0');
-                 const tenths = Math.floor((duration % 1000) / 100).toString();
-                 return `${minutes}:${seconds}.${tenths}`;
-             }
         }
+
+        // Convert milliseconds to MM:SS:TTT format
+         function msToTime(duration) {
+             if (isNaN(duration)) return '--:--:---'; // Handle non-numeric input
+
+             const sign = duration < 0 ? "-" : "";
+             const absDuration = Math.abs(duration);
+
+             const milliseconds = (absDuration % 1000).toString().padStart(3, '0');
+             const totalSeconds = Math.floor(absDuration / 1000);
+             const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+             const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+
+             return `${sign}${minutes}:${seconds}:${milliseconds}`;
+         }
 
 
         // Draw connections between tapped nodes
@@ -1348,7 +1351,7 @@
         function startTimer() {
             stopTimer(); // Ensure no duplicate timers
             state.startTime = Date.now(); // Use Date.now() for more reliable interval calculation
-            state.timerInterval = setInterval(updateTimer, 100); // Update every 100ms
+            state.timerInterval = setInterval(updateTimer, 10); // Update every 10ms for better resolution
             updateTimer(); // Initial display
         }
 
@@ -1356,36 +1359,34 @@
         function stopTimer() {
             clearInterval(state.timerInterval);
             state.timerInterval = null; // Clear interval ID
-            state.startTime = null; // Reset start time
+            // state.startTime is kept to calculate final elapsed time
         }
 
         // Update timer display
         function updateTimer() {
              if (!state.startTime) {
-                 timeDisplay.textContent = '00:00.0';
+                 timeDisplay.textContent = '00:00:000';
                  return;
              }
             const elapsedMs = Date.now() - state.startTime;
-            const totalSeconds = Math.floor(elapsedMs / 1000);
-            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-            const tenths = Math.floor((elapsedMs % 1000) / 100).toString(); // Tenths of a second
+            // Format as MM:SS:TTT
+            const minutes = Math.floor(elapsedMs / 60000).toString().padStart(2, '0');
+            const seconds = Math.floor((elapsedMs % 60000) / 1000).toString().padStart(2, '0');
+            const milliseconds = (elapsedMs % 1000).toString().padStart(3, '0');
 
-
-            timeDisplay.textContent = `${minutes}:${seconds}.${tenths}`;
+            timeDisplay.textContent = `${minutes}:${seconds}:${milliseconds}`;
         }
 
         // Initialize the application when the page loads
         window.addEventListener('DOMContentLoaded', init);
-		
-		
-		
+
+
         function downloadResults() {
-		
+
 	const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    const receivedData = JSON.parse(storedDataString);
 		//userName, telNumber
-		
+
         	const name = receivedData["userName"];
 		const telNo = receivedData["telNumber"];
 	    	const birthDate = receivedData["birthDate"];
@@ -1396,21 +1397,23 @@
 
 		//sessionStorage.removeItem('confirmationFormData');
 
-        const part1Time = document.getElementById('part1-time').textContent;
-        const part1Accuracy = document.getElementById('part1-accuracy').textContent;
-        const part2Time = document.getElementById('part2-time').textContent;
-        const part2Accuracy = document.getElementById('part2-accuracy').textContent;
-		const trainingPart1Time = document.getElementById('training-part1-time').textContent;
-        const trainingPart1Accuracy = document.getElementById('training-part1-accuracy').textContent;
-        const trainingPart2Time = document.getElementById('training-part2-time').textContent;
-        const trainingPart2Accuracy = document.getElementById('training-part2-accuracy').textContent;
+        // Use raw millisecond values for download
+        const part1TimeMs = state.part1Stats.timeMs;
+        const part1Accuracy = state.part1Stats.accuracy;
+        const part2TimeMs = state.part2Stats.timeMs;
+        const part2Accuracy = state.part2Stats.accuracy;
+		const trainingPart1TimeMs = state.trainingPart1Stats.timeMs;
+        const trainingPart1Accuracy = state.trainingPart1Stats.accuracy;
+        const trainingPart2TimeMs = state.trainingPart2Stats.timeMs;
+        const trainingPart2Accuracy = state.trainingPart2Stats.accuracy;
 
-        const totalTime = document.getElementById('total-time').textContent;
-        const averageAccuracy = document.getElementById('average-accuracy').textContent;
-        const trainingTimeDifference = document.getElementById('training-time-difference').textContent;
-        const testTimeDifference = document.getElementById('test-time-difference').textContent;
-        const trainingAccuracyDifference = document.getElementById('training-accuracy-difference').textContent;
-        const testAccuracyDifference = document.getElementById('test-accuracy-difference').textContent;
+        const totalTimeMs = state.trainingPart1Stats.timeMs + state.trainingPart2Stats.timeMs + state.part1Stats.timeMs + state.part2Stats.timeMs;
+        const averageAccuracy = (state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks) > 0 ? Math.round((state.trainingPart1Stats.correctClicks + state.trainingPart2Stats.correctClicks + state.part1Stats.correctClicks + state.part2Stats.correctClicks) / (state.trainingPart1Stats.totalClicks + state.trainingPart2Stats.totalClicks + state.part1Stats.totalClicks + state.part2Stats.totalClicks) * 100) : 0;
+        const trainingTimeDifferenceMs = state.trainingPart2Stats.timeMs - state.trainingPart1Stats.timeMs;
+        const testTimeDifferenceMs = state.part2Stats.timeMs - state.part1Stats.timeMs;
+        const trainingAccuracyDifference = state.trainingPart1Stats.accuracy != 0 ? Math.round(((state.trainingPart2Stats.accuracy - state.trainingPart1Stats.accuracy) / state.trainingPart1Stats.accuracy) * 100) : 0;
+        const testAccuracyDifference = state.part1Stats.accuracy != 0 ? Math.round(((state.part2Stats.accuracy - state.part1Stats.accuracy) / state.part1Stats.accuracy) * 100) : 0;
+
 
         let resultsText = "";
 		 resultsText +=  `Ad-Soyad: ${name}\n`;
@@ -1421,20 +1424,20 @@
 		 resultsText +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
 		 resultsText +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
 
-        resultsText += `1. Bölüm Eğitim Süresi: ${trainingPart1Time}\n`;
+        resultsText += `1. Bölüm Eğitim Süresi (ms): ${trainingPart1TimeMs}\n`;
         resultsText += `1. Bölüm Eğitim Doğruluğu: ${trainingPart1Accuracy}\n`;
-        resultsText += `1. Bölüm Süresi: ${part1Time}\n`;
+        resultsText += `1. Bölüm Süresi (ms): ${part1TimeMs}\n`;
         resultsText += `1. Bölüm Doğruluğu: ${part1Accuracy}\n\n`;
 
-        resultsText += `2. Bölüm Eğitim Süresi: ${trainingPart2Time}\n`;
+        resultsText += `2. Bölüm Eğitim Süresi (ms): ${trainingPart2TimeMs}\n`;
         resultsText += `2. Bölüm Eğitim Doğruluğu: ${trainingPart2Accuracy}\n`;
-        resultsText += `2. Bölüm Süresi: ${part2Time}\n`;
+        resultsText += `2. Bölüm Süresi (ms): ${part2TimeMs}\n`;
         resultsText += `2. Bölüm Doğruluğu: ${part2Accuracy}\n\n`;
 
-        resultsText += `Toplam Süre: ${totalTime}\n`;
+        resultsText += `Toplam Süre (ms): ${totalTimeMs}\n`;
         resultsText += `Ortalama Doğruluk: ${averageAccuracy}\n`;
-        resultsText += `Eğitimler Arası Süre Farkı: ${trainingTimeDifference}\n`;
-        resultsText += `Bölümler Arası Süre Farkı: ${testTimeDifference}\n`;
+        resultsText += `Eğitimler Arası Süre Farkı (ms): ${trainingTimeDifferenceMs}\n`;
+        resultsText += `Bölümler Arası Süre Farkı (ms): ${testTimeDifferenceMs}\n`;
         resultsText += `Bölümler Arası Doğruluk Farkı: ${trainingAccuracyDifference}\n`;
         resultsText += `Eğitimler Arası Doğruluk Farkı: ${testAccuracyDifference}\n`;
 
