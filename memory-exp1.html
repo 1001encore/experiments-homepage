@@ -468,7 +468,7 @@
                      scaleBtn.onclick = () => handleRecognitionAnswer(word, 'confidence', i, itemDiv);
                      likertDiv.appendChild(scaleBtn);
                  }
-                 itemDiv.appendChild(seenButtonsDiv); itemDiv.appendChild(wordSpan); itemDiv.appendChild(likertDiv);
+                 itemDiv.appendChild(likertDiv); itemDiv.appendChild(seenButtonsDiv); itemDiv.appendChild(wordSpan);
                  recognitionListEl.appendChild(itemDiv);
              });
               checkAllRecognitionAnswered();
