@@ -770,9 +770,9 @@ function generateResultsText() {
 
         let listStatus = "Hiçbirinde Yok"; // "Not in either"
         if (inList1) {
-            listStatus = "Liste 1";
+            listStatus = "Liste1";
         } else if (inList2) {
-            listStatus = "Liste 2";
+            listStatus = "Liste2";
         }
 
         const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
@@ -859,6 +859,36 @@ function generateResultsCsv() {
      let falseAlarmWords = [];
      let correctRejectionWords = [];
 
+	let wordList = [];
+	let listStatus = [];
+	let participantSaidSeenText = [];
+	let answerConfidence = [];
+
+	Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
+        const lowerWord = word.toLowerCase();
+        const inList1 = (list1Words || []).some(x => x.toLowerCase() === lowerWord);
+        const inList2 = (list2Words || []).some(x => x.toLowerCase() === lowerWord);
+        // Assuming a word is not in BOTH lists
+
+        let listStatus = "Hiçbirinde Yok"; // "Not in either"
+        if (inList1) {
+            listStatus = "Liste1";
+        } else if (inList2) {
+            listStatus = "Liste2";
+        }
+        const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
+        //text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}, ${answer.confidence}\n`;
+		/*wordList += `${word}, `;
+		listStatus += `${listStatus}, `;
+		participantSaidSeenText += `${participantSaidSeenText}, `;
+		answerConfidence += `${answerConfidence}, `;
+  		*/
+		wordList.push(word);
+		listStatus.push(listStatus);
+		participantSaidSeenText.push(participantSaidSeenText);
+		answerConfidence.push(answerConfidence);
+        }
+
 
      Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
          const lowerWord = word.toLowerCase();
@@ -909,7 +939,8 @@ function generateResultsCsv() {
      csvContent += ",\"Liste Sırası\",\"Toplam Hatırlanan\",\"Doğru Hatırlanan (Toplam)\",\"Doğru Hatırlanan (Liste 1)\",\"Doğru Hatırlanan (Liste 2)\",\"Araya Girme Sayısı\",\"Girilen Kelimeler\"";
      csvContent += ",\"Oyun Toplam Cevaplar\",\"Oyun Doğru Cevaplar\",\"Oyun Doğruluk (%)\"";
      csvContent += ",\"Tanıma Listelerde Olup Tanınanlar (Doğru)\",\"Tanıma Listelerde Olup Tanınmayanlar (Yanlış)\",\"Tanıma Liste 1 Tanınanlar\",\"Tanıma Liste 1 Tanınmayanlar\",\"Tanıma Liste 2 Tanınanlar\",\"Tanıma Liste 2 Tanınmayanlar\"";
-     csvContent += ",\"Tanıma Olmayıp Tanınanlar (Yanlış Alarm)\",\"Tanıma Olmayıp Tanınmayanlar (Doğru Red)\",\"Yanlış Alarm Kelimeleri\"\n";
+     csvContent += ",\"Tanıma Olmayıp Tanınanlar (Yanlış Alarm)\",\"Tanıma Olmayıp Tanınmayanlar (Doğru Red)\",\"Yanlış Alarm Kelimeleri\"";
+	csvContent += ",\"Kelime Listesi\",\"Liste Sırası\",\"Gördüm Mü Dedi?\",\"Özgüveni\"\n";
 
 
      // Add user and test results data
@@ -945,7 +976,11 @@ function generateResultsCsv() {
          escapeCsvValue(list2Misses),
          escapeCsvValue(falseAlarms),
          escapeCsvValue(correctRejections),
-         escapeCsvValue(falseAlarmWords.join(', ')) // List false alarm words
+         escapeCsvValue(falseAlarmWords.join(', ')), // List false alarm words
+	     escapeCsvValue(wordList.join(', ')),
+	     escapeCsvValue(listStatus.join(', ')),
+	     escapeCsvValue(participantSaidSeenText.join(', ')),
+	     escapeCsvValue(answerConfidence.join(', ')),
      ];
 
      csvContent += rowData.join(',') + '\n';
