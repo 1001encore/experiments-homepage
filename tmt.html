@@ -1383,35 +1383,39 @@ function msToTime(duration) {
 
         // Start timer
         function startTimer() {
-            stopTimer(); // Ensure no duplicate timers
-            state.startTime = Date.now(); // Use Date.now() for more reliable interval calculation
-            state.timerInterval = setInterval(updateTimer, 100); // Update every 100ms
-            updateTimer(); // Initial display
-        }
+    stopTimer(); // Ensure no duplicate timers
+    state.startTime = Date.now(); // Use Date.now() for more reliable interval calculation
+    state.timerInterval = setInterval(updateTimer, 100); // Update display every 100ms
+    updateTimer(); // Initial display
+}
 
-        // Stop timer
-        function stopTimer() {
-            clearInterval(state.timerInterval);
-            state.timerInterval = null; // Clear interval ID
-            state.startTime = null; // Reset start time
-        }
+// Stop timer
+function stopTimer() {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null; // Clear interval ID
+    // state.startTime is not reset here, it's needed to calculate elapsedMs when stopping
+}
 
-        // Update timer display
-        function updateTimer() {
-             if (!state.startTime) {
-                 timeDisplay.textContent = '00:00.0';
-                 return;
-             }
-            const elapsedMs = Date.now() - state.startTime;
-            const totalSeconds = Math.floor(elapsedMs / 1000);
-            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-            const tenths = Math.floor((elapsedMs % 1000) / 100).toString(); // Tenths of a second
+// Update timer display
+function updateTimer() {
+    // Only update if the timer is running
+    if (state.startTime === null) {
+        // Ensure display is reset if timer is explicitly stopped without a final update
+         if(timeDisplay.textContent !== '00:00.0') {
+             timeDisplay.textContent = '00:00.0';
+         }
+         return;
+    }
 
+    const elapsedMs = Date.now() - state.startTime;
 
-            timeDisplay.textContent = `${minutes}:${seconds}.${tenths}`;
-        }
+    // Use msToTime function to format the elapsed time for the display
+    // Using the MM:SS:TTT format from our previous correction
+    timeDisplay.textContent = msToTime(elapsedMs);
 
+     // Note: The raw elapsedMs is calculated here but not stored in state yet.
+     // It should be stored when the *part ends*.
+}
         // Initialize the application when the page loads
         window.addEventListener('DOMContentLoaded', init);
 		
