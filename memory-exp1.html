@@ -860,9 +860,9 @@ function generateResultsCsv() {
      let correctRejectionWords = [];
 
 	let wordList = [];
-	let listStatus = [];
-	let participantSaidSeenText = [];
-	let answerConfidence = [];
+	let listStatusList = [];
+	let participantSaidSeenList = [];
+	let answerConfidenceList = [];
 
 	Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
         const lowerWord = word.toLowerCase();
@@ -884,9 +884,9 @@ function generateResultsCsv() {
 		answerConfidence += `${answerConfidence}, `;
   		*/
 		wordList.push(word);
-		listStatus.push(listStatus);
-		participantSaidSeenText.push(participantSaidSeenText);
-		answerConfidence.push(answerConfidence);
+		listStatusList.push(listStatus);
+		participantSaidSeenList.push(participantSaidSeen);
+		answerConfidenceList.push(answer.confidence);
         });
 
 
@@ -978,9 +978,9 @@ function generateResultsCsv() {
          escapeCsvValue(correctRejections),
          escapeCsvValue(falseAlarmWords.join(', ')), // List false alarm words
 	     escapeCsvValue(wordList.join(', ')),
-	     escapeCsvValue(listStatus.join(', ')),
-	     escapeCsvValue(participantSaidSeenText.join(', ')),
-	     escapeCsvValue(answerConfidence.join(', ')),
+	     escapeCsvValue(listStatusList.join(', ')),
+	     escapeCsvValue(participantSaidSeenList.join(', ')),
+	     escapeCsvValue(answerConfidenceList.join(', ')),
      ];
 
      csvContent += rowData.join(',') + '\n';
