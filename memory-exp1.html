@@ -877,15 +877,10 @@ function generateResultsCsv() {
             listStatus = "Liste2";
         }
         const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
-        //text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}, ${answer.confidence}\n`;
-		/*wordList += `${word}, `;
-		listStatus += `${listStatus}, `;
-		participantSaidSeenText += `${participantSaidSeenText}, `;
-		answerConfidence += `${answerConfidence}, `;
-  		*/
+		const participantSaidSeenTr = (participantSaidSeen ? "Evet" : "Hayır")
 		wordList.push(word);
 		listStatusList.push(listStatus);
-		participantSaidSeenList.push(participantSaidSeen);
+		participantSaidSeenList.push(participantSaidSeenTr);
 		answerConfidenceList.push(answer.confidence);
         });
 
