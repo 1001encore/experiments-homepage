@@ -635,168 +635,319 @@
         }
 
          // --- Button Actions (Reset Modified, Download Updated) ---
-         document.getElementById('resetTestBtn').addEventListener('click', () => {
-             // Clear timers
-             clearTimeout(wordTimeout); clearTimeout(intervalTimeout);
-             clearInterval(gameTimerInterval); clearInterval(recallTimerInterval);
+         // Assume listOrderSwapped, recalledWords, list1ShownWords, list2ShownWords,
+// gameTotalAnswered, gameScore, list1Words, list2Words, and recognitionAnswers
+// are accessible in this scope.
 
-             // Reset state variables
-             list1ShownWords = []; list2ShownWords = []; gameData = [];
-             originalGameData = []; currentGameCardIndex = 0; gameScore = 0;
-             gameTotalAnswered = 0; recalledWords = []; recognitionAnswers = {};
+document.getElementById('downloadResultsBtn').addEventListener('click', () => {
 
-             // *** Toggle the list order for the next run ***
-             listOrderSwapped = !listOrderSwapped;
-             console.log("Resetting test... List order swapped for next run:", listOrderSwapped);
+    // --- Generate Text Results ---
+    const resultsText = generateResultsText(); // This function needs to be defined below or elsewhere in scope
+    const textBlob = new Blob([resultsText], { type: 'text/plain;charset=utf-8;' });
+    const textLink = document.createElement('a');
+    textLink.href = URL.createObjectURL(textBlob);
+    textLink.download = 'unutma_deneyi_2_sonuçlar.txt';
+    document.body.appendChild(textLink);
+    textLink.click();
+    document.body.removeChild(textLink);
+    URL.revokeObjectURL(textLink.href);
 
-             // Reset displays
-             wordDisplayEl.textContent = ''; wordDisplayEl2.textContent = '';
-             gameAreaEl.innerHTML = ''; recalledWordsListEl.innerHTML = '<strong>Hatırlanan Kelimeler:</strong>';
-             recognitionListEl.innerHTML = ''; resultsAreaEl.innerHTML = '';
-             // Reset titles/instructions potentially changed by list swap
-             listTitle1El.textContent = "Kelime:";
-             listTitle2El.textContent = "Kelime:";
-             instructionText1El.textContent = "Şimdi sizlere birer saniye aralıklarla 14 kelimelik bir liste sunulacaktır. Kelimeleri dikkatle inceleyin aklınızda tutmaya çalışın, daha sonra bir hatırlama testi verilecektir.";
-             instructionText2El.textContent = "Az önce görmüş olduğunuz kelimeler, asıl listeyi sorunsuz şekilde uygulamak için sadece alıştırma amacıyla verildi. Hatırlama testine dahil değildir. Testte sorumlu olacağınız asıl liste şimdi sunulacaktır. Dikkatle inceleyin ve aklınızda tutmaya çalışın.";
+    // --- Generate CSV Results ---
+    const csvContent = generateResultsCsv(); // This function will be defined below
+    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const csvLink = document.createElement('a');
+    csvLink.href = URL.createObjectURL(csvBlob);
+    csvLink.download = 'unutma_deneyi_2_sonuçlar.csv';
+    document.body.appendChild(csvLink);
+
+    // Add a small delay before the second download to help browsers handle it
+    // This might not be strictly necessary depending on the browser and context,
+    // but can improve reliability for multiple downloads from one click.
+     setTimeout(() => {
+         csvLink.click();
+         document.body.removeChild(csvLink);
+         URL.revokeObjectURL(csvLink.href);
+         console.log("Downloading results...");
+     }, 100); // 100ms delay
+
+});
+
+// Helper function for escaping CSV values (important for commas, quotes, newlines)
+const escapeCsvValue = (value) => {
+    if (value === undefined || value === null) {
+        return '';
+    }
+    let stringValue = String(value);
+    // Check if value contains comma, double quote, or newline
+    if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+        // Escape double quotes by doubling them, then wrap in double quotes
+        return `"${stringValue.replace(/"/g, '""')}"`;
+    }
+    return stringValue;
+};
 
 
-             switchScreen('screen1'); // Go back to the start
-         });
+// --- Original function to generate TEXT results (kept for .txt download) ---
+// Modified to include list order information
+function generateResultsText() {
+    const storedDataString = sessionStorage.getItem('confirmationFormData');
+    const receivedData = JSON.parse(storedDataString);
 
-         document.getElementById('downloadResultsBtn').addEventListener('click', () => {
-             const resultsText = generateResultsText(); // generateResultsText now includes swap info
-             const blob = new Blob([resultsText], { type: 'text/plain' });
-             const link = document.createElement('a');
-             link.href = URL.createObjectURL(blob);
-             link.download = 'unutma_deneyi_1_sonuçları.txt';
-             link.click();
-             URL.revokeObjectURL(link.href);
-             console.log("Downloading results...");
-         });
+    const name = receivedData["userName"];
+    const telNo = receivedData["telNumber"];
+    const birthDate = receivedData["birthDate"];
+    const question1 = receivedData["question1"];
+    const question1Details = receivedData["question1Details"];
+    const question2 = receivedData["question2"];
+    const sex = receivedData["sex"];
+    //sessionStorage.removeItem('confirmationFormData'); // Be cautious if you remove this here and need data later
 
-         // Modified to include list order information
-         function generateResultsText() {
-	    const storedDataString = sessionStorage.getItem('confirmationFormData');
-	    const receivedData = JSON.parse(storedDataString);
-		 
-		const name = receivedData["userName"];
-		const telNo = receivedData["telNumber"];
-	    	const birthDate = receivedData["birthDate"];
-		const question1 = receivedData["question1"];
-		const question1Details = receivedData["question1Details"];
-		const question2 = receivedData["question2"];
-		const sex = receivedData["sex"];
-		//sessionStorage.removeItem('confirmationFormData');
-             let text = "Test Sonuçları\n=============================\n";
-		 text +=  `Ad-Soyad: ${name}\n`;
-		 text +=  `Telefon Numarası: ${telNo}\n\n`;
-		 text +=  `Doğum Tarihi: ${birthDate}\n`;
-		 text +=  `Cinsiyeti: ${sex}\n`;
-		 text +=  `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
-		 text +=  `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
-		 text +=  `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
-		 
-             text += `Liste Sırası: ${listOrderSwapped ? 'Önce Liste 2, sonra Liste 1' : 'Önce Liste 1, sonra Liste 2'}\n\n`;
+    let text = "Test Sonuçları\n=============================\n";
+    text += `Ad-Soyad: ${name}\n`;
+    text += `Telefon Numarası: ${telNo}\n\n`;
+    text += `Doğum Tarihi: ${birthDate}\n`;
+    text += `Cinsiyeti: ${sex}\n`;
+    text += `Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?: ${question1}\n`;
+    text += `Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı yazınız: ${question1Details}\n`;
+    text += `Renk körlüğü ya da görme bozukluğu var mı?: ${question2}\n\n`;
 
-             // Recall Results
-             let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
-		 
-             recalledWords.forEach(word => {
-				word = word.toLowerCase()
-                if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
-                    correctRecalls++;
-                    if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
-                    if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
-                } else {
-                    intrusionRecalls++;
-                }
-            });
-		 
-             const firstListName = listOrderSwapped ? "List 2" : "List 1";
-             const secondListName = listOrderSwapped ? "List 1" : "List 2";
-             text += "Serbest Hatırlama Bölümü:\n";
-             text += ` - Toplam Hatırlanan: ${recalledWords.length}\n`;
-             text += ` - Doğru Hatırlanan: ${correctRecalls}\n`;
-             text += `   - İlk Gösterilenden (${firstListName}): ${list1Recalls}\n`;
-             text += `   - İkinci Gösterilenden (${secondListName}): ${list2Recalls}\n`;
-             text += ` - Araya Girme: ${intrusionRecalls}\n`;
-             text += ` - Girilen Kelimeler: ${recalledWords.join(', ') || 'None'}\n\n`;
+    text += `Liste Sırası: ${listOrderSwapped ? 'Önce Liste 2, sonra Liste 1' : 'Önce Liste 1, sonra Liste 2'}\n\n`;
 
-             // Game Results (Unchanged)
-             const gameAccuracy = gameTotalAnswered > 0 ? ((gameScore / gameTotalAnswered) * 100).toFixed(1) : 0;
-             text += "Oyun İstatistikleri:\n";
-             text += ` - Toplam Cevaplar: ${gameTotalAnswered}\n`;
-             text += ` - Doğru Cevaplar: ${gameScore}\n`;
-             text += ` - Doğruluk: ${gameAccuracy}%\n\n`;
+    // Recall Results
+    let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
 
-             // Recognition Results (Unchanged - checks against original lists)
-            let list1Hits = 0, list1Misses = 0;
-            let list2Hits = 0, list2Misses = 0;
-            let falseAlarms = 0, correctRejections = 0;
+    recalledWords.forEach(word => {
+        const lowerWord = word.toLowerCase();
+        if (list1ShownWords.some(x => x.toLowerCase() === lowerWord) || list2ShownWords.some(x => x.toLowerCase() === lowerWord)) {
+            correctRecalls++;
+            if (list1ShownWords.some(x => x.toLowerCase() === lowerWord)) list1Recalls++;
+            if (list2ShownWords.some(x => x.toLowerCase() === lowerWord)) list2Recalls++;
+        } else {
+            intrusionRecalls++;
+        }
+    });
 
-            // We no longer combine the lists; keep them separate to check origin
-            // const allOriginalWords = [...list1Words, ...list2Words]; // REMOVE THIS LINE
+    const firstListName = listOrderSwapped ? "Liste 2" : "Liste 1";
+    const secondListName = listOrderSwapped ? "Liste 1" : "Liste 2";
+    text += "Serbest Hatırlama Bölümü:\n";
+    text += ` - Toplam Hatırlanan: ${recalledWords.length}\n`;
+    text += ` - Doğru Hatırlanan: ${correctRecalls}\n`;
+    text += `    - İlk Gösterilenden (${firstListName}): ${list1Recalls}\n`;
+    text += `    - İkinci Gösterilenden (${secondListName}): ${list2Recalls}\n`;
+    text += ` - Araya Girme: ${intrusionRecalls}\n`;
+    text += ` - Girilen Kelimeler: ${recalledWords.join(', ') || 'None'}\n\n`;
 
-            text += "Tanıma Bölümü (Detaylı):\n";
-            text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?\n"; // Updated header
+    // Game Results
+    const gameAccuracy = gameTotalAnswered > 0 ? ((gameScore / gameTotalAnswered) * 100).toFixed(1) : 0;
+    text += "Oyun İstatistikleri:\n";
+    text += ` - Toplam Cevaplar: ${gameTotalAnswered || 0}\n`;
+    text += ` - Doğru Cevaplar: ${gameScore || 0}\n`;
+    text += ` - Doğruluk: ${gameAccuracy}%\n\n`;
 
-            Object.entries(recognitionAnswers).forEach(([word, answer]) => {
-                const inList1 = list1Words.includes(word);
-                const inList2 = list2Words.includes(word);
-                // Assuming a word is not in BOTH lists - standard for this type of task
+    // Recognition Results Summary & Detail
+    let list1Hits = 0, list1Misses = 0;
+    let list2Hits = 0, list2Misses = 0;
+    let falseAlarms = 0, correctRejections = 0;
 
-                let listStatus = "Hiçbirinde Yok"; // "Not in either"
-                if (inList1) {
-                    listStatus = "Liste 1";
-                } else if (inList2) {
-                    listStatus = "Liste 2";
-                }
+    text += "Tanıma Bölümü (Detaylı):\n";
+    text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?\n";
 
-                const participantSaidSeen = (answer.seen === "yes");
+    Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
+        const lowerWord = word.toLowerCase();
+        const inList1 = (list1Words || []).some(x => x.toLowerCase() === lowerWord);
+        const inList2 = (list2Words || []).some(x => x.toLowerCase() === lowerWord);
+        // Assuming a word is not in BOTH lists
 
-                text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}\n`;
+        let listStatus = "Hiçbirinde Yok"; // "Not in either"
+        if (inList1) {
+            listStatus = "Liste 1";
+        } else if (inList2) {
+            listStatus = "Liste 2";
+        }
 
-                // Update counters based on origin and response
-                if (inList1) {
-                    if (participantSaidSeen) {
-                        list1Hits++; // In List 1, said yes -> Hit for List 1
-                    } else {
-                        list1Misses++; // In List 1, said no -> Miss for List 1
-                    }
-                } else if (inList2) {
-                    if (participantSaidSeen) {
-                        list2Hits++; // In List 2, said yes -> Hit for List 2
-                    } else {
-                        list2Misses++; // In List 2, said no -> Miss for List 2
-                    }
-                } else { // The word was not in either list
-                    if (participantSaidSeen) {
-                        falseAlarms++; // Not in lists, said yes -> False Alarm
-                    } else {
-                        correctRejections++; // Not in lists, said no -> Correct Rejection
-                    }
-                }
-            });
+        const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
 
-            text += "\nTanıma Özeti:\n";
+        text += `${word}, ${listStatus}, ${participantSaidSeen ? "Evet" : "Hayır"}\n`;
 
-            text += `Listelerde olup tanınanlar(doğru): ${list1Hits+list2Hits}\n`
-            text += `Listelerde olup tanınmayanlar(yanlış): ${list1Misses+list2Misses}\n\n`
+        // Update counters based on origin and response
+        if (inList1) {
+            if (participantSaidSeen) {
+                list1Hits++; // In List 1, said yes -> Hit for List 1
+            } else {
+                list1Misses++; // In List 1, said no -> Miss for List 1
+            }
+        } else if (inList2) {
+            if (participantSaidSeen) {
+                list2Hits++; // In List 2, said yes -> Hit for List 2
+            } else {
+                list2Misses++; // In List 2, said no -> Miss for List 2
+            }
+        } else { // The word was not in either list
+            if (participantSaidSeen) {
+                falseAlarms++; // Not in lists, said yes -> False Alarm
+            } else {
+                correctRejections++; // Not in lists, said no -> Correct Rejection
+            }
+        }
+    });
 
-            text += "Liste 1 Analizi:\n";
-            text += `   - Listede olup tanınanlar(doğru): ${list1Hits}\n`; // In List 1, said yes
-            text += `   - Listede olup tanınmayanlar(yanlış): ${list1Misses}\n`; // In List 1, said no
+    text += "\nTanıma Özeti:\n";
+    text += `Listelerde olup tanınanlar(doğru): ${list1Hits + list2Hits}\n`;
+    text += `Listelerde olup tanınmayanlar(yanlış): ${list1Misses + list2Misses}\n\n`;
 
-            text += "\nListe 2 Analizi:\n";
-            text += `   - Listede olup tanınanlar(doğru): ${list2Hits}\n`; // In List 2, said yes
-            text += `   - Listede olup tanınmayanlar(yanlış): ${list2Misses}\n`; // In List 2, said no
+    text += "Liste 1 Analizi:\n";
+    text += `    - Listede olup tanınanlar(doğru): ${list1Hits}\n`; // In List 1, said yes
+    text += `    - Listede olup tanınmayanlar(yanlış): ${list1Misses}\n`; // In List 1, said no
 
-            text += "\nListelerde Olmayan Kelimeler:\n";
-            text += `   - Olmayıp tanınanlar(yanlış - Yanlış Alarm): ${falseAlarms}\n`; // Not in lists, said yes
-            text += `   - Olmayıp tanınmayanlar(doğru - Doğru Red): ${correctRejections}\n\n`; // Not in lists, said no
+    text += "\nListe 2 Analizi:\n";
+    text += `    - Listede olup tanınanlar(doğru): ${list2Hits}\n`; // In List 2, said yes
+    text += `    - Listede olup tanınmayanlar(yanlış): ${list2Misses}\n`; // In List 2, said no
 
-            return text;
+    text += "\nListelerde Olmayan Kelimeler:\n";
+    text += `    - Olmayıp tanınanlar(yanlış - Yanlış Alarm): ${falseAlarms}\n`; // Not in lists, said yes
+    text += `    - Olmayıp tanınmayanlar(doğru - Doğru Red): ${correctRejections}\n\n`; // Not in lists, said no
+
+
+    return text;
+}
+
+
+// --- New function to generate CSV results ---
+function generateResultsCsv() {
+     const storedDataString = sessionStorage.getItem('confirmationFormData');
+     const receivedData = JSON.parse(storedDataString);
+
+     const name = receivedData["userName"];
+     const telNo = receivedData["telNumber"];
+     const birthDate = receivedData["birthDate"];
+     const question1 = receivedData["question1"];
+     const question1Details = receivedData["question1Details"];
+     const question2 = receivedData["question2"];
+     const sex = receivedData["sex"];
+     //sessionStorage.removeItem('confirmationFormData'); // Be cautious if you remove this here and need data later
+
+     // Recalculate Recall Results (same logic as in generateResultsText)
+     let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
+     const actualRecalledWords = recalledWords || []; // Handle potential undefined
+
+     actualRecalledWords.forEach(word => {
+         const lowerWord = word.toLowerCase();
+         if ((list1ShownWords || []).some(x => x.toLowerCase() === lowerWord) || (list2ShownWords || []).some(x => x.toLowerCase() === lowerWord)) {
+             correctRecalls++;
+             if ((list1ShownWords || []).some(x => x.toLowerCase() === lowerWord)) list1Recalls++;
+             if ((list2ShownWords || []).some(x => x.toLowerCase() === lowerWord)) list2Recalls++;
+         } else {
+             intrusionRecalls++;
          }
+     });
+     const totalRecalled = actualRecalledWords.length;
+
+     // Recalculate Recognition Results (same logic as in generateResultsText)
+     let list1Hits = 0, list1Misses = 0;
+     let list2Hits = 0, list2Misses = 0;
+     let falseAlarms = 0, correctRejections = 0;
+     let falseAlarmWords = [];
+     let correctRejectionWords = [];
+
+
+     Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
+         const lowerWord = word.toLowerCase();
+         const inList1 = (list1Words || []).some(x => x.toLowerCase() === lowerWord);
+         const inList2 = (list2Words || []).some(x => x.toLowerCase() === lowerWord);
+
+         const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
+
+         if (inList1) {
+             if (participantSaidSeen) {
+                 list1Hits++;
+             } else {
+                 list1Misses++;
+             }
+         } else if (inList2) {
+             if (participantSaidSeen) {
+                 list2Hits++;
+             } else {
+                 list2Misses++;
+             }
+         } else { // Not in either list
+             if (participantSaidSeen) {
+                 falseAlarms++;
+                 falseAlarmWords.push(word); // Collect false alarm words
+             } else {
+                 correctRejections++;
+                 correctRejectionWords.push(word); // Collect correct rejection words (if needed in CSV)
+             }
+         }
+     });
+
+     // Combine Hits/Misses for summary counts
+     const totalListHits = list1Hits + list2Hits;
+     const totalListMisses = list1Misses + list2Misses;
+
+
+     // Game Results (assuming gameScore and gameTotalAnswered are available)
+     const actualGameTotalAnswered = gameTotalAnswered || 0;
+     const actualGameScore = gameScore || 0;
+     const gameAccuracy = actualGameTotalAnswered > 0 ? ((actualGameScore / actualGameTotalAnswered) * 100).toFixed(1) : 0;
+
+
+     // --- Prepare data for CSV ---
+     // Define the headers for the CSV file
+     let csvContent = "Ad-Soyad,Telefon Numarası,Doğum Tarihi,Cinsiyeti,\"Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?\",\"Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı?\",\"Renk körlüğü ya da görme bozukluğu var mı?\"";
+
+     // Add headers for test results
+     csvContent += ",\"Liste Sırası\",\"Toplam Hatırlanan\",\"Doğru Hatırlanan (Toplam)\",\"Doğru Hatırlanan (Liste 1)\",\"Doğru Hatırlanan (Liste 2)\",\"Araya Girme Sayısı\",\"Girilen Kelimeler\"";
+     csvContent += ",\"Oyun Toplam Cevaplar\",\"Oyun Doğru Cevaplar\",\"Oyun Doğruluk (%)\"";
+     csvContent += ",\"Tanıma Listelerde Olup Tanınanlar (Doğru)\",\"Tanıma Listelerde Olup Tanınmayanlar (Yanlış)\",\"Tanıma Liste 1 Tanınanlar\",\"Tanıma Liste 1 Tanınmayanlar\",\"Tanıma Liste 2 Tanınanlar\",\"Tanıma Liste 2 Tanınmayanlar\"";
+     csvContent += ",\"Tanıma Olmayıp Tanınanlar (Yanlış Alarm)\",\"Tanıma Olmayıp Tanınmayanlar (Doğru Red)\",\"Yanlış Alarm Kelimeleri\"\n";
+
+
+     // Add user and test results data
+     let rowData = [
+         escapeCsvValue(name),
+         escapeCsvValue(telNo),
+         escapeCsvValue(birthDate),
+         escapeCsvValue(sex),
+         escapeCsvValue(question1),
+         escapeCsvValue(question1Details),
+         escapeCsvValue(question2),
+
+         // Add recall data
+         escapeCsvValue(listOrderSwapped ? 'Önce Liste 2, sonra Liste 1' : 'Önce Liste 1, sonra Liste 2'),
+         escapeCsvValue(totalRecalled),
+         escapeCsvValue(correctRecalls),
+         escapeCsvValue(list1Recalls),
+         escapeCsvValue(list2Recalls),
+         escapeCsvValue(intrusionRecalls),
+         escapeCsvValue(actualRecalledWords.join(', ')), // List recalled words, joined by comma
+
+         // Add game stats
+         escapeCsvValue(actualGameTotalAnswered),
+         escapeCsvValue(actualGameScore),
+         escapeCsvValue(gameAccuracy),
+
+         // Add recognition summary stats
+         escapeCsvValue(totalListHits),
+         escapeCsvValue(totalListMisses),
+         escapeCsvValue(list1Hits),
+         escapeCsvValue(list1Misses),
+         escapeCsvValue(list2Hits),
+         escapeCsvValue(list2Misses),
+         escapeCsvValue(falseAlarms),
+         escapeCsvValue(correctRejections),
+         escapeCsvValue(falseAlarmWords.join(', ')) // List false alarm words
+     ];
+
+     csvContent += rowData.join(',') + '\n';
+
+     return csvContent; // Return the CSV string
+
+}
+
+// Note: This code assumes that variables like listOrderSwapped, recalledWords,
+// list1ShownWords, list2ShownWords, gameTotalAnswered, gameScore,
+// list1Words, list2Words, and recognitionAnswers are available in the scope
+// where these functions are defined and called.
 
 
         // --- Initial Setup ---
