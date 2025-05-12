@@ -653,6 +653,37 @@ edileceksiniz.</p>
 // gameTotalAnswered, gameScore, list1Words, list2Words, and recognitionAnswers
 // are accessible in this scope.
 
+// --- Button Actions (Reset Modified, Download Updated) ---
+         document.getElementById('resetTestBtn').addEventListener('click', () => {
+             // Clear timers
+             clearTimeout(wordTimeout); clearTimeout(intervalTimeout);
+             clearInterval(gameTimerInterval); clearInterval(recallTimerInterval);
+
+             // Reset state variables
+             list1ShownWords = []; list2ShownWords = []; gameData = [];
+             originalGameData = []; currentGameCardIndex = 0; gameScore = 0;
+             gameTotalAnswered = 0; recalledWords = []; recognitionAnswers = {};
+
+             // *** Toggle the list order for the next run ***
+             listOrderSwapped = !listOrderSwapped;
+             console.log("Resetting test... List order swapped for next run:", listOrderSwapped);
+
+             // Reset displays
+             wordDisplayEl.textContent = ''; wordDisplayEl2.textContent = '';
+             gameAreaEl.innerHTML = ''; recalledWordsListEl.innerHTML = '<strong>Hatırlanan Kelimeler:</strong>';
+             recognitionListEl.innerHTML = ''; resultsAreaEl.innerHTML = '';
+             // Reset titles/instructions potentially changed by list swap
+             listTitle1El.textContent = "Kelime:";
+             listTitle2El.textContent = "Kelime:";
+             instructionText1El.textContent = "Şimdi sizlere birer saniye aralıklarla 14 kelimelik bir liste sunulacaktır. Kelimeleri dikkatle inceleyin aklınızda tutmaya çalışın, daha sonra bir hatırlama testi verilecektir.";
+             instructionText2El.textContent = "Az önce görmüş olduğunuz kelimeler, asıl listeyi sorunsuz şekilde uygulamak için sadece alıştırma amacıyla verildi. Hatırlama testine dahil değildir. Testte sorumlu olacağınız asıl liste şimdi sunulacaktır. Dikkatle inceleyin ve aklınızda tutmaya çalışın.";
+
+
+             switchScreen('screen1'); // Go back to the start
+         });
+
+
+
 document.getElementById('downloadResultsBtn').addEventListener('click', () => {
 
     // --- Generate Text Results ---
