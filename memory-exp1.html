@@ -780,16 +780,18 @@ function generateResultsText() {
     // Recall Results
     let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
 
-    recalledWords.forEach(word => {
-        const lowerWord = word.toLowerCase();
-        if (list1ShownWords.some(x => x.toLowerCase() === lowerWord) || list2ShownWords.some(x => x.toLowerCase() === lowerWord)) {
-            correctRecalls++;
-            if (list1ShownWords.some(x => x.toLowerCase() === lowerWord)) list1Recalls++;
-            if (list2ShownWords.some(x => x.toLowerCase() === lowerWord)) list2Recalls++;
-        } else {
-            intrusionRecalls++;
-        }
-    });
+	
+    const uniqueRecalledWords = [...new Set(recalledWords.map(word => word.toLowerCase()))];
+
+uniqueRecalledWords.forEach(word => {
+    if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+        correctRecalls++;
+        if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
+        if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+    } else {
+        intrusionRecalls++;
+    }
+});
 
     const firstListName = listOrderSwapped ? "Liste 2" : "Liste 1";
     const secondListName = listOrderSwapped ? "Liste 1" : "Liste 2";
@@ -894,16 +896,17 @@ function generateResultsCsv() {
      let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
      const actualRecalledWords = recalledWords || []; // Handle potential undefined
 
-     actualRecalledWords.forEach(word => {
-         const lowerWord = word.toLowerCase();
-         if ((list1ShownWords || []).some(x => x.toLowerCase() === lowerWord) || (list2ShownWords || []).some(x => x.toLowerCase() === lowerWord)) {
-             correctRecalls++;
-             if ((list1ShownWords || []).some(x => x.toLowerCase() === lowerWord)) list1Recalls++;
-             if ((list2ShownWords || []).some(x => x.toLowerCase() === lowerWord)) list2Recalls++;
-         } else {
-             intrusionRecalls++;
-         }
-     });
+     const uniqueRecalledWords = [...new Set(actualRecalledWords.map(word => word.toLowerCase()))];
+
+uniqueRecalledWords.forEach(word => {
+    if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+        correctRecalls++;
+        if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
+        if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+    } else {
+        intrusionRecalls++;
+    }
+});
      const totalRecalled = actualRecalledWords.length;
 
      // Recalculate Recognition Results (same logic as in generateResultsText)
@@ -1037,8 +1040,6 @@ function generateResultsCsv() {
      return csvContent; // Return the CSV string
 
 }
-
-
 
         // --- Initial Setup ---
          switchScreen('screen1');
