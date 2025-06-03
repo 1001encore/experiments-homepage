@@ -575,19 +575,17 @@ Bitirmek için “Tamamladım” tuşuna basınız.</p>
             let list1Recalls = 0; // Recalls from the list shown FIRST
             let list2Recalls = 0; // Recalls from the list shown SECOND
             let intrusionRecalls = 0;
-
-            recalledWords.forEach(word => {
-                // Check if the recalled word was in *either* of the lists presented in this run
-				word = word.toLowerCase()
-                if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
-                    correctRecalls++;
-                    // Attribute recall to the correct *presentation slot*
-                    if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
-                    if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
-                } else {
-                    intrusionRecalls++;
-                }
-            });
+		
+            const uniqueRecalledWords = [...new Set(recalledWords.map(word => word.toLowerCase()))];
+		uniqueRecalledWords.forEach(word => {
+			if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+				correctRecalls++;
+			if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
+			if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+			} else {
+			intrusionRecalls++;
+			}
+		});
 
 	    const storedDataString = sessionStorage.getItem('confirmationFormData');
 	    const receivedData = JSON.parse(storedDataString);
