@@ -607,10 +607,8 @@ Bitirmek için “Tamamladım” tuşuna basınız.</p>
             resultsAreaEl.innerHTML += `<p><strong>   -- İlk Gösterilenden (${firstListName}):</strong> ${list1Recalls}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>   -- İkinci Gösterilenden (${secondListName}):</strong> ${list2Recalls}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>Araya Girme Hataları (Listelerde olmayanlar)</strong>: ${intrusionRecalls}</p>`;
-            resultsAreaEl.innerHTML += `<p><strong>Girilen Kelimeler:</strong> ${recalledWords.join(', ') || 'None'}</p><hr>`;
-		resultsAreaEl.innerHTML += `<p><strong>Tekrarsız Kelimeler:</strong> ${uniqueRecalledWords.join(', ') || 'None'}</p><hr>`;
-
-
+            resultsAreaEl.innerHTML += `<p><strong>Girilen Kelimeler:</strong> ${recalledWords.join(', ') || 'None'}</p>`;
+		resultsAreaEl.innerHTML += `<p><strong>Girilen Kelimeler (Tekrarsız):</strong> ${uniqueRecalledWords.join(', ') || 'None'}</p><hr>`;
             // 2. Game Statistics (Unchanged)
             resultsAreaEl.innerHTML += `<h3>Oyun İstatistikleri</h3>`;
             resultsAreaEl.innerHTML += `<p><strong>Toplam Cevaplanan Eşleşmeler: </strong>${gameTotalAnswered}</p>`;
