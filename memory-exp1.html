@@ -601,12 +601,14 @@ Bitirmek için “Tamamladım” tuşuna basınız.</p>
 
             resultsAreaEl.innerHTML += `<h3>Serbest Hatırlama Sonuçları</h3>`;
             resultsAreaEl.innerHTML += `<p><strong>Toplam Hatırlanan Kelime Sayısı:</strong> ${recalledWords.length}</p>`;
+		resultsAreaEl.innerHTML += `<p><strong>Toplam Hatırlanan Kelime Sayısı (Tekrarsız):</strong> ${uniqueRecalledWords.length}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>Doğru Hatırlanan Kelimeler:</strong> ${correctRecalls}</p>`;
             // Label recalls based on presentation order and original list name
             resultsAreaEl.innerHTML += `<p><strong>   -- İlk Gösterilenden (${firstListName}):</strong> ${list1Recalls}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>   -- İkinci Gösterilenden (${secondListName}):</strong> ${list2Recalls}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>Araya Girme Hataları (Listelerde olmayanlar)</strong>: ${intrusionRecalls}</p>`;
             resultsAreaEl.innerHTML += `<p><strong>Girilen Kelimeler:</strong> ${recalledWords.join(', ') || 'None'}</p><hr>`;
+		resultsAreaEl.innerHTML += `<p><strong>Tekrarsız Kelimeler:</strong> ${uniqueRecalledWords.join(', ') || 'None'}</p><hr>`;
 
 
             // 2. Game Statistics (Unchanged)
