@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bellek Deneyi</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preco bunnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -797,11 +797,13 @@ uniqueRecalledWords.forEach(word => {
     const secondListName = listOrderSwapped ? "Liste 1" : "Liste 2";
     text += "Serbest Hatırlama Bölümü:\n";
     text += ` - Toplam Hatırlanan: ${recalledWords.length}\n`;
+	text += ` - Toplam Hatırlanan (Tekrarsız): ${uniqueRecalledWords.length}\n`;
     text += ` - Doğru Hatırlanan: ${correctRecalls}\n`;
     text += `    - İlk Gösterilenden (${firstListName}): ${list1Recalls}\n`;
     text += `    - İkinci Gösterilenden (${secondListName}): ${list2Recalls}\n`;
     text += ` - Araya Girme: ${intrusionRecalls}\n`;
-    text += ` - Girilen Kelimeler: ${recalledWords.join(', ') || 'None'}\n\n`;
+    text += ` - Girilen Kelimeler: ${recalledWords.join(', ') || 'None'}\n`;
+	text += ` - Girilen Kelimeler (Tekrarsız): ${uniqueRecalledWords.join(', ') || 'None'}\n\n`;
 
     // Game Results
     const gameAccuracy = gameTotalAnswered > 0 ? ((gameScore / gameTotalAnswered) * 100).toFixed(1) : 0;
@@ -988,7 +990,7 @@ uniqueRecalledWords.forEach(word => {
      let csvContent = "Ad-Soyad,Telefon Numarası,Doğum Tarihi,Cinsiyeti,\"Son iki ayda herhangi bir psikiyatrik veya psikolojik tedavi görmüş mü?\",\"Yukarıdaki soruya cevabınız “Evet” ise bu tedaviler gereği herhangi bir ilaç kullandınız mı?\",\"Renk körlüğü ya da görme bozukluğu var mı?\"";
 
      // Add headers for test results
-     csvContent += ",\"Liste Sırası\",\"Toplam Hatırlanan\",\"Doğru Hatırlanan (Toplam)\",\"Doğru Hatırlanan (Liste 1)\",\"Doğru Hatırlanan (Liste 2)\",\"Araya Girme Sayısı\",\"Girilen Kelimeler\"";
+     csvContent += ",\"Liste Sırası\",\"Toplam Hatırlanan\",\"Doğru Hatırlanan (Toplam)\",\"Doğru Hatırlanan (Liste 1)\",\"Doğru Hatırlanan (Liste 2)\",\"Araya Girme Sayısı\",\"Girilen Kelimeler\",\"Girilen Kelimeler (Tekrarsız)\"";
      csvContent += ",\"Oyun Toplam Cevaplar\",\"Oyun Doğru Cevaplar\",\"Oyun Doğruluk (%)\"";
      csvContent += ",\"Tanıma Listelerde Olup Tanınanlar (Doğru)\",\"Tanıma Listelerde Olup Tanınmayanlar (Yanlış)\",\"Tanıma Liste 1 Tanınanlar\",\"Tanıma Liste 1 Tanınmayanlar\",\"Tanıma Liste 2 Tanınanlar\",\"Tanıma Liste 2 Tanınmayanlar\"";
      csvContent += ",\"Tanıma Olmayıp Tanınanlar (Yanlış Alarm)\",\"Tanıma Olmayıp Tanınmayanlar (Doğru Red)\",\"Yanlış Alarm Kelimeleri\"";
@@ -1013,6 +1015,7 @@ uniqueRecalledWords.forEach(word => {
          escapeCsvValue(list2Recalls),
          escapeCsvValue(intrusionRecalls),
          escapeCsvValue(actualRecalledWords.join(', ')), // List recalled words, joined by comma
+	     escapeCsvValue(uniqueRecalledWords.join(', ')),
 
          // Add game stats
          escapeCsvValue(actualGameTotalAnswered),
