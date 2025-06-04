@@ -576,12 +576,12 @@ Bitirmek için “Tamamladım” tuşuna basınız.</p>
             let list2Recalls = 0; // Recalls from the list shown SECOND
             let intrusionRecalls = 0;
 		
-            const uniqueRecalledWords = [...new Set(recalledWords.map(word => word.toLowerCase()))];
+            const uniqueRecalledWords = [...new Set(recalledWords.map(word => word.toUpperCase()))];
 		uniqueRecalledWords.forEach(word => {
-			if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+			if (list1ShownWords.some(x => x.toUpperCase() == word) || list2ShownWords.some(x => x.toUpperCase() == word)) {
 				correctRecalls++;
-			if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
-			if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+			if (list1ShownWords.some(x => x.toUpperCase() == word)) list1Recalls++;
+			if (list2ShownWords.some(x => x.toUpperCase() == word)) list2Recalls++;
 			} else {
 			intrusionRecalls++;
 			}
@@ -781,13 +781,13 @@ function generateResultsText() {
     let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
 
 	
-    const uniqueRecalledWords = [...new Set(recalledWords.map(word => word.toLowerCase()))];
+    const uniqueRecalledWords = [...new Set(recalledWords.map(word => word.toUpperCase()))];
 
 uniqueRecalledWords.forEach(word => {
-    if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+    if (list1ShownWords.some(x => x.toUpperCase() == word) || list2ShownWords.some(x => x.toUpperCase() == word)) {
         correctRecalls++;
-        if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
-        if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+        if (list1ShownWords.some(x => x.toUpperCase() == word)) list1Recalls++;
+        if (list2ShownWords.some(x => x.toUpperCase() == word)) list2Recalls++;
     } else {
         intrusionRecalls++;
     }
@@ -821,9 +821,9 @@ uniqueRecalledWords.forEach(word => {
     text += "Kelime, Hangi Listede Var?, Gördüm Mü Dedi?, Özgüveni(1-4)\n";
 
     Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
-        const lowerWord = word.toLowerCase();
-        const inList1 = (list1Words || []).some(x => x.toLowerCase() === lowerWord);
-        const inList2 = (list2Words || []).some(x => x.toLowerCase() === lowerWord);
+        const lowerWord = word.toUpperCase();
+        const inList1 = (list1Words || []).some(x => x.toUpperCase() === lowerWord);
+        const inList2 = (list2Words || []).some(x => x.toUpperCase() === lowerWord);
         // Assuming a word is not in BOTH lists
 
         let listStatus = "Hiçbirinde Yok"; // "Not in either"
@@ -898,13 +898,13 @@ function generateResultsCsv() {
      let correctRecalls = 0, list1Recalls = 0, list2Recalls = 0, intrusionRecalls = 0;
      const actualRecalledWords = recalledWords || []; // Handle potential undefined
 
-     const uniqueRecalledWords = [...new Set(actualRecalledWords.map(word => word.toLowerCase()))];
+     const uniqueRecalledWords = [...new Set(actualRecalledWords.map(word => word.toUpperCase()))];
 
 uniqueRecalledWords.forEach(word => {
-    if (list1ShownWords.some(x => x.toLowerCase() == word) || list2ShownWords.some(x => x.toLowerCase() == word)) {
+    if (list1ShownWords.some(x => x.toUpperCase() == word) || list2ShownWords.some(x => x.toUpperCase() == word)) {
         correctRecalls++;
-        if (list1ShownWords.some(x => x.toLowerCase() == word)) list1Recalls++;
-        if (list2ShownWords.some(x => x.toLowerCase() == word)) list2Recalls++;
+        if (list1ShownWords.some(x => x.toUpperCase() == word)) list1Recalls++;
+        if (list2ShownWords.some(x => x.toUpperCase() == word)) list2Recalls++;
     } else {
         intrusionRecalls++;
     }
@@ -924,9 +924,9 @@ uniqueRecalledWords.forEach(word => {
 	let answerConfidenceList = [];
 
 	Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
-        const lowerWord = word.toLowerCase();
-        const inList1 = (list1Words || []).some(x => x.toLowerCase() === lowerWord);
-        const inList2 = (list2Words || []).some(x => x.toLowerCase() === lowerWord);
+        const lowerWord = word.toUpperCase();
+        const inList1 = (list1Words || []).some(x => x.toUpperCase() === lowerWord);
+        const inList2 = (list2Words || []).some(x => x.toUpperCase() === lowerWord);
         // Assuming a word is not in BOTH lists
 
         let listStatus = "Hiçbirinde Yok"; // "Not in either"
@@ -945,9 +945,9 @@ uniqueRecalledWords.forEach(word => {
 
 
      Object.entries(recognitionAnswers || {}).forEach(([word, answer]) => {
-         const lowerWord = word.toLowerCase();
-         const inList1 = (list1Words || []).some(x => x.toLowerCase() === lowerWord);
-         const inList2 = (list2Words || []).some(x => x.toLowerCase() === lowerWord);
+         const lowerWord = word.toUpperCase();
+         const inList1 = (list1Words || []).some(x => x.toUpperCase() === lowerWord);
+         const inList2 = (list2Words || []).some(x => x.toUpperCase() === lowerWord);
 
          const participantSaidSeen = (answer && answer.seen === "yes"); // Added check for answer object
 
